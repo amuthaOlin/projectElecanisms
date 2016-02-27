@@ -11,8 +11,9 @@
 
 
 uint16_t val1, val2;
-_PIN *ENC_SCK, *ENC_MISO, *ENC_MOSI;
-_PIN *ENC_NCS;
+_PIN *SCK, *MISO, *MOSI;
+_PIN *NCS;
+_PIN *SLAVE_INT;
 
 
 
@@ -20,24 +21,22 @@ WORD recieve_or_send_spi(WORD cmd) {
     WORD result;
    
 
-    pin_clear(ENC_NCS);
+    pin_clear(NCS);
     spi_transfer(&spi1, cmd.b[1]);
     spi_transfer(&spi1, cmd.b[0]);
-    pin_set(ENC_NCS);
+    pin_set(NCS);
 
-    pin_clear(ENC_NCS);
+    pin_clear(NCS);
     result.b[1] = spi_transfer(&spi1, 0);
     result.b[0] = spi_transfer(&spi1, 0);
-    pin_set(ENC_NCS);
+    pin_set(NCS);
 
     return result;
 
 }
 
 void send_spi(WORD cmd){
-    pin_set(&D[4]);
     recieve_or_send_spi(cmd);
-    pin_clear(&D[4]);
 }
 
 WORD recieve_spi(){
@@ -56,13 +55,15 @@ int16_t main(void) {
     init_ui();
     init_pin();
 
-    ENC_MISO = &D[1];
-    ENC_MOSI = &D[0];
-    ENC_SCK = &D[2];
-    ENC_NCS = &D[3];
+    MISO = &D[1];
+    MOSI = &D[0];
+    SCK = &D[2];
+    NCS = &D[3];
+    SLAVE_INT = &D[4];
 
-
-    spi_open(&spi1, ENC_MISO, ENC_MOSI, ENC_SCK, 2e6 ,1);
+    pin_digitalIn(SLAVE_INT);
+    pin_digitalOut(NCS);
+    spi_open(&spi1, MISO, MOSI, SCK, 2e6 ,1);
 
 
 
@@ -70,13 +71,15 @@ int16_t main(void) {
 
 
     while (1) {
-        if (pin_read(&D[4])){
+        if (pin_read(SLAVE_INT)!=0){
             result = recieve_spi();
-            if (result.b[0] == 0xFF){
+            printf("result 0 = %u\n\r",result.w);
+            if (result.w == 65535){
+
                 led_toggle(&led1);
     
             }
-        led_toggle(&led2);
+            led_toggle(&led2);
         }
     led_toggle(&led3);
     }
