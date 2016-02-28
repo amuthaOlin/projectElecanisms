@@ -7,9 +7,10 @@
 #include "pin.h"
 #include "i2c.h"
 
-// void callback() {
-//     led_toggle(&led2);
-// }
+void __attribute__((interrupt,auto_psv)) _INT1Interrupt() {
+    IFS1 = 0x0000; // clear interrupt 16+4 = 20 (INT1)
+    led_toggle(&led3);
+}
 
 int16_t main(void) {
     init_clock();
@@ -17,11 +18,11 @@ int16_t main(void) {
     init_pin();
     init_i2c();
 
-    led_on(&led3);
-
     INTCON2 = 0x0000; // defaults, all externals rising edge
-    IEC0 = 0x0001; // enable interrupt 0
-    IFS0 = 0x0001; // fake interupt 0
+    IEC1 = 0x0010; // enable interrupt 16+4 = 20 (INT1)
+
+    pin_digitalIn(&D[0]);
+    RPINR0 = 0x1400; // Map pin 0 (RP20) to EXT1?
 
     led_on(&led1);
 
