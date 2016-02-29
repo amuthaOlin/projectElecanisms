@@ -24,6 +24,8 @@ env.Append(BUILDERS = {'List' : list})
 env.Program('inttest', ['inttest.c',
                         '../lib/ui.c', 
                         '../lib/pin.c', 
+                        '../lib/uart.c', 
+                        '../lib/int.c', 
                         '../lib/i2c.c',
                         '../lib/common.c'])
 

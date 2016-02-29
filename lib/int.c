@@ -26,6 +26,7 @@
 #include <p24FJ128GB206.h>
 #include "common.h"
 #include "int.h"
+#include "ui.h"
 
 _INT int1, int2, int3, int4;
 
@@ -38,30 +39,30 @@ void int_serviceInterrupt(_INT *self) {
     }
 }
 
-void __attribute__((interrupt, auto_psv)) _T1Interrupt(void) {
-    int_serviceInterrupt(&int1);
-}
+// void __attribute__((interrupt, auto_psv)) _INT1Interrupt(void) {
+//     int_serviceInterrupt(&int1);
+// }
 
-void __attribute__((interrupt, auto_psv)) _T2Interrupt(void) {
+void __attribute__((interrupt, auto_psv)) _INT2Interrupt(void) {
     int_serviceInterrupt(&int2);
 }
 
-void __attribute__((interrupt, auto_psv)) _T3Interrupt(void) {
+void __attribute__((interrupt, auto_psv)) _INT3Interrupt(void) {
     int_serviceInterrupt(&int3);
 }
 
-void __attribute__((interrupt, auto_psv)) _T4Interrupt(void) {
+void __attribute__((interrupt, auto_psv)) _INT4Interrupt(void) {
     int_serviceInterrupt(&int4);
 }
 
 void init_int(void) {
-    int_init(&int1, _INT *self, (uint16_t *)&IFS1, (uint16_t *)&IEC1, (uint16_t *)&RPINR0, 8, 4);
-    int_init(&int2, _INT *self, (uint16_t *)&IFS1, (uint16_t *)&IEC1, (uint16_t *)&RPINR1, 0, 13);
-    int_init(&int3, _INT *self, (uint16_t *)&IFS3, (uint16_t *)&IEC3, (uint16_t *)&RPINR1, 8, 5);
-    int_init(&int4, _INT *self, (uint16_t *)&IFS3, (uint16_t *)&IEC3, (uint16_t *)&RPINR2, 0, 6);
+    int_init(&int1, (uint16_t *)&IFS1, (uint16_t *)&IEC1, (uint16_t *)&RPINR0, 8, 4);
+    int_init(&int2, (uint16_t *)&IFS1, (uint16_t *)&IEC1, (uint16_t *)&RPINR1, 0, 13);
+    int_init(&int3, (uint16_t *)&IFS3, (uint16_t *)&IEC3, (uint16_t *)&RPINR1, 8, 5);
+    int_init(&int4, (uint16_t *)&IFS3, (uint16_t *)&IEC3, (uint16_t *)&RPINR2, 0, 6);
 }
 
-void int_init(_INT *self, uint16_t *IFSn, uint16_t *IECn, uint16_t *RPINRn, uint8_t rpinshift, uint8_t flagbit); {
+void int_init(_INT *self, uint16_t *IFSn, uint16_t *IECn, uint16_t *RPINRn, uint8_t rpinshift, uint8_t flagbit) {
     self->IFSn = IFSn;
     self->IECn = IECn;
     self->RPINRn = RPINRn;
@@ -84,7 +85,7 @@ void int_disableInterrupt(_INT *self) {
 
 void int_attach(_INT *self, _PIN *pin, void (*callback)(_INT *self)) {
     int_disableInterrupt(self);
-    *(self->RPINRn) |= pin->rpnum << self->rpinshift;
+    // *(self->RPINRn) |= pin->rpnum << self->rpinshift;
     self->pin = pin;
     self->isr = callback;
     int_enableInterrupt(self);
