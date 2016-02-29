@@ -31,24 +31,11 @@ int16_t main(void) {
     pin_digitalIn(&D[0]);
     int_attach(&int1, &D[0], blue);
 
-    asm volatile (
-       "mov #0x742,w1 \n"
-       "mov #0x46,w2 \n"
-       "mov #0x57,w3 \n"
-       "mov.b w2,[w1] \n"
-       "mov.b w3,[w1] \n"
-       "bclr 0x742,#6 \n"
-    );
-    // uint16_t tmp = RPINR0;
-    RPINR0 = D[0].rpnum<<8; // Map pin 0 (RP20) to EXT1
-    asm volatile (
-       "mov #0x742,w1 \n"
-       "mov #0x46,w2 \n"
-       "mov #0x57,w3 \n"
-       "mov.b w2,[w1] \n"
-       "mov.b w3,[w1] \n"
-       "bset 0x742,#6 \n"
-    );
+    __builtin_write_OSCCONL(OSCCON&0xBF);
+    printf("RPINR0: 0x%x\n", RPINR0);
+    RPINR0bits.INT1R = D[0].rpnum;
+    printf("RPINR0: 0x%x\n", RPINR0);
+    __builtin_write_OSCCONL(OSCCON&0x40);
 
     led_on(&led1);
 
