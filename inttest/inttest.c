@@ -9,11 +9,6 @@
 #include "i2c.h"
 #include "uart.h"
 
-void __attribute__((interrupt,auto_psv)) _INT1Interrupt() {
-    IFS1 = 0x0000; // clear interrupt 16+4 = 20 (INT1)
-    led_toggle(&led3);
-}
-
 void blue() {
     led_toggle(&led3);
 }

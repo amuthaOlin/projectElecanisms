@@ -39,9 +39,9 @@ void int_serviceInterrupt(_INT *self) {
     }
 }
 
-// void __attribute__((interrupt, auto_psv)) _INT1Interrupt(void) {
-//     int_serviceInterrupt(&int1);
-// }
+void __attribute__((interrupt, auto_psv)) _INT1Interrupt(void) {
+    int_serviceInterrupt(&int1);
+}
 
 void __attribute__((interrupt, auto_psv)) _INT2Interrupt(void) {
     int_serviceInterrupt(&int2);
