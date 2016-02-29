@@ -32,9 +32,7 @@ int16_t main(void) {
     int_attach(&int1, &D[0], blue);
 
     __builtin_write_OSCCONL(OSCCON&0xBF);
-    printf("RPINR0: 0x%x\n", RPINR0);
     RPINR0bits.INT1R = D[0].rpnum;
-    printf("RPINR0: 0x%x\n", RPINR0);
     __builtin_write_OSCCONL(OSCCON&0x40);
 
     led_on(&led1);
