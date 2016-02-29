@@ -26,10 +26,6 @@ int16_t main(void) {
     pin_digitalIn(&D[0]);
     int_attach(&int1, &D[0], blue);
 
-    __builtin_write_OSCCONL(OSCCON&0xBF);
-    RPINR0bits.INT1R = D[0].rpnum;
-    __builtin_write_OSCCONL(OSCCON&0x40);
-
     led_on(&led1);
 
     while(1) {}

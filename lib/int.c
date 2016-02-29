@@ -56,13 +56,13 @@ void __attribute__((interrupt, auto_psv)) _INT4Interrupt(void) {
 }
 
 void init_int(void) {
-    int_init(&int1, (uint16_t *)&IFS1, (uint16_t *)&IEC1, (WORD)RPINR0, 8, 4);
-    int_init(&int2, (uint16_t *)&IFS1, (uint16_t *)&IEC1, (WORD)RPINR1, 0, 13);
-    int_init(&int3, (uint16_t *)&IFS3, (uint16_t *)&IEC3, (WORD)RPINR1, 8, 5);
-    int_init(&int4, (uint16_t *)&IFS3, (uint16_t *)&IEC3, (WORD)RPINR2, 0, 6);
+    int_init(&int1, (uint16_t *)&IFS1, (uint16_t *)&IEC1, (WORD*)&RPINR0, 1, 4);
+    int_init(&int2, (uint16_t *)&IFS1, (uint16_t *)&IEC1, (WORD*)&RPINR1, 0, 13);
+    int_init(&int3, (uint16_t *)&IFS3, (uint16_t *)&IEC3, (WORD*)&RPINR1, 1, 5);
+    int_init(&int4, (uint16_t *)&IFS3, (uint16_t *)&IEC3, (WORD*)&RPINR2, 0, 6);
 }
 
-void int_init(_INT *self, uint16_t *IFSn, uint16_t *IECn, WORD RPINRn, uint8_t rpinshift, uint8_t flagbit) {
+void int_init(_INT *self, uint16_t *IFSn, uint16_t *IECn, WORD* RPINRn, uint8_t rpinshift, uint8_t flagbit) {
     self->IFSn = IFSn;
     self->IECn = IECn;
     self->RPINRn = RPINRn;
@@ -86,7 +86,7 @@ void int_disableInterrupt(_INT *self) {
 void int_attach(_INT *self, _PIN *pin, void (*callback)(_INT *self)) {
     int_disableInterrupt(self);
     __builtin_write_OSCCONL(OSCCON&0xBF);
-    self->RPINRn.b[0] = pin->rpnum << self->rpinshift;
+    self->RPINRn->b[self->rpinshift] = pin->rpnum;
     __builtin_write_OSCCONL(OSCCON&0x40);
     self->pin = pin;
     self->isr = callback;

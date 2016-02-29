@@ -34,7 +34,7 @@ void init_int(void);
 typedef struct _INT {
     uint16_t *IFSn;
     uint16_t *IECn;
-    WORD RPINRn;
+    WORD *RPINRn;
     uint8_t rpinshift;
     uint8_t flagbit;
     void (*isr)(struct _INT *self);
@@ -43,7 +43,7 @@ typedef struct _INT {
 
 extern _INT int1, int2, int3, int4;
 
-void int_init(_INT *self, uint16_t *IFSn, uint16_t *IECn, WORD RPINRn, uint8_t rpinshift, uint8_t flagbit);
+void int_init(_INT *self, uint16_t *IFSn, uint16_t *IECn, WORD *RPINRn, uint8_t rpinshift, uint8_t flagbit);
 void int_lower(_INT *self);
 void int_enableInterrupt(_INT *self);
 void int_disableInterrupt(_INT *self);
