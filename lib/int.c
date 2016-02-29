@@ -33,14 +33,6 @@ void int_serviceInterrupt(_INT *self) {
     int_lower(self);
     if (self->isr) {
         self->isr(self);
-    } else if (self->after) {
-        if (self->aftercount) {
-            self->after(self);
-            self->aftercount--;
-        } else {
-            int_disableInterrupt(self);
-            self->after = NULL;
-        }
     } else {
         int_disableInterrupt(self);
     }
@@ -63,15 +55,17 @@ void __attribute__((interrupt, auto_psv)) _T4Interrupt(void) {
 }
 
 void init_int(void) {
-    int_init(&int1, _INT *self, (uint16_t *)&IFS1, (uint16_t *)&IEC1, 4);
-    int_init(&int2, _INT *self, (uint16_t *)&IFS1, (uint16_t *)&IEC1, 13);
-    int_init(&int3, _INT *self, (uint16_t *)&IFS3, (uint16_t *)&IEC3, 5);
-    int_init(&int4, _INT *self, (uint16_t *)&IFS3, (uint16_t *)&IEC3, 6);
+    int_init(&int1, _INT *self, (uint16_t *)&IFS1, (uint16_t *)&IEC1, (uint16_t *)&RPINR0, 8, 4);
+    int_init(&int2, _INT *self, (uint16_t *)&IFS1, (uint16_t *)&IEC1, (uint16_t *)&RPINR1, 0, 13);
+    int_init(&int3, _INT *self, (uint16_t *)&IFS3, (uint16_t *)&IEC3, (uint16_t *)&RPINR1, 8, 5);
+    int_init(&int4, _INT *self, (uint16_t *)&IFS3, (uint16_t *)&IEC3, (uint16_t *)&RPINR2, 0, 6);
 }
 
-void int_init(_INT *self, uint16_t *IFSn, uint16_t *IECn, uint8_t flagbit); {
+void int_init(_INT *self, uint16_t *IFSn, uint16_t *IECn, uint16_t *RPINRn, uint8_t rpinshift, uint8_t flagbit); {
     self->IFSn = IFSn;
     self->IECn = IECn;
+    self->RPINRn = RPINRn;
+    self->rpinshift = rpinshift;
     self->flagbit = flagbit;
     self->isr = NULL;
 }
@@ -88,12 +82,10 @@ void int_disableInterrupt(_INT *self) {
     bitclear(self->IECn, self->flagbit);
 }
 
-void int_isr(_INT *self, void (*callback)(_INT *self)) {
+void int_attach(_INT *self, _PIN *pin, void (*callback)(_INT *self)) {
     int_disableInterrupt(self);
-    int_setPeriod(self, interval);
-    self->aftercount = 0;
+    *(self->RPINRn) |= pin->rpnum << self->rpinshift;
+    self->pin = pin;
     self->isr = callback;
-    self->after = NULL;
     int_enableInterrupt(self);
-    int_start(self);
 }

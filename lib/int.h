@@ -27,22 +27,26 @@
 #define _INT_H_
 
 #include <stdint.h>
+#include "pin.h"
 
 void init_int(void);
 
 typedef struct _INT {
     uint16_t *IFSn;
     uint16_t *IECn;
+    uint16_t *RPINRn;
+    uint8_t rpinshift;
     uint8_t flagbit;
     void (*isr)(struct _INT *self);
+    _PIN *pin;
 } _INT;
 
 extern _INT int1, int2, int3, int4;
 
-void int_init(_INT *self, uint16_t *IFSn, uint16_t *IECn, 
-                uint8_t flagbit);
+void int_init(_INT *self, uint16_t *IFSn, uint16_t *IECn, uint16_t *RPINRn, uint8_t rpinshift, uint8_t flagbit);
 void int_lower(_INT *self);
 void int_enableInterrupt(_INT *self);
 void int_disableInterrupt(_INT *self);
+void int_attach(_INT *self, _PIN *pin, void (*callback)(_INT *self));
 
 #endif
