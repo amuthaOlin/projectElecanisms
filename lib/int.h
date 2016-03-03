@@ -37,16 +37,17 @@ typedef struct _INT {
     WORD *RPINRn;
     uint8_t rpinshift;
     uint8_t flagbit;
+    uint8_t intconbit;
     void (*isr)(struct _INT *self);
     _PIN *pin;
 } _INT;
 
 extern _INT int1, int2, int3, int4;
 
-void int_init(_INT *self, uint16_t *IFSn, uint16_t *IECn, WORD *RPINRn, uint8_t rpinshift, uint8_t flagbit);
+void int_init(_INT *self, uint16_t *IFSn, uint16_t *IECn, WORD *RPINRn, uint8_t rpinshift, uint8_t flagbit, uint8_t intconbit);
 void int_lower(_INT *self);
 void int_enableInterrupt(_INT *self);
 void int_disableInterrupt(_INT *self);
-void int_attach(_INT *self, _PIN *pin, void (*callback)(_INT *self));
+void int_attach(_INT *self, _PIN *pin, uint8_t edge, void (*callback)(_INT *self));
 
 #endif

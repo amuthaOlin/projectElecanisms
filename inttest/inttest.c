@@ -9,6 +9,14 @@
 #include "i2c.h"
 #include "uart.h"
 
+void red() {
+    led_toggle(&led1);
+}
+
+void green() {
+    led_toggle(&led2);
+}
+
 void blue() {
     led_toggle(&led3);
 }
@@ -21,10 +29,17 @@ int16_t main(void) {
     init_i2c();
     init_uart();
 
-    INTCON2 = 0x0000; // defaults, all externals rising edge
-
     pin_digitalIn(&D[0]);
-    int_attach(&int1, &D[0], blue);
+    int_attach(&int1, &D[0], 1, red);
+
+    pin_digitalIn(&D[1]);
+    int_attach(&int2, &D[1], 0, green);
+
+    pin_digitalIn(&D[2]);
+    int_attach(&int3, &D[2], 0, blue);
+
+    pin_digitalIn(&D[3]);
+    int_attach(&int4, &D[3], 0, blue);
 
     led_on(&led1);
 
