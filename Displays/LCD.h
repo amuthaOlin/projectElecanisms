@@ -49,8 +49,8 @@
 
 // Modes
 #define INTERNAL_WRITE 0x00
-#define BUSY_READ 0x01
-#define DR_WRITE 0x02
+#define BUSY_READ 0x02
+#define DR_WRITE 0x01
 #define DR_READ 0x03
 
 
@@ -72,4 +72,8 @@ void delayMicroseconds(uint16_t uS);
 
 
 #endif
+
+
+
+
 
