@@ -1,9 +1,7 @@
 #ifndef _LCD_H_
 #define _LCD_H_
 
-#include <stdint.h>
-#include "pin.h"
-#include "timer.h"
+#include "i2c.h"
 
 
 // I2C Reg (MSB) P7 P6 P5 P4 P3 P2 P1 P0
@@ -29,6 +27,12 @@
 #define LCD_SETCGRAMADDR 0x40
 #define LCD_SETDDRAMADDR 0x80
 
+// flags for display entry mode
+#define LCD_ENTRYRIGHT 0x00
+#define LCD_ENTRYLEFT 0x02
+#define LCD_ENTRYSHIFTINCREMENT 0x01
+#define LCD_ENTRYSHIFTDECREMENT 0x00
+
 // flags for display on/off control
 #define LCD_DISPLAYON 0x04
 #define LCD_DISPLAYOFF 0x00
@@ -50,19 +54,21 @@
 #define DR_READ 0x03
 
 
-uint8_t _displaycontrol;
-uint8_t _displaymode;
-uint8_t _IOWriteVal;
+// uint8_t _displaycontrol;
+// uint8_t _displaymode;
+// uint8_t _IOWriteVal;
 
 void init_lcd(_I2C *i2c, float freq);
 void lcd_init(_I2C *i2c);
 void lcd_display(_I2C *i2c);
 void lcd_clear(_I2C *i2c);
 void lcd_send(_I2C *i2c,uint8_t value, uint8_t command);
+void enableToggle();
+void enablePulse(_I2C *i2c);
 void lcd_write(_I2C *i2c, uint8_t value);
-void enableToggle(void);
-void enablePluse(_I2C *i2c);
 void i2c_write(_I2C *i2c, uint8_t ch);
+void init_delay();
+void delayMicroseconds(uint16_t uS);
 
 
 #endif

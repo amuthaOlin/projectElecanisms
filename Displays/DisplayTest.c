@@ -18,11 +18,11 @@ int16_t main(void) {
     led_on(&led3);
 
 
-    init_lcd(&i2c3, 1e3)
-    lcd_write(&i2c3, 0x45)
+    init_lcd(&i2c3, 1e3);
+    lcd_write(&i2c3, 0x45);
     i2c_stop(&i2c3);
 
     led_on(&led1);
 
-    while(1) {}
+    // while(1) {}
 }
