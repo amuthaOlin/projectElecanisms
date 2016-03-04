@@ -3,7 +3,7 @@ env = Environment(PIC = '24FJ128GB206',
                   PROGSUFFIX = '.elf',
                   CFLAGS = '-g -omf=elf -x c -mcpu=$PIC',
                   LINKFLAGS = '-omf=elf -mcpu=$PIC -Wl,--script="app_p24FJ128GB206.gld"',
-                  CPPPATH = '../../lib')
+                  CPPPATH = '../lib')
 
 
 #Path for OSX
@@ -21,11 +21,10 @@ list = Builder(action = 'xc16-objdump -S -D $SOURCE > $TARGET',
 env.Append(BUILDERS = {'List' : list})
 
 env.Program('slave_pic', ['slave_pic.c',
-                         '../../lib/pin.c', 
-                         '../../lib/uart.c',
-                         '../../lib/ui.c',
-                         '../../lib/spi.c',
-                         '../../lib/timer.c',
-                         '../../lib/common.c'])
+                         'descriptors.c', 
+                         'usb.c', 
+                         '../lib/pin.c', 
+                         '../lib/uart.c',
+                         '../lib/spi.c'])
 env.Hex('slave_pic')
 env.List('slave_pic')
