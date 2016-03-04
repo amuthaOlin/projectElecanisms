@@ -22,11 +22,8 @@ WORD recieve_or_send_spi(WORD cmd) {
     printf("cmd = %u\n\r",cmd);
 
 
-    spi_transfer(&spi1, cmd.b[1]);
-    spi_transfer(&spi1, cmd.b[0]);
-
-    result.b[1] = spi_transfer(&spi1, 0);
-    result.b[0] = spi_transfer(&spi1, 0);
+    result.b[1] = spi_transfer(&spi1, cmd.b[1]);
+    result.b[0] = spi_transfer(&spi1, cmd.b[0]);
 
     return result;
 
@@ -70,7 +67,7 @@ int16_t main(void) {
     pin_digitalIn(&D[5]);
     pin_digitalOut(SLAVE_INT);
 
-    spi_open(&spi1, MISO, MOSI, SCK, 2e6 ,1);
+    spi_open_slave(&spi1, MISO, MOSI, SCK, 2e6 ,0);
 
 
 
@@ -79,7 +76,7 @@ int16_t main(void) {
     timer_setPeriod(&timer2, .5);
     timer_start(&timer2); 
 
-    WORD command = (WORD) 0xFFFF;
+    WORD command = (WORD) 0x0F0F;
 
     while (1) {
         led_toggle(&led3);

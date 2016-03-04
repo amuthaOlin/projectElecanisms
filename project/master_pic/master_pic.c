@@ -19,16 +19,12 @@ _PIN *SLAVE_INT;
 
 WORD recieve_or_send_spi(WORD cmd) {
     WORD result;
-   
+    printf("cmd = %u\n\r",cmd.w);
+
 
     pin_clear(NCS);
-    spi_transfer(&spi1, cmd.b[1]);
-    spi_transfer(&spi1, cmd.b[0]);
-    pin_set(NCS);
-
-    pin_clear(NCS);
-    result.b[1] = spi_transfer(&spi1, 0);
-    result.b[0] = spi_transfer(&spi1, 0);
+    result.b[1] = spi_transfer(&spi1, cmd.b[1]);
+    result.b[0] = spi_transfer(&spi1, cmd.b[0]);
     pin_set(NCS);
 
     return result;
@@ -41,7 +37,7 @@ void send_spi(WORD cmd){
 
 WORD recieve_spi(){
     WORD result;
-    WORD cmd;
+    WORD cmd = (WORD) 0xFFFF;
     result = recieve_or_send_spi(cmd);
     return result;
 
@@ -63,9 +59,7 @@ int16_t main(void) {
 
     pin_digitalIn(SLAVE_INT);
     pin_digitalOut(NCS);
-    spi_open(&spi1, MISO, MOSI, SCK, 2e6 ,1);
-
-
+    spi_open(&spi1, MISO, MOSI, SCK, 2e6 ,0);
 
     WORD result;
 
@@ -73,8 +67,9 @@ int16_t main(void) {
     while (1) {
         if (pin_read(SLAVE_INT)!=0){
             result = recieve_spi();
-            printf("result 0 = %u\n\r",result.w);
-            if (result.w == 65535){
+            printf("res = %u\n\r",result.w);
+
+            if (result.w == 0x0F0F){
 
                 led_toggle(&led1);
     
