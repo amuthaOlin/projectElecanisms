@@ -11,33 +11,29 @@
 
 
 uint16_t val1, val2;
-_PIN *SCK, *MISO, *MOSI;
-_PIN *NCS;
-_PIN *SLAVE_INT;
+_PIN *SCK, *MISO, *MOSI, *SSN, *SLAVE_INT;
 
 
 
 WORD recieve_or_send_spi(WORD cmd) {
     WORD result;
-    printf("cmd = %u\n\r",cmd);
-
-
+    printf("SLAVE_INT = %x\n\r",pin_read(SLAVE_INT));
+    printf("SSN = %x\n\r",pin_read(SSN));
     result.b[1] = spi_transfer(&spi1, cmd.b[1]);
     result.b[0] = spi_transfer(&spi1, cmd.b[0]);
-
     return result;
 
 }
 
 void send_spi(WORD cmd){
-    pin_set(&D[4]);
+    pin_set(SLAVE_INT);
     uint16_t i;
     for (i = 0;i<1e4;i++)
     {
 
     }
     recieve_or_send_spi(cmd);
-    pin_clear(&D[4]);
+    pin_clear(SLAVE_INT);
 }
 
 WORD recieve_spi(){
@@ -61,13 +57,13 @@ int16_t main(void) {
     MISO = &D[1];
     MOSI = &D[0];
     SCK = &D[2];
-    NCS = &D[3];
+    SSN = &D[3];
     SLAVE_INT = &D[4];
 
-    pin_digitalIn(&D[5]);
     pin_digitalOut(SLAVE_INT);
+    
 
-    spi_open_slave(&spi1, MISO, MOSI, SCK, 2e6 ,0);
+    spi_open_slave(&spi1, MISO, MOSI, SCK, SSN, 2e6 ,0);
 
 
 

@@ -11,21 +11,25 @@
 
 
 uint16_t val1, val2;
-_PIN *SCK, *MISO, *MOSI;
-_PIN *NCS;
-_PIN *SLAVE_INT;
+_PIN *SCK, *MISO, *MOSI, *SSN, *SLAVE_INT;
 
 
 
 WORD recieve_or_send_spi(WORD cmd) {
     WORD result;
-    printf("cmd = %u\n\r",cmd.w);
+    //printf("cmd = %u\n\r",cmd.w);
 
 
-    pin_clear(NCS);
+    pin_clear(SSN);
+    printf("spiXSTAT = %x\n\r",*(spi1.SPIxSTAT));
+    printf("spiXBUFF = %x\n\r",*(spi1.SPIxBUF));
     result.b[1] = spi_transfer(&spi1, cmd.b[1]);
+    printf("spiXSTAT = %x\n\r",*(spi1.SPIxSTAT));
+    printf("spiXBUFF = %x\n\r",*(spi1.SPIxBUF));
     result.b[0] = spi_transfer(&spi1, cmd.b[0]);
-    pin_set(NCS);
+    printf("spiXSTAT = %x\n\r",*(spi1.SPIxSTAT));
+    printf("spiXBUFF = %x\n\r",*(spi1.SPIxBUF));
+    pin_set(SSN);
 
     return result;
 
@@ -54,11 +58,11 @@ int16_t main(void) {
     MISO = &D[1];
     MOSI = &D[0];
     SCK = &D[2];
-    NCS = &D[3];
+    SSN = &D[3];
     SLAVE_INT = &D[4];
 
     pin_digitalIn(SLAVE_INT);
-    pin_digitalOut(NCS);
+    pin_digitalOut(SSN);
     spi_open(&spi1, MISO, MOSI, SCK, 2e6 ,0);
 
     WORD result;
@@ -67,12 +71,9 @@ int16_t main(void) {
     while (1) {
         if (pin_read(SLAVE_INT)!=0){
             result = recieve_spi();
-            printf("res = %u\n\r",result.w);
-
+            //printf("res = %x\n\r",result.w);
             if (result.w == 0x0F0F){
-
                 led_toggle(&led1);
-    
             }
             led_toggle(&led2);
         }

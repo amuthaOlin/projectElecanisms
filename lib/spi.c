@@ -129,7 +129,9 @@ void spi_open(_SPI *self, _PIN *MISO, _PIN *MOSI, _PIN *SCK, float freq, uint8_t
     *(self->SPIxSTAT) = 0x8000;
 }
 
-void spi_open_slave(_SPI *self, _PIN *MISO, _PIN *MOSI, _PIN *SCK, float freq, uint8_t mode) {
+
+
+void spi_open_slave(_SPI *self, _PIN *MISO, _PIN *MOSI, _PIN *SCK, _PIN *SSN, float freq, uint8_t mode) {
     uint16_t primary, secondary;
     uint16_t modebits[4] = { 0x0100, 0x0000, 0x0140, 0x0040 };
 
@@ -142,7 +144,7 @@ void spi_open_slave(_SPI *self, _PIN *MISO, _PIN *MOSI, _PIN *SCK, float freq, u
         pin_digitalIn(MOSI);
         //pin_set(MISO);
         pin_digitalIn(SCK);
-        pin_clear(SCK);
+        pin_digitalIn(SSN);
         self->MISO = MISO;
         MISO->owner = (void *)self;
         MISO->write = NULL;
@@ -155,6 +157,9 @@ void spi_open_slave(_SPI *self, _PIN *MISO, _PIN *MOSI, _PIN *SCK, float freq, u
         SCK->owner = (void *)self;
         SCK->write = NULL;
         SCK->read = NULL;
+        SSN->owner = (void *)self;
+        SSN->write = NULL;
+        SSN->read = NULL;
         __builtin_write_OSCCONL(OSCCON&0xBF);
         *(self->MISOrpinr) &= ~(0x3F<<(self->MISOrpshift));
         *(self->MISOrpinr) |= (MISO->rpnum)<<(self->MISOrpshift);
@@ -168,9 +173,10 @@ void spi_open_slave(_SPI *self, _PIN *MISO, _PIN *MOSI, _PIN *SCK, float freq, u
                 // previous assignment
     }
 
+
+    *(self->SPIxCON1) = 0x0180;
+    *(self->SPIxCON2) = 0x4000;
     *(self->SPIxBUF)  = 0x0000; //slave mode: clear spibuf 
-    *(self->SPIxCON1) = 0x0100;
-    *(self->SPIxCON2) = 0x0000;
     *(self->SPIxSTAT) = 0x8000; //enable SPI
 }
 
@@ -217,7 +223,7 @@ uint8_t spi_transfer(_SPI *self, uint8_t val) {
 //MASTER SPIxCON2- 0000000000000000
 //MASTER SPIxSTAT- 1000000000000000
 //SLAVE  SPIxBUF - 0000000000000000
-//SLAVE  SPIxCON1- 0000000100000000
+//SLAVE  SPIxCON1- 0000000110000000
 //SLAVE  SPIxCON2- 0000000000000000
 //SLAVE  SPIxSTAT- 1000000000000000
 
@@ -229,14 +235,14 @@ uint8_t spi_transfer(_SPI *self, uint8_t val) {
 //0 bit 10 is Word wide? or byte wide? Think it's byte wide. Must be same as master
 //0 bit 9 SMP must be cleared in slave
 //1 bit 8 must be same as in master
-//0 bit 7 Slave Select disabled
+//1 bit 7 Slave Select enabled b/c CKE(bit 8) is high
 //0 bit 6 Clock Polarity same as master
 //0 bit 5 Set as slave
 //00000 0 through 4 only in Master mode
 //SLAVE SPIxCON1- 0000000100000000 
 
-//SLAVE SPIxCON2- 0000000000000000
-//bit 14 might be changed if slave select enabled
+//SLAVE SPIxCON2- 0100000000000000
+//bit 14 changed if slave select enabled
 
 
 //SLAVE SPIxSTAT- 1000000000000000
