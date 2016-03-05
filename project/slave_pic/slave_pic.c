@@ -7,7 +7,7 @@
 #include "spi.h"
 #include "ui.h"
 #include "timer.h"
-
+#include "int.h"
 
 
 
@@ -66,7 +66,7 @@ int16_t main(void) {
     timer_setPeriod(&timer2, .5);
     timer_start(&timer2); 
 
-    int_attach(SSN,0,send_spi);
+    int_attach(&int1,SSN,0,send_spi);
 
     while (1) {
         led_toggle(&led3);

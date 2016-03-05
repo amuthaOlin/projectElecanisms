@@ -6,7 +6,7 @@
 #include "uart.h"
 #include "spi.h"
 #include "ui.h"
-
+#include "int.h"
 
 
 
@@ -17,17 +17,11 @@ volatile WORD result;
 
 WORD recieve_or_send_spi(WORD cmd) {
     //printf("cmd = %u\n\r",cmd.w);
-
-
+    //printf("spiXSTAT = %x\n\r",*(spi1.SPIxSTAT));
+    //printf("spiXBUFF = %x\n\r",*(spi1.SPIxBUF));
     pin_clear(SSN);
-    printf("spiXSTAT = %x\n\r",*(spi1.SPIxSTAT));
-    printf("spiXBUFF = %x\n\r",*(spi1.SPIxBUF));
     result.b[1] = spi_transfer(&spi1, cmd.b[1]);
-    printf("spiXSTAT = %x\n\r",*(spi1.SPIxSTAT));
-    printf("spiXBUFF = %x\n\r",*(spi1.SPIxBUF));
     result.b[0] = spi_transfer(&spi1, cmd.b[0]);
-    printf("spiXSTAT = %x\n\r",*(spi1.SPIxSTAT));
-    printf("spiXBUFF = %x\n\r",*(spi1.SPIxBUF));
     pin_set(SSN);
 
     printf("result = %x\n\r",result);
@@ -61,12 +55,12 @@ int16_t main(void) {
 
     pin_digitalIn(SLAVE_INT);
     pin_digitalOut(SSN);
+    pin_set(SSN);
     spi_open(&spi1, MISO, MOSI, SCK, 2e6 ,0);
 
     WORD result;
-    led_toggle(&led2);
-    int_attach(SLAVE_INT,1,recieve_spi);
-    led_toggle(&led3);
+    int_attach(&int1,SLAVE_INT,1,recieve_spi);
+
     while (1) {
         if (result.w == 0x0F0F){
             led_toggle(&led1);
@@ -74,7 +68,7 @@ int16_t main(void) {
         else{
             led_toggle(&led2);
         }
-        
+    led_toggle(&led3); 
     }
 }
 
