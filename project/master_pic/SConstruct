@@ -25,6 +25,7 @@ env.Program('master_pic', ['master_pic.c',
                          '../../lib/uart.c',
                          '../../lib/spi.c',
                          '../../lib/ui.c',
+                         '../../lib/int.c',
                          '../../lib/common.c'])
 env.Hex('master_pic')
 env.List('master_pic')

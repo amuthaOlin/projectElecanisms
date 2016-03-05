@@ -10,29 +10,24 @@
 
 
 
-uint16_t val1, val2;
+
 _PIN *SCK, *MISO, *MOSI, *SSN, *SLAVE_INT;
-
-
+volatile WORD cmd = (WORD) 0x0F0F;
+volatile WORD result;
 
 WORD recieve_or_send_spi(WORD cmd) {
-    WORD result;
+
     printf("SLAVE_INT = %x\n\r",pin_read(SLAVE_INT));
     printf("SSN = %x\n\r",pin_read(SSN));
     result.b[1] = spi_transfer(&spi1, cmd.b[1]);
     result.b[0] = spi_transfer(&spi1, cmd.b[0]);
-    return result;
+
 
 }
 
 void send_spi(WORD cmd){
     pin_set(SLAVE_INT);
-    uint16_t i;
-    for (i = 0;i<1e4;i++)
-    {
-
-    }
-    recieve_or_send_spi(cmd);
+    cmd = cmd;
     pin_clear(SLAVE_INT);
 }
 
@@ -52,7 +47,7 @@ int16_t main(void) {
     init_ui();
     init_pin();
     init_timer();
-
+    init_int();
 
     MISO = &D[1];
     MOSI = &D[0];
@@ -66,20 +61,25 @@ int16_t main(void) {
     spi_open_slave(&spi1, MISO, MOSI, SCK, SSN, 2e6 ,0);
 
 
-
     WORD result;
 
     timer_setPeriod(&timer2, .5);
     timer_start(&timer2); 
 
-    WORD command = (WORD) 0x0F0F;
+    int_attach(SSN,0,send_spi);
 
     while (1) {
         led_toggle(&led3);
         if (timer_flag(&timer2)) {
             timer_lower(&timer2);
+            if (cmd.w == 0x0F0F){
+                cmd = (WORD)0xFFFF;
+            }
+            else{
+                cmd = (WORD)0x0F0F;
+            }
             led_toggle(&led1);
-            send_spi(command);
+            send_spi(cmd);
             led_toggle(&led2);
         }
     }

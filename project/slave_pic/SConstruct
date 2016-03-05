@@ -26,6 +26,7 @@ env.Program('slave_pic', ['slave_pic.c',
                          '../../lib/ui.c',
                          '../../lib/spi.c',
                          '../../lib/timer.c',
+                         '../../lib/int.c',
                          '../../lib/common.c'])
 env.Hex('slave_pic')
 env.List('slave_pic')
