@@ -15,27 +15,24 @@ _PIN *SCK, *MISO, *MOSI, *SSN, *SLAVE_INT;
 volatile WORD cmd = (WORD) 0x0F0F;
 volatile WORD result;
 
-WORD recieve_or_send_spi(WORD cmd) {
-
-    printf("SLAVE_INT = %x\n\r",pin_read(SLAVE_INT));
-    printf("SSN = %x\n\r",pin_read(SSN));
+void recieve_or_send_spi() {
+    led_toggle(&led1);
     result.b[1] = spi_transfer(&spi1, cmd.b[1]);
     result.b[0] = spi_transfer(&spi1, cmd.b[0]);
+    printf("SLAVE_INT = %x\n\r",pin_read(SLAVE_INT));
+    printf("SSN = %x\n\r",pin_read(SSN));
 
 
 }
 
-void send_spi(WORD cmd){
+void send_spi(){
+    led_toggle(&led2);
     pin_set(SLAVE_INT);
-    cmd = cmd;
-    pin_clear(SLAVE_INT);
-}
+    int i;
+    for(i=0;i,1000;i++){
 
-WORD recieve_spi(){
-    WORD result;
-    WORD cmd;
-    result = recieve_or_send_spi(cmd);
-    return result;
+    }
+    pin_clear(SLAVE_INT);
 
 }
 
@@ -56,31 +53,31 @@ int16_t main(void) {
     SLAVE_INT = &D[4];
 
     pin_digitalOut(SLAVE_INT);
-    
-
+    pin_clear(SLAVE_INT);
     spi_open_slave(&spi1, MISO, MOSI, SCK, SSN, 2e6 ,0);
 
 
-    WORD result;
 
     timer_setPeriod(&timer2, .5);
     timer_start(&timer2); 
 
-    int_attach(&int1,SSN,0,send_spi);
+    int_attach(&int1,SSN,0,recieve_or_send_spi);
+
+
+
 
     while (1) {
         led_toggle(&led3);
         if (timer_flag(&timer2)) {
             timer_lower(&timer2);
-            if (cmd.w == 0x0F0F){
-                cmd = (WORD)0xFFFF;
-            }
-            else{
-                cmd = (WORD)0x0F0F;
-            }
-            led_toggle(&led1);
-            send_spi(cmd);
-            led_toggle(&led2);
+            // if (cmd.w == 0x0F0F){
+            //     cmd = (WORD)0xFFFF;
+            // }
+            // else{
+            //     cmd = (WORD)0x0F0F;
+            // }
+            send_spi();
+
         }
     }
 }
