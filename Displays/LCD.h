@@ -16,6 +16,7 @@
 #define LCD_FUNCTIONSET 0x20
 #define DISPLAYMASK 0x08
 #define ENABLE_TOGGLE 0x04
+#define LCD_BACKLIGHT 0x08
 
 // commands
 #define LCD_CLEARDISPLAY 0x01
@@ -48,15 +49,11 @@
 #define LCD_MOVELEFT 0x00
 
 // Modes
-#define INTERNAL_WRITE 0x00
-#define BUSY_READ 0x02
-#define DR_WRITE 0x01
-#define DR_READ 0x03
+#define INTERNAL_WRITE 0x08
+#define BUSY_READ 0x0A
+#define DR_WRITE 0x09
+#define DR_READ 0x0B
 
-
-// uint8_t _displaycontrol;
-// uint8_t _displaymode;
-// uint8_t _IOWriteVal;
 
 void init_lcd(_I2C *i2c, float freq);
 void lcd_init(_I2C *i2c);
@@ -69,6 +66,7 @@ void lcd_write(_I2C *i2c, uint8_t value);
 void i2c_write(_I2C *i2c, uint8_t ch);
 void init_delay();
 void delayMicroseconds(uint16_t uS);
+void lcd_goto(_I2C *i2c, uint8_t x, uint8_t y);
 
 
 #endif

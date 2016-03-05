@@ -9,6 +9,9 @@
 #include "LCD.h"
 #include "timer.h"
 
+// I2C Reg (MSB) P7 P6 P5 P4 P3 P2 P1 P0
+// Driver pin    D7 D6 D5 D4 ?  E  RW RS
+
 int16_t main(void) {
     led_on(&led1);
     init_clock();
@@ -17,21 +20,29 @@ int16_t main(void) {
     init_i2c();
     init_timer();
     led_off(&led1);
+    init_delay();
     // led_on(&led3);
 
 
     init_lcd(&i2c3, 1e3);
     led_on(&led2);
-    // lcd_send(&i2c3,0xE,INTERNAL_WRITE);
-    // lcd_send(&i2c3,0x6,INTERNAL_WRITE);
-    // lcd_send(&i2c3,0x45,DR_WRITE);
-    // lcd_write(&i2c3, 0x45);
-    led_on(&led1);
-    // i2c_stop(&i2c3);
-
-    // led_toggle(&led1);
+    lcd_write(&i2c3, 'S');
+    lcd_write(&i2c3, 'P');
+    lcd_write(&i2c3, 'A');
+    lcd_write(&i2c3, 'C');
+    lcd_write(&i2c3, 'E');
+    lcd_write(&i2c3, ' ');
+    lcd_write(&i2c3, 'T');
+    lcd_write(&i2c3, 'E');
+    lcd_write(&i2c3, 'A');
+    lcd_write(&i2c3, 'M');
+    lcd_write(&i2c3, '!');
+    i2c_stop(&i2c3);
 
     while(1) {
-        lcd_write(&i2c3, 0x45);
+        delayMicroseconds(500);
+        led_toggle(&led2);
+
+
     }
 }
