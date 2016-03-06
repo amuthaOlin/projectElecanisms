@@ -16,13 +16,10 @@ volatile WORD cmd = (WORD) 0x0F0F;
 volatile WORD result;
 
 WORD recieve_or_send_spi(WORD cmd) {
-
     printf("SLAVE_INT = %x\n\r",pin_read(SLAVE_INT));
     printf("SSN = %x\n\r",pin_read(SSN));
     result.b[1] = spi_transfer(&spi1, cmd.b[1]);
     result.b[0] = spi_transfer(&spi1, cmd.b[0]);
-
-
 }
 
 void send_spi(WORD cmd){
@@ -36,7 +33,6 @@ WORD recieve_spi(){
     WORD cmd;
     result = recieve_or_send_spi(cmd);
     return result;
-
 }
 
 
@@ -56,17 +52,16 @@ int16_t main(void) {
     SLAVE_INT = &D[4];
 
     pin_digitalOut(SLAVE_INT);
-    
+    pin_digitalIn(SSN);
 
     spi_open_slave(&spi1, MISO, MOSI, SCK, SSN, 2e6 ,0);
-
 
     WORD result;
 
     timer_setPeriod(&timer2, .5);
     timer_start(&timer2); 
 
-    int_attach(&int1,SSN,0,send_spi);
+    int_attach(&int1, SSN, 0, send_spi);
 
     while (1) {
         led_toggle(&led3);
@@ -84,4 +79,3 @@ int16_t main(void) {
         }
     }
 }
-
