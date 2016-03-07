@@ -15,21 +15,19 @@ _PIN *SCK, *MISO, *MOSI, *SSN, *SLAVE_INT;
 volatile WORD cmd = (WORD) 0x0F0F;
 volatile WORD result;
 
-void recieve_or_send_spi() {
-    led_toggle(&led1);
-    result.b[1] = spi_transfer(&spi1, cmd.b[1]);
-    result.b[0] = spi_transfer(&spi1, cmd.b[0]);
-    // printf("SLAVE_INT = %x\n\r",pin_read(SLAVE_INT));
-    // printf("SSN = %x\n\r",pin_read(SSN));
-    led_on(&led2);
+void recieve_spi() {
+    
+    result1 = (uint8_t)(*(&spi1->SPIxBUF));
+    printf("result = %x\n\r,result.w");
 
 }
 
 void send_spi(){
-
+    led_toggle(&led1);
     pin_set(SLAVE_INT);
     pin_clear(SLAVE_INT);
-
+    *(&spi1->SPIxBUF) = (uint16_t)cmd.b[1];
+    *(&spi1->SPIxBUF) = (uint16_t)cmd.b[0];
 }
 
 
@@ -63,7 +61,6 @@ int16_t main(void) {
 
 
     while (1) {
-        led_toggle(&led3);
         if (timer_flag(&timer2)) {
             timer_lower(&timer2);
             send_spi();
