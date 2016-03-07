@@ -38,7 +38,7 @@ typedef struct {
     uint16_t *SPIxBUF;
     uint16_t *DINrpinr;
     uint8_t DINrpshift;
-    int16_t MOSIrpnum;
+    int16_t DOrpnum;
     int16_t SCKrpnum;
     _PIN *MISO;
     _PIN *MOSI;
@@ -50,7 +50,7 @@ extern _SPI spi1, spi2, spi3;
 void spi_init(_SPI *self, uint16_t *SPIxSTAT, uint16_t *SPIxCON1, 
               uint16_t *SPIxCON2, uint16_t *SPIxBUF, 
               uint16_t *DINrpinr, uint8_t DINrpshift, 
-              int16_t MOSIrpnum, int16_t SCKrpnum);
+              int16_t DOrpnum, int16_t SCKrpnum);
 void spi_open(_SPI *self, _PIN *MISO, _PIN *MOSI, _PIN *SCK, float freq, uint8_t mode);
 void spi_open_slave(_SPI *self, _PIN *MISO, _PIN *MOSI, _PIN *SCK, uint8_t mode);
 void spi_close(_SPI *self);
