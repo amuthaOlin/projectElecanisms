@@ -208,8 +208,7 @@ void spi_open_slave(_SPI *self, _PIN *MISO, _PIN *MOSI, _PIN *SCK, uint8_t mode)
     *(self->SPIxCON2) = 0;
     // Enable the SPI module and clear status flags
     // clear SPIROV for slave mode
-    *(self->SPIxSTAT) = 0x0020; // Probably not necessary
-    *(self->SPIxSTAT) = 0x8020; // to do in 2 steps
+    *(self->SPIxSTAT) = 0x8000;
 }
 
 void spi_close(_SPI *self) {
