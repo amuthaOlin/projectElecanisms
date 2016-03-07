@@ -29,35 +29,6 @@
 
 _SPI spi1, spi2, spi3;
 
-void spi_serviceInterrupt(_SPI *self) {
-    spi_lower(self);
-    if (self->isr) {
-        self->isr(self);
-    } else {
-        spi_disableInterrupt(self);
-    }
-}
-
-void __attribute__((interrupt, auto_psv)) _SPI1Interrupt(void) {
-    spi_serviceInterrupt(&spi1);
-}
-
-void __attribute__((interrupt, auto_psv)) _SPI2Interrupt(void) {
-    spi_serviceInterrupt(&spi2);
-}
-
-void spi_lower(_SPI *self) {
-    bitclear(self->IFSn, self->flagbit);
-}
-
-void spi_enableInterrupt(_INT *self) {
-    bitset(self->IECn, self->flagbit);
-}
-
-void spi_disableInterrupt(_INT *self) {
-    bitclear(self->IECn, self->flagbit);
-}
-
 void init_spi(void) {
     spi_init(&spi1, (uint16_t *)&SPI1STAT, (uint16_t *)&SPI1CON1, 
              (uint16_t *)&SPI1CON2, (uint16_t *)&SPI1BUF, 

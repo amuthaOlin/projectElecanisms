@@ -3,10 +3,10 @@
 #include "config.h"
 #include "common.h"
 #include "ui.h"
-#include "usb.h"
 #include "pin.h"
 #include "int.h"
 #include "spi.h"
+#include "timer.h"
 #include "uart.h"
 
 void red() {
@@ -49,14 +49,14 @@ int16_t main(void) {
         if (timer_flag(&timer1)) {
             timer_lower(&timer1);
 
-            *(self->SPIxBUF) = 0x005A; // set Tx data
+            *(spi1.SPIxBUF) = 0x005A; // set Tx data
             pin_set(Sint); // pulse Sint to request transaction
             pin_clear(Sint); // trigger on falling edge
-            while (bitread(self->SPIxSTAT, 0)==0) {} // wait for master to transact
-            res = (uint8_t)(*(self->SPIxBUF)); // read result from buffer
+            while (bitread(spi1.SPIxSTAT, 0)==0) {} // wait for master to transact
+            res = (uint8_t)(*(spi1.SPIxBUF)); // read result from buffer
 
-            printf("Slave sent: \x\r\n", 0x5A);
-            printf("Slave received: \x\r\n", res);
+            printf("Slave sent: 0x%x\r\n", 0x5A);
+            printf("Slave received: 0x%x\r\n", res);
         }
     }
 }

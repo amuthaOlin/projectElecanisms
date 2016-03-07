@@ -3,7 +3,6 @@
 #include "config.h"
 #include "common.h"
 #include "ui.h"
-#include "usb.h"
 #include "pin.h"
 #include "int.h"
 #include "spi.h"
@@ -24,10 +23,10 @@ void blue() {
 
 uint8_t res = 0;
 
-void handle_sint(_INT *int) {
+void handle_sint(_INT *intx) {
     res = spi_transfer(&spi1, 0xF0);
-    printf("Master sent: \x\r\n", 0xF0);
-    printf("Master received: \x\r\n", res);
+    printf("Master sent: 0x%x\r\n", 0xF0);
+    printf("Master received: 0x%x\r\n", res);
 }
 
 _PIN *CSn = &D[3];
