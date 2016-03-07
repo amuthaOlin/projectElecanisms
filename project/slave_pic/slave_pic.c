@@ -19,19 +19,15 @@ void recieve_or_send_spi() {
     led_toggle(&led1);
     result.b[1] = spi_transfer(&spi1, cmd.b[1]);
     result.b[0] = spi_transfer(&spi1, cmd.b[0]);
-    printf("SLAVE_INT = %x\n\r",pin_read(SLAVE_INT));
-    printf("SSN = %x\n\r",pin_read(SSN));
-
+    // printf("SLAVE_INT = %x\n\r",pin_read(SLAVE_INT));
+    // printf("SSN = %x\n\r",pin_read(SSN));
+    led_on(&led2);
 
 }
 
 void send_spi(){
-    led_toggle(&led2);
-    pin_set(SLAVE_INT);
-    int i;
-    for(i=0;i,1000;i++){
 
-    }
+    pin_set(SLAVE_INT);
     pin_clear(SLAVE_INT);
 
 }
@@ -70,12 +66,6 @@ int16_t main(void) {
         led_toggle(&led3);
         if (timer_flag(&timer2)) {
             timer_lower(&timer2);
-            // if (cmd.w == 0x0F0F){
-            //     cmd = (WORD)0xFFFF;
-            // }
-            // else{
-            //     cmd = (WORD)0x0F0F;
-            // }
             send_spi();
 
         }
