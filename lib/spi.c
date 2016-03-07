@@ -43,7 +43,7 @@ void init_spi(void) {
 
 void spi_init(_SPI *self, uint16_t *SPIxSTAT, uint16_t *SPIxCON1, 
               uint16_t *SPIxCON2, uint16_t *SPIxBUF, 
-              uint16_t *MISOrpinr, uint8_t MISOrpshift, 
+              WORD *MISOrpinr, uint8_t MISOrpshift, 
               int16_t MOSIrpnum, int16_t SCKrpnum) {
     self->SPIxSTAT = SPIxSTAT;
     self->SPIxCON1 = SPIxCON1;
@@ -85,12 +85,9 @@ void spi_open(_SPI *self, _PIN *MISO, _PIN *MOSI, _PIN *SCK, float freq, uint8_t
         SCK->write = NULL;
         SCK->read = NULL;
         __builtin_write_OSCCONL(OSCCON&0xBF);
-        *(self->MISOrpinr) &= ~(0x3F<<(self->MISOrpshift));
-        *(self->MISOrpinr) |= (MISO->rpnum)<<(self->MISOrpshift);
-        *(MOSI->rpor) &= ~(0x3F<<(MOSI->rpshift));
-        *(MOSI->rpor) |= (self->MOSIrpnum)<<(MOSI->rpshift);
-        *(SCK->rpor) &= ~(0x3F<<(SCK->rpshift));
-        *(SCK->rpor) |= (self->SCKrpnum)<<(SCK->rpshift);
+        self->MISOrpinr->b[self->MISOrpshift] = MISO->rpnum;
+        ((WORD*)MOSI->rpor)->b[MOSI->rpshift/8] = self->MOSIrpnum;
+        ((WORD*)SCK->rpor)->b[SCK->rpshift/8] = self->SCKrpnum;
         __builtin_write_OSCCONL(OSCCON|0x40);
     } else if ((self->MISO!=MISO) || (self->MOSI!=MOSI) || (self->SCK!=SCK)) {
         return; // At least one of the specified pins does not match the 
@@ -138,11 +135,9 @@ void spi_open_slave(_SPI *self, _PIN *MISO, _PIN *MOSI, _PIN *SCK, uint8_t mode)
     if ((MISO->owner==NULL) && (MOSI->owner==NULL) && (SCK->owner==NULL)) {
         // All of the specified pins are available and RP pins, so configure 
         // as specified
-        pin_digitalIn(MISO);
-        pin_digitalOut(MOSI);
-        pin_set(MOSI);
-        pin_digitalOut(SCK);
-        pin_clear(SCK);
+        pin_digitalOut(MISO);
+        pin_digitalIn(MOSI);
+        pin_digitalIn(SCK);
         self->MISO = MISO;
         MISO->owner = (void *)self;
         MISO->write = NULL;
@@ -156,8 +151,7 @@ void spi_open_slave(_SPI *self, _PIN *MISO, _PIN *MOSI, _PIN *SCK, uint8_t mode)
         SCK->write = NULL;
         SCK->read = NULL;
         __builtin_write_OSCCONL(OSCCON&0xBF);
-        *(self->MISOrpinr) &= ~(0x3F<<(self->MISOrpshift));
-        *(self->MISOrpinr) |= (MISO->rpnum)<<(self->MISOrpshift);
+        self->MISOrpinr->b[self->MISOrpshift] = MISO->rpnum;
         *(MOSI->rpor) &= ~(0x3F<<(MOSI->rpshift));
         *(MOSI->rpor) |= (self->MOSIrpnum)<<(MOSI->rpshift);
         *(SCK->rpor) &= ~(0x3F<<(SCK->rpshift));
@@ -171,15 +165,21 @@ void spi_open_slave(_SPI *self, _PIN *MISO, _PIN *MOSI, _PIN *SCK, uint8_t mode)
     *(self->SPIxBUF) = 0x0000;
     //   set SPI module to 8-bit slave mode, SMP = 0, MSTEN = 0
     //   set CKE and CKP bits according to the SPI mode specified
-    if (modebits[mode & 0x03] & 0x0100) { // setting CKE
-        *(self->SPIxCON1) = 0x0080 | modebits[mode & 0x03]; // must set SSEN to enable SSx
-    } else {
-        *(self->SPIxCON1) = 0x0000 | modebits[mode & 0x03];
+    //                 SMP
+    // SPIxCON1: 0000_0010_0000_0000
+    *(self->SPIxCON1) = 0x0200 | modebits[mode & 0x03];
+    *(self->SPIxCON2) = 0x0000;
+    bitclear(self->SPIxCON1, 9);
+
+    *(self->SPIxSTAT) = 0x0040;
+    if (modebits[mode & 0x03] & 0x0100) { // checking for CKE
+        bitset(self->SPIxCON1, 7); // must set SSEN to enable SSx
     }
-    *(self->SPIxCON2) = 0;
+
+    bitclear(self->SPIxSTAT, 6);
     // Enable the SPI module and clear status flags
     // clear SPIROV for slave mode
-    *(self->SPIxSTAT) = 0x8000;
+    bitset(self->SPIxSTAT, 15);
 }
 
 void spi_close(_SPI *self) {
@@ -188,7 +188,7 @@ void spi_close(_SPI *self) {
     *(self->SPIxCON2) = 0;
     if (self->MISO) {
         __builtin_write_OSCCONL(OSCCON&0xBF);
-        *(self->MISOrpinr) |= 0x3F<<(self->MISOrpshift);
+        self->MISOrpinr->b[self->MISOrpshift] = 0x3F;
         __builtin_write_OSCCONL(OSCCON|0x40);
         self->MISO->owner = NULL;
         pin_digitalIn(self->MISO);

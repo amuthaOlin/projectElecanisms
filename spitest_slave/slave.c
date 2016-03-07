@@ -55,6 +55,8 @@ int16_t main(void) {
             while (bitread(spi1.SPIxSTAT, 0)==0) {} // wait for master to transact
             res = (uint8_t)(*(spi1.SPIxBUF)); // read result from buffer
 
+            led_toggle(&led3);
+
             printf("Slave sent: 0x%x\r\n", 0x5A);
             printf("Slave received: 0x%x\r\n", res);
         }

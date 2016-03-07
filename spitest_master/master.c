@@ -23,14 +23,17 @@ void blue() {
 
 uint8_t res = 0;
 
+_PIN *CSn = &D[3];
+_PIN *Sint = &D[4];
+
 void handle_sint(_INT *intx) {
+    led_toggle(&led3);
+    pin_clear(CSn);
     res = spi_transfer(&spi1, 0xF0);
+    pin_set(CSn);
     printf("Master sent: 0x%x\r\n", 0xF0);
     printf("Master received: 0x%x\r\n", res);
 }
-
-_PIN *CSn = &D[3];
-_PIN *Sint = &D[4];
 
 int16_t main(void) {
     init_clock();
@@ -46,9 +49,9 @@ int16_t main(void) {
     pin_digitalIn(Sint);
 
     pin_digitalOut(CSn);
-    pin_clear(CSn);
+    pin_set(CSn);
 
-    int_attach(&int1, CSn, 0, handle_sint);
+    int_attach(&int1, Sint, 0, handle_sint);
 
     while(1) {}
 }
