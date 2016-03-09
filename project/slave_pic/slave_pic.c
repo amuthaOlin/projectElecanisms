@@ -17,17 +17,24 @@ volatile WORD result;
 
 void recieve_spi() {
     
-    result1 = (uint8_t)(*(&spi1->SPIxBUF));
+    result = (WORD)(*(spi1.SPIxBUF));
     printf("result = %x\n\r,result.w");
 
 }
 
 void send_spi(){
+
     led_toggle(&led1);
+    result.b[1] = spi_slave_transfer(&spi1, cmd.b[1]);
+    result.b[0] = spi_slave_transfer(&spi1, cmd.b[0]);
+    printf("SPIxSTAT = %x\n\r",*(spi1.SPIxSTAT)); 
+
+
     pin_set(SLAVE_INT);
     pin_clear(SLAVE_INT);
-    *(&spi1->SPIxBUF) = (uint16_t)cmd.b[1];
-    *(&spi1->SPIxBUF) = (uint16_t)cmd.b[0];
+
+    printf("cmd = %x\n\r",cmd.w);    
+    //printf("spiBuf = %x\n\r",SPI1BUF);
 }
 
 
@@ -48,14 +55,14 @@ int16_t main(void) {
 
     pin_digitalOut(SLAVE_INT);
     pin_clear(SLAVE_INT);
-    spi_open_slave(&spi1, MISO, MOSI, SCK, SSN, 2e6 ,0);
+    spi_open_slave(&spi1, MISO, MOSI, SCK, SSN, 0);
 
 
 
     timer_setPeriod(&timer2, .5);
     timer_start(&timer2); 
 
-    int_attach(&int1,SSN,0,recieve_or_send_spi);
+    //int_attach(&int1,SSN,0,recieve_spi);
 
 
 
@@ -66,6 +73,7 @@ int16_t main(void) {
             send_spi();
 
         }
+        led_toggle(&led2);
     }
 }
 

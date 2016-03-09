@@ -19,6 +19,10 @@ void recieve_or_send_spi(WORD cmd) {
 
     result.b[1] = spi_transfer(&spi1, cmd.b[1]);
     result.b[0] = spi_transfer(&spi1, cmd.b[0]);
+    //printf("result = %x\n\r",result); 
+    printf("SPIxCON1 = %x\n\r",*(spi1.SPIxCON1));  
+    printf("SPIxCON2 = %x\n\r",*(spi1.SPIxCON2)); 
+    printf("SPIxSTAT = %x\n\r",*(spi1.SPIxSTAT)); 
 
 
 }
@@ -28,12 +32,13 @@ void send_spi(WORD cmd){
 }
 
 void recieve_spi(){
-    led_on(&led1);
-    WORD cmd = (WORD) 0xF00F;
+    led_toggle(&led1);
+    WORD cmd = (WORD) 0x830F;
+    recieve_or_send_spi(cmd);
     pin_clear(SSN);
     pin_set(SSN);
     
-    recieve_or_send_spi(cmd);
+    
 
 }
 
