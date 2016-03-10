@@ -29,25 +29,14 @@
 #include <stdint.h>
 #include "pin.h"
 
-void init_int(void);
+void init_leds(void);
 
 typedef struct _LEDS {
-    uint16_t *IFSn;
-    uint16_t *IECn;
-    WORD *RPINRn;
-    uint8_t rpinshift;
-    uint8_t flagbit;
-    uint8_t intconbit;
-    void (*isr)(struct _LEDS *self);
     _PIN *pin;
 } _LEDS;
 
 extern _LEDS int1, int2, int3, int4;
 
-void int_init(_LEDS *self, uint16_t *IFSn, uint16_t *IECn, WORD *RPINRn, uint8_t rpinshift, uint8_t flagbit, uint8_t intconbit);
-void int_lower(_LEDS *self);
-void int_enableInterrupt(_LEDS *self);
-void int_disableInterrupt(_LEDS *self);
-void int_attach(_LEDS *self, _PIN *pin, uint8_t edge, void (*callback)(_LEDS *self));
+void leds_init(_LEDS *self, _PIN *pin);
 
 #endif
