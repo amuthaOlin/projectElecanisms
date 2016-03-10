@@ -13,6 +13,9 @@
 
 _PIN *CSn = &D[3];
 _PIN *Sint = &D[4];
+_PIN *MISO = &D[1];
+_PIN *MOSI = &D[0];
+_PIN *SCK = &D[2];
 
 
 uint8_t recieve_spi(void) {
@@ -24,7 +27,7 @@ uint8_t recieve_spi(void) {
 
 void send_spi(uint8_t cmd){
 
-    spi_send_slave(&spi1,cmd);
+    spi_write_slave(&spi1,cmd);
 }
 
 uint8_t recieve_and_send_spi(uint8_t cmd){
@@ -45,7 +48,10 @@ int16_t main(void) {
     init_timer();
     init_uart();
 
-    spi_open_slave(&spi1, &D[0], &D[1], &D[2], 1);
+
+
+
+    spi_open_slave(&spi1, MOSI, MISO, SCK, 1);
 
     pin_digitalOut(Sint);
     pin_clear(Sint);
