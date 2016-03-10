@@ -37,20 +37,24 @@
 _LEDS leds;
 
 void __leds_bit_high(_LEDS *self) {
-    pin_write(self->pin, LEDS_HIGH);
-}
-
-void __leds_bit_low(_LEDS *self) {
     pin_write(self->pin, LEDS_LOW);
 }
 
+void __leds_bit_low(_LEDS *self) {
+    pin_write(self->pin, LEDS_HIGH);
+}
+
 void __leds_reset(_LEDS *self) {
-    pin_write(self->pin, 0x0000);
+    oc_free(&oc1);
+    pin_write(self->pin, 1);
     timer_delayMicro(7);
 }
 
 volatile uint16_t bitcount = 0;
 void __attribute__((interrupt, auto_psv)) _OC1Interrupt(void) {
+    if (!bitcount) {
+        oc_pwm(leds.oc, leds.pin, NULL, 8e5, 0x0000);
+    }
     bitclear(&IFS0, 2);
 
     // actually write the RGB data
