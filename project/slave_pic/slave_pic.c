@@ -11,69 +11,64 @@
 
 
 
-_PIN *SCK, *MISO, *MOSI, *SSN, *SLAVE_INT;
-volatile WORD cmd = (WORD) 0x0F0F;
-volatile WORD result;
+_PIN *CSn = &D[3];
+_PIN *Sint = &D[4];
 
-void recieve_spi() {
+
+uint8_t recieve_spi(void) {
     
-    result = (WORD)(*(spi1.SPIxBUF));
-    printf("result = %x\n\r,result.w");
-
+    uint8_t res;
+    res = spi_read_slave(&spi1);
+    return res;
 }
 
-void send_spi(){
+void send_spi(uint8_t cmd){
 
-    led_toggle(&led1);
-    result.b[1] = spi_slave_transfer(&spi1, cmd.b[1]);
-    result.b[0] = spi_slave_transfer(&spi1, cmd.b[0]);
-    printf("SPIxSTAT = %x\n\r",*(spi1.SPIxSTAT)); 
+    spi_send_slave(&spi1,cmd);
+}
 
+uint8_t recieve_and_send_spi(uint8_t cmd){
 
-    pin_set(SLAVE_INT);
-    pin_clear(SLAVE_INT);
-
-    printf("cmd = %x\n\r",cmd.w);    
-    //printf("spiBuf = %x\n\r",SPI1BUF);
+    send_spi(cmd);
+    uint8_t res;
+    res = recieve_spi();
+    return res;
 }
 
 
 int16_t main(void) {
     init_clock();
-    init_uart();
-    init_spi();
     init_ui();
     init_pin();
-    init_timer();
     init_int();
+    init_spi();
+    init_timer();
+    init_uart();
 
-    MISO = &D[1];
-    MOSI = &D[0];
-    SCK = &D[2];
-    SSN = &D[3];
-    SLAVE_INT = &D[4];
+    spi_open_slave(&spi1, &D[0], &D[1], &D[2], 1);
 
-    pin_digitalOut(SLAVE_INT);
-    pin_clear(SLAVE_INT);
-    spi_open_slave(&spi1, MISO, MOSI, SCK, SSN, 0);
+    pin_digitalOut(Sint);
+    pin_clear(Sint);
 
+    pin_digitalIn(CSn);
 
+    timer_setPeriod(&timer1, 0.5);
+    timer_start(&timer1);
 
-    timer_setPeriod(&timer2, .5);
-    timer_start(&timer2); 
-
-    //int_attach(&int1,SSN,0,recieve_spi);
-
-
+    uint8_t res = 0;
+    uint8_t cmd = 0;
 
 
     while (1) {
         if (timer_flag(&timer2)) {
             timer_lower(&timer2);
-            send_spi();
-
+            recieve_and_send_spi(cmd);
+            
+            led_toggle(&led2);
+            //printf("Slave sent: 0x%x\r\n", 0x5A);
+            //printf("Slave received: 0x%x\r\n", res);
         }
-        led_toggle(&led2);
+
     }
 }
 
