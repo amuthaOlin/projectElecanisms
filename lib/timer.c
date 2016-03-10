@@ -47,6 +47,16 @@ void timer_serviceInterrupt(_TIMER *self) {
     }
 }
 
+void timer_delayMicro(uint16_t uS) {
+    uint16_t count = 0;
+    while (count < uS) {
+        if (timer_flag(&timer5)) {
+            timer_lower(&timer5);
+            count +=1;
+        }
+    }
+}
+
 void __attribute__((interrupt, auto_psv)) _T1Interrupt(void) {
     timer_serviceInterrupt(&timer1);
 }

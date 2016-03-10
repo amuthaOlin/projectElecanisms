@@ -28,9 +28,6 @@
 #include "leds.h"
 #include "oc.h"
 
-#define INT_RISING 1
-#define INT_FALLING 0 // backwards
-
 _LEDS leds;
 
 void init_leds(void) {
@@ -39,5 +36,6 @@ void init_leds(void) {
 
 void leds_init(_LEDS *self, _PIN *pin) {
     self->pin = pin;
-    oc_pwm(&oc1, self->pin, NULL, 1e3, .5);
+
+    oc_pwm(&oc1, self->pin, NULL, 1.2e3, 0xff00);
 }
