@@ -1,57 +1,78 @@
 #include <p24FJ128GB206.h>
-#include <stdint.h>
+#include <stdio.h>
 #include "config.h"
 #include "common.h"
-#include "ui.h"
 #include "pin.h"
-#include "int.h"
-#include "spi.h"
-#include "timer.h"
 #include "uart.h"
+#include "spi.h"
+#include "ui.h"
+#include "int.h"
 
-void red() {
-    led_toggle(&led1);
+
+
+
+volatile uint8_t res, cmd;
+_PIN *MISO  = &D[1];
+_PIN *MOSI  = &D[0];
+_PIN *SCK   = &D[2];
+_PIN *CSn1  = &D[3];
+_PIN *Sint1 = &D[4];
+_PIN *CSn2  = &D[5];
+_PIN *Sint2 = &D[6];
+_PIN *CSn3  = &D[7];
+_PIN *Sint3 = &D[8];
+
+
+
+void init_master_pins(){
+    pin_digitalIn(Sint1);
+    pin_digitalIn(Sint2);
+    pin_digitalIn(Sint3);
+
+    pin_digitalOut(CSn1);
+    pin_digitalOut(CSn2);
+    pin_digitalOut(CSn3);
+    pin_set(CSn1);
+    pin_set(CSn2);
+    pin_set(CSn3);
 }
 
-void green() {
-    led_toggle(&led2);
+void recieve_and_send_spi(_PIN *CSn){
+    res = spi_transfer(&spi1, cmd, CSn);
 }
 
-void blue() {
-    led_toggle(&led3);
+//recieve SPI interrupt handler
+void handle_sint1(_INT *intx) {
+    recieve_and_send_spi(CSn1);
 }
 
-uint8_t res = 0;
-
-_PIN *CSn = &D[3];
-_PIN *Sint = &D[4];
-
-void handle_sint(_INT *intx) {
-    led_toggle(&led3);
-    pin_clear(CSn);
-    res = spi_transfer(&spi1, 0xF0);
-    pin_set(CSn);
-    printf("Master sent: 0x%x\r\n", 0xF0);
-    printf("Master received: 0x%x\r\n", res);
+void handle_sint2(_INT *intx) {
+    recieve_and_send_spi(CSn2);
 }
+
+void handle_sint3(_INT *intx) {
+    recieve_and_send_spi(CSn3);
+}
+
 
 int16_t main(void) {
     init_clock();
+    init_uart();
+    init_spi();
     init_ui();
     init_pin();
     init_int();
-    init_spi();
-    init_timer();
-    init_uart();
+
+    init_master_pins();
+
 
     spi_open(&spi1, &D[0], &D[1], &D[2], 1e6, 1);
 
-    pin_digitalIn(Sint);
+    int_attach(&int1, Sint1, 0, handle_sint1);
+    int_attach(&int2, Sint1, 0, handle_sint2);
+    int_attach(&int3, Sint1, 0, handle_sint3);
 
-    pin_digitalOut(CSn);
-    pin_set(CSn);
-
-    int_attach(&int1, Sint, 0, handle_sint);
-
-    while(1) {}
+    while (1) {
+    }
 }
+
