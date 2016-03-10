@@ -217,3 +217,13 @@ uint8_t spi_transfer(_SPI *self, uint8_t val) {
     while (bitread(self->SPIxSTAT, 0)==0) {}
     return (uint8_t)(*(self->SPIxBUF));
 }
+
+void spi_write_slave(_SPI *self, uint8_t val){
+    *(self->SPIxBUF) = (uint16_t)val;
+}
+
+uint8_t spi_read_slave(_SPI *self, uint8_t val) {
+    while (bitread(self->SPIxSTAT, 0)==0) {}
+    return (uint8_t)(*(self->SPIxBUF));
+}
+
