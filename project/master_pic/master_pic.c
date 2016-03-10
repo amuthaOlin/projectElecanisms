@@ -10,36 +10,54 @@
 
 
 
-uint16_t val1, val2;
-_PIN *SCK, *MISO, *MOSI, *SSN, *SLAVE_INT;
-volatile WORD result;
+
+volatile uint8_t res, cmd;
+_PIN *MISO  = &D[1];
+_PIN *MOSI  = &D[0];
+_PIN *SCK   = &D[2];
+_PIN *CSn1  = &D[3];
+_PIN *Sint1 = &D[4];
+_PIN *CSn2  = &D[5];
+_PIN *Sint2 = &D[6];
+_PIN *CSn3  = &D[7];
+_PIN *Sint3 = &D[8];
 
 
-void recieve_or_send_spi(WORD cmd) {
 
-    result.b[1] = spi_transfer(&spi1, cmd.b[1]);
-    result.b[0] = spi_transfer(&spi1, cmd.b[0]);
-    //printf("result = %x\n\r",result); 
-    printf("SPIxCON1 = %x\n\r",*(spi1.SPIxCON1));  
-    printf("SPIxCON2 = %x\n\r",*(spi1.SPIxCON2)); 
-    printf("SPIxSTAT = %x\n\r",*(spi1.SPIxSTAT)); 
+void init_master_pins(){
+    pin_digitalIn(Sint1);
+    pin_digitalIn(Sint2);
+    pin_digitalIn(Sint3);
 
-
+    pin_digitalOut(CSn1);
+    pin_digitalOut(CSn2);
+    pin_digitalOut(CSn3);
+    pin_set(CSn1);
+    pin_set(CSn2);
+    pin_set(CSn3);
 }
 
-void send_spi(WORD cmd){
-    recieve_or_send_spi(cmd);
+void recieve_and_send_spi(){
+    res = spi_transfer(&spi1, cmd);
 }
 
-void recieve_spi(){
-    led_toggle(&led1);
-    WORD cmd = (WORD) 0x830F;
-    recieve_or_send_spi(cmd);
-    pin_clear(SSN);
-    pin_set(SSN);
-    
-    
+//recieve SPI interrupt handler
+void handle_sint1(_INT *intx) {
+    pin_clear(CSn1);
+    recieve_and_send_spi();
+    pin_clear(CSn1);
+}
 
+void handle_sint2(_INT *intx) {
+    pin_clear(CSn2);
+    recieve_and_send_spi();
+    pin_clear(CSn2);
+}
+
+void handle_sint3(_INT *intx) {
+    pin_clear(CSn3);
+    recieve_and_send_spi();
+    pin_clear(CSn3);
 }
 
 
@@ -51,30 +69,16 @@ int16_t main(void) {
     init_pin();
     init_int();
 
-    MISO = &D[1];
-    MOSI = &D[0];
-    SCK = &D[2];
-    SSN = &D[3];
-    SLAVE_INT = &D[4];
+    init_master_pins();
 
-    pin_digitalIn(SLAVE_INT);
-    pin_digitalOut(SSN);
-    pin_set(SSN);
 
-    spi_open(&spi1, MISO, MOSI, SCK, 2e6 ,0);
+    spi_open(&spi1, &D[0], &D[1], &D[2], 1e6, 1);
 
-    int_attach(&int1,SLAVE_INT,1,recieve_spi);
+    int_attach(&int1, Sint1, 0, handle_sint1);
+    int_attach(&int2, Sint1, 0, handle_sint2);
+    int_attach(&int3, Sint1, 0, handle_sint3);
 
     while (1) {
-        
-        if (result.w == 0x0F0F){
-            led_on(&led2);
-            printf("result = %x\n\r",result);
-        }
-        else{
-            
-        }
-    led_toggle(&led3); 
     }
 }
 

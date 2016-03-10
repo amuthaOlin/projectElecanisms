@@ -28,6 +28,8 @@ uint8_t recieve_spi(void) {
 void send_spi(uint8_t cmd){
 
     spi_write_slave(&spi1,cmd);
+    pin_set(Sint); // pulse Sint to request transaction
+    pin_clear(Sint); // trigger on falling edge
 }
 
 uint8_t recieve_and_send_spi(uint8_t cmd){
@@ -70,7 +72,7 @@ int16_t main(void) {
             timer_lower(&timer2);
             recieve_and_send_spi(cmd);
             
-            led_toggle(&led2);
+            //led_toggle(&led2);
             //printf("Slave sent: 0x%x\r\n", 0x5A);
             //printf("Slave received: 0x%x\r\n", res);
         }
