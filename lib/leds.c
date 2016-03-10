@@ -30,9 +30,9 @@
 #include "oc.h"
 #include "timer.h"
 
-#define LEDS_HIGH = 0x7AE1; // ~48% duty cycle
-#define LEDS_LOW = 0x3D70; // ~24% duty cycle
-#define LED_NUM = 8;
+#define LEDS_HIGH 0x7AE1 // ~48% duty cycle
+#define LEDS_LOW 0x3D70 // ~24% duty cycle
+#define LED_NUM 8
 
 _LEDS leds;
 
@@ -42,6 +42,11 @@ void __leds_bit_high(_LEDS *self) {
 
 void __leds_bit_low(_LEDS *self) {
     pin_write(self->pin, LEDS_HIGH);
+}
+
+void __leds_reset(_LEDS *self) {
+    pin_write(self->pin, 0x0000);
+    timer_delayMicro(50);
 }
 
 volatile uint16_t bitcount = 0;
@@ -54,7 +59,7 @@ void __attribute__((interrupt, auto_psv)) _OC1Interrupt(void) {
     bitcount++;
     if (bitcount == 24*LED_NUM) {
         bitcount = 0;
-        leds_reset();
+        __leds_reset(&leds);
     }
 }
 
@@ -70,9 +75,4 @@ void leds_init(_LEDS *self, _PIN *pin, _OC *oc) {
     oc_pwm(self->oc, self->pin, NULL, 8e5, 0xff00);
     // OC1 interrupt
     bitset(&IEC0, 2);
-}
-
-void leds_reset(_LEDS *self) {
-    pin_write(self->pin, 0x0000);
-    timer_delayMicro(50);
 }
