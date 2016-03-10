@@ -49,11 +49,7 @@ int16_t main(void) {
         if (timer_flag(&timer1)) {
             timer_lower(&timer1);
 
-            *(spi1.SPIxBUF) = 0x005A; // set Tx data
-            pin_set(Sint); // pulse Sint to request transaction
-            pin_clear(Sint); // trigger on falling edge
-            while (bitread(spi1.SPIxSTAT, 0)==0) {} // wait for master to transact
-            res = (uint8_t)(*(spi1.SPIxBUF)); // read result from buffer
+            res = spi_transfer_slave(&spi1, 0x5A, Sint);
 
             led_toggle(&led3);
 

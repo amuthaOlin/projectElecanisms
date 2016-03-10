@@ -186,7 +186,7 @@ void spi_close(_SPI *self) {
     *(self->SPIxCON2) = 0;
     if (self->MISO) {
         __builtin_write_OSCCONL(OSCCON&0xBF);
-        ((WORD*)self->DINrpinr)->b[self->DINrpshift] = 0x3F;
+        ((WORD*)self->DINrpinr)->b[self->DINrpshift] = 0x00;
         __builtin_write_OSCCONL(OSCCON|0x40);
         self->MISO->owner = NULL;
         pin_digitalIn(self->MISO);
@@ -194,7 +194,7 @@ void spi_close(_SPI *self) {
     }
     if (self->MOSI) {
         __builtin_write_OSCCONL(OSCCON&0xBF);
-        *(self->MOSI->rpor) &= ~(0x3F<<(self->MOSI->rpshift));
+        ((WORD*)self->MOSI->rpor)->b[self->MOSI->rpshift/8] = 0x00;
         __builtin_write_OSCCONL(OSCCON|0x40);
         self->MOSI->owner = NULL;
         pin_digitalOut(self->MOSI);
@@ -203,7 +203,7 @@ void spi_close(_SPI *self) {
     }
     if (self->SCK) {
         __builtin_write_OSCCONL(OSCCON&0xBF);
-        *(self->SCK->rpor) &= ~(0x3F<<(self->SCK->rpshift));
+        ((WORD*)self->SCK->rpor)->b[self->SCK->rpshift] = 0x00;
         __builtin_write_OSCCONL(OSCCON|0x40);
         self->SCK->owner = NULL;
         pin_digitalOut(self->SCK);
@@ -218,12 +218,10 @@ uint8_t spi_transfer(_SPI *self, uint8_t val) {
     return (uint8_t)(*(self->SPIxBUF));
 }
 
-void spi_write_slave(_SPI *self, uint8_t val){
+uint8_t spi_transfer_slave(_SPI *self, uint8_t val, _PIN *Sint) {
     *(self->SPIxBUF) = (uint16_t)val;
-}
-
-uint8_t spi_read_slave(_SPI *self, uint8_t val) {
+    pin_set(Sint);
+    pin_clear(Sint);
     while (bitread(self->SPIxSTAT, 0)==0) {}
     return (uint8_t)(*(self->SPIxBUF));
 }
-
