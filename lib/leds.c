@@ -26,9 +26,17 @@
 #include <p24FJ128GB206.h>
 #include "common.h"
 #include "leds.h"
+#include "ui.h"
 #include "oc.h"
+#include "timer.h"
 
 _LEDS leds;
+
+volatile uint16_t bitcount = 0;
+void __attribute__((interrupt, auto_psv)) _OC1Interrupt(void) {
+    bitclear(&IFS0, 2);
+    led_toggle(&led2);
+}
 
 void init_leds(void) {
     leds_init(&leds, &D[7]);
@@ -38,4 +46,6 @@ void leds_init(_LEDS *self, _PIN *pin) {
     self->pin = pin;
 
     oc_pwm(&oc1, self->pin, NULL, 1.2e3, 0xff00);
+    // enable interrupt
+    bitset(&IEC0, 2);
 }
