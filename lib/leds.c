@@ -41,12 +41,12 @@ void __leds_bit_high(_LEDS *self) {
 }
 
 void __leds_bit_low(_LEDS *self) {
-    pin_write(self->pin, LEDS_HIGH);
+    pin_write(self->pin, LEDS_LOW);
 }
 
 void __leds_reset(_LEDS *self) {
     pin_write(self->pin, 0x0000);
-    timer_delayMicro(50);
+    timer_delayMicro(7);
 }
 
 volatile uint16_t bitcount = 0;
@@ -72,7 +72,7 @@ void leds_init(_LEDS *self, _PIN *pin, _OC *oc) {
     self->pin = pin;
     self->oc = oc;
 
-    oc_pwm(self->oc, self->pin, NULL, 8e5, 0xff00);
+    oc_pwm(self->oc, self->pin, NULL, 8e5, 0x0000);
     // OC1 interrupt
     bitset(&IEC0, 2);
 }
