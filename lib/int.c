@@ -1,5 +1,5 @@
 /*
-** Copyright (c) 2013, Bradley A. Minch
+** Copyright (c) 2013, Evan Dorsky
 ** All rights reserved.
 **
 ** Redistribution and use in source and binary forms, with or without
