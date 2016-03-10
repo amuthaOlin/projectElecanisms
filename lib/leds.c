@@ -30,22 +30,39 @@
 #include "oc.h"
 #include "timer.h"
 
+#define LEDS_HIGH = 0xFFF0;
+#define LEDS_LOW = 0x6000;
+
 _LEDS leds;
+
+void __leds_bit_high(_LEDS *self) {
+    pin_write(self->pin, LEDS_HIGH);
+}
+
+void __leds_bit_low(_LEDS *self) {
+    pin_write(self->pin, LEDS_HIGH);
+}
 
 volatile uint16_t bitcount = 0;
 void __attribute__((interrupt, auto_psv)) _OC1Interrupt(void) {
     bitclear(&IFS0, 2);
     led_toggle(&led2);
+    bitcount++;
 }
 
 void init_leds(void) {
-    leds_init(&leds, &D[7]);
+    leds_init(&leds, &D[7], &oc1);
 }
 
-void leds_init(_LEDS *self, _PIN *pin) {
+void leds_init(_LEDS *self, _PIN *pin, _OC *oc) {
     self->pin = pin;
+    self->oc = oc;
 
-    oc_pwm(&oc1, self->pin, NULL, 1.2e3, 0xff00);
+    oc_pwm(self->oc, self->pin, NULL, 1.2e3, 0xff00);
     // enable interrupt
     bitset(&IEC0, 2);
+}
+
+void leds_reset_code(_LEDS *self) {
+    
 }

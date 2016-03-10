@@ -28,15 +28,17 @@
 
 #include <stdint.h>
 #include "pin.h"
+#include "oc.h"
 
 void init_leds(void);
 
 typedef struct _LEDS {
     _PIN *pin;
+    _OC *oc;
 } _LEDS;
 
-extern _LEDS int1, int2, int3, int4;
+extern _LEDS leds;
 
-void leds_init(_LEDS *self, _PIN *pin);
+void leds_init(_LEDS *self, _PIN *pin, _OC *oc);
 
 #endif
