@@ -45,10 +45,10 @@ void __attribute__((interrupt, auto_psv)) _OC1Interrupt(void) {
     if (!bitcount)
         oc_freq(leds.oc, LEDS_FREQ);
 
-    pin_write(leds.pin, bitread(&leds_state[bitcount/8], bitcount%8)? LEDS_HIGH : LEDS_LOW);
+    pin_write(leds.pin, bitread(&leds_state[(uint16_t)(bitcount/8)], 5)? LEDS_LOW : LEDS_HIGH);
 
     bitcount++;
-    if (bitcount == 24*LED_NUM) {
+    if (bitcount == 24*LED_NUM-1) {
         bitcount = 0;
         oc_freq(leds.oc, 16666);
         pin_write(leds.pin, 0);
@@ -61,9 +61,9 @@ void init_leds(void) {
 }
 
 void leds_writeOne(_LEDS *self, uint8_t led, uint8_t red, uint8_t green, uint8_t blue) {
-    leds_state[led] = green;
-    leds_state[led+1] = red;
-    leds_state[led+2] = blue;
+    leds_state[3*led] = green;
+    leds_state[3*led+1] = red;
+    leds_state[3*led+2] = blue;
 }
 
 void leds_init(_LEDS *self, _PIN *pin, _OC *oc) {
@@ -75,7 +75,7 @@ void leds_init(_LEDS *self, _PIN *pin, _OC *oc) {
     bitset(&IEC0, 2);
 
     uint8_t i;
-    for (i = 0; i < LED_NUM; i++) {
-        leds_writeOne(self, i, 0,100,255);
-    }
+    // for (i = 0; i < LED_NUM; i++) {
+    // leds_writeOne(self, 2, 255,255,255);
+    // }
 }
