@@ -32,8 +32,8 @@
 
 #define LEDS_HIGH 0x7AE1 // ~48% duty cycle
 #define LEDS_LOW 0x3D70 // ~24% duty cycle
-#define LED_NUM 8
-#define LEDS_FREQ 8e5
+#define LED_NUM 1
+#define LEDS_FREQ 1e5
 
 _LEDS leds;
 
@@ -47,18 +47,14 @@ void __leds_refresh(_TIMER *timer) {
 volatile int16_t bitcount = 0;
 void __attribute__((interrupt, auto_psv)) _OC1Interrupt(void) {
     bitclear(&IFS0, 2);
-    if (!bitcount)
-        oc_freq(leds.oc, LEDS_FREQ);
 
-    if (bitcount > 24*3 && bitcount < 24*4) {
+    if (bitcount%2)
         pin_write(leds.pin, LEDS_HIGH);
-        led_toggle(&led2);
-    } else {
-        pin_write(leds.pin, LEDS_LOW);
-    }
+    else
+        pin_write(leds.pin, LOW);
 
     bitcount++;
-    if (bitcount == 24*LED_NUM-1) {
+    if (bitcount == 8*LED_NUM-1) {
         bitcount = 0;
         oc_free(leds.oc); // clears leds.pin
     }
