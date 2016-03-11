@@ -28,6 +28,7 @@
 
 #include <stdint.h>
 #include "pin.h"
+#include "timer.h"
 #include "oc.h"
 
 void init_leds(void);
@@ -35,11 +36,16 @@ void init_leds(void);
 typedef struct _LEDS {
     _PIN *pin;
     _OC *oc;
+    _TIMER *timer;
 } _LEDS;
 
 extern _LEDS leds;
 
-void leds_init(_LEDS *self, _PIN *pin, _OC *oc);
+void leds_init(_LEDS *self, _PIN *pin, _OC *oc, _TIMER *timer);
+void leds_writeAll(_LEDS *self, uint8_t red, uint8_t green, uint8_t blue);
 void leds_writeOne(_LEDS *self, uint8_t led, uint8_t red, uint8_t green, uint8_t blue);
+void leds_clear(_LEDS *self);
+
+void leds_bounce(_LEDS *self, float period, uint8_t red, uint8_t green, uint8_t blue);
 
 #endif

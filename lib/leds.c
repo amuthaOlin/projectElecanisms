@@ -30,18 +30,16 @@
 #include "oc.h"
 #include "timer.h"
 
-#define LEDS_HIGH 0x7AE1 // ~48% duty cycle
 #define LEDS_HIGH_R 0x0009 // high word of LEDS_HIGH*OC1RS
-#define LEDS_LOW 0x3D70 // ~24% duty cycle
 #define LEDS_LOW_R 0x0004 // high word of LEDS_LOW*OC1RS
-#define LED_NUM 8
+#define LEDS_NUM 8
 #define LEDS_FREQ 2e5
-#define LEDS_PERIOD 80 // cycles for LEDS_FREQ (FCY = 16e6)
+#define LEDS_PERIOD FCY/(LEDS_FREQ*1.) // cycles for LEDS_FREQ (FCY = 16e6)
 #define LEDS_RS_PERIOD 960 // cycles for 60us reset
 
 _LEDS leds;
 
-uint8_t leds_state[3*LED_NUM];
+uint8_t leds_state[3*LEDS_NUM];
 
 volatile uint8_t bitcount = 0;
 void __attribute__((interrupt, auto_psv)) _OC1Interrupt(void) {
@@ -52,7 +50,7 @@ void __attribute__((interrupt, auto_psv)) _OC1Interrupt(void) {
     OC1R = bitread(&leds_state[(uint16_t)(bitcount/8)], bitcount%8) ? LEDS_HIGH_R : LEDS_LOW_R;
 
     bitcount++;
-    if (bitcount == 24*LED_NUM+1) {
+    if (bitcount == 24*LEDS_NUM+1) {
         OC1RS = LEDS_RS_PERIOD;
         OC1R = 0x0000;
         bitcount = 0;
@@ -60,8 +58,39 @@ void __attribute__((interrupt, auto_psv)) _OC1Interrupt(void) {
 }
 
 void init_leds(void) {
-    // must pass OC1 for now
-    leds_init(&leds, &A[5], &oc1);
+    leds_init(&leds, &A[5], &oc1, &timer5);
+}
+
+volatile uint8_t bounce_led = 0;
+volatile int8_t bounce_dir = 1;
+volatile uint8_t bounce_r = 0;
+volatile uint8_t bounce_g = 0;
+volatile uint8_t bounce_b = 0;
+void __leds_bounce_write(_TIMER *timer) {
+    leds_clear(&leds);
+    leds_writeOne(&leds, bounce_led, bounce_r,bounce_g,bounce_b);
+    bounce_led += bounce_dir;
+    if (bounce_led == LEDS_NUM-1)
+        bounce_dir = -1;
+    if (bounce_led < 1)
+        bounce_dir = 1;
+}
+
+void leds_bounce(_LEDS *self, float period, uint8_t red, uint8_t green, uint8_t blue) {
+    bounce_r = red;
+    bounce_g = green;
+    bounce_b = blue;
+    timer_every(self->timer, period, __leds_bounce_write);
+}
+
+void leds_writeAll(_LEDS *self, uint8_t red, uint8_t green, uint8_t blue) {
+    uint8_t i;
+    for (i = 0; i < LEDS_NUM; i++)
+        leds_writeOne(self, i, red,green,blue);
+}
+
+void leds_clear(_LEDS *self) {
+    leds_writeAll(self, 0,0,0);
 }
 
 void leds_writeOne(_LEDS *self, uint8_t led, uint8_t red, uint8_t green, uint8_t blue) {
@@ -70,12 +99,13 @@ void leds_writeOne(_LEDS *self, uint8_t led, uint8_t red, uint8_t green, uint8_t
     leds_state[3*led+2] = blue;
 }
 
-void leds_init(_LEDS *self, _PIN *pin, _OC *oc) {
+void leds_init(_LEDS *self, _PIN *pin, _OC *oc, _TIMER *timer) {
     self->pin = pin;
     self->oc = oc;
+    self->timer = timer;
 
     oc_pwm(&oc1, self->pin, NULL, LEDS_FREQ, 0x0000);
     bitset(&IEC0, 2);
 
-    leds_writeOne(&leds, 2, 0,0,255);
+    leds_bounce(&leds, 0.1, 0,140,255);
 }
