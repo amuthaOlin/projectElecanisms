@@ -103,8 +103,6 @@ void oc_init(_OC *self, uint16_t *OCxCON1, uint16_t *OCxCON2,
 }
 
 void oc_free(_OC *self) {
-    *(self->OCxCON1) = 0;
-    *(self->OCxCON2) = 0;
     if (self->pin) {
         __builtin_write_OSCCONL(OSCCON&0xBF);
         *(self->pin->rpor) &= ~(0x3F<<(self->pin->rpshift));
@@ -114,23 +112,13 @@ void oc_free(_OC *self) {
         pin_clear(self->pin);
         self->pin = NULL;
     }
+    *(self->OCxCON1) = 0;
+    *(self->OCxCON2) = 0;
 }
 
 void oc_pwm(_OC *self, _PIN *pin, _TIMER *timer, float freq, uint16_t duty) {
     WORD32 temp;
-
-    if (pin->rpnum==-1)
-        return;
-    if (pin->owner==NULL) {
-        self->pin = pin;
-        pin->owner = (void *)self;
-        __builtin_write_OSCCONL(OSCCON&0xBF);
-        *(pin->rpor) &= ~(0x3F<<(pin->rpshift));
-        *(pin->rpor) |= (self->rpnum)<<(pin->rpshift);
-        __builtin_write_OSCCONL(OSCCON|0x40);
-    } else if (pin->owner!=(void *)self) {
-        return;
-    }
+    
     if (timer) {
         *(self->OCxCON1) = ((timer->octselnum)<<10)|0x0006;
         *(self->OCxCON2) = 0x001F;
@@ -145,6 +133,19 @@ void oc_pwm(_OC *self, _PIN *pin, _TIMER *timer, float freq, uint16_t duty) {
     *(self->OCxR) = temp.w[1];
     self->pin->write = __pwmWrite;
     self->pin->read = __pwmRead;
+
+    if (pin->rpnum==-1)
+        return;
+    if (pin->owner==NULL) {
+        self->pin = pin;
+        pin->owner = (void *)self;
+        __builtin_write_OSCCONL(OSCCON&0xBF);
+        *(pin->rpor) &= ~(0x3F<<(pin->rpshift));
+        *(pin->rpor) |= (self->rpnum)<<(pin->rpshift);
+        __builtin_write_OSCCONL(OSCCON|0x40);
+    } else if (pin->owner!=(void *)self) {
+        return;
+    }
 }
 
 void oc_freq(_OC *self, float freq) {

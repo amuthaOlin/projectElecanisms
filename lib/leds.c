@@ -49,13 +49,11 @@ volatile WORD32 oc1tmp;
 void __attribute__((interrupt, auto_psv)) _OC1Interrupt(void) {
     bitclear(&IFS0, 2);
 
-    if (bitcount%2) {
-        oc1tmp.ul = (uint32_t)0x8000*(uint32_t)OC1RS;
-        OC1R = oc1tmp.w[1];
-    } else {
-        oc1tmp.ul = (uint32_t)0x1000*(uint32_t)OC1RS;
-        OC1R = oc1tmp.w[1];
-    }
+    if (bitcount%2)
+        oc1tmp.ul = (uint32_t)0x7AE1*(uint32_t)OC1RS;
+    else
+        oc1tmp.ul = (uint32_t)0x3D70*(uint32_t)OC1RS;
+    OC1R = oc1tmp.w[1];
 
     bitcount++;
     if (bitcount == 7) {
