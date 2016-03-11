@@ -30,28 +30,22 @@
 #include "oc.h"
 #include "timer.h"
 
-#define LEDS_HIGH 0x7AE1 // ~48% duty cycle
-#define LEDS_LOW 0x3D70 // ~24% duty cycle
+#define LEDS_HIGH 0x3D70 // ~48% duty cycle (inverted)
+#define LEDS_LOW 0x7AE1 // ~24% duty cycle (inverted)
 #define LED_NUM 8
 #define LEDS_FREQ 8e5
 
 _LEDS leds;
 
-void __leds_bit_high(_LEDS *self) {
-    pin_write(self->pin, LEDS_LOW);
-}
-
-void __leds_bit_low(_LEDS *self) {
-    pin_write(self->pin, LEDS_HIGH);
-}
+uint8_t *leds_state[3*LED_NUM];
 
 volatile int16_t bitcount = 0;
 void __attribute__((interrupt, auto_psv)) _OC1Interrupt(void) {
+    bitclear(&IFS0, 2);
     if (!bitcount)
         oc_freq(leds.oc, LEDS_FREQ);
-    bitclear(&IFS0, 2);
 
-    __leds_bit_high(&leds);
+    pin_write(self->pin, bit? LEDS_HIGH : LEDS_LOW);
 
     bitcount++;
     if (bitcount == 24*LED_NUM) {
