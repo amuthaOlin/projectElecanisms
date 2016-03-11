@@ -68,7 +68,7 @@ volatile uint8_t bounce_g = 0;
 volatile uint8_t bounce_b = 0;
 void __leds_bounce_write(_TIMER *timer) {
     leds_clear(&leds);
-    leds_writeOne(&leds, bounce_led, bounce_r,bounce_g,bounce_b);
+    leds_writeRGB(&leds, bounce_led, bounce_r,bounce_g,bounce_b);
     bounce_led += bounce_dir;
     if (bounce_led == LEDS_NUM-1)
         bounce_dir = -1;
@@ -83,26 +83,41 @@ void leds_bounce(_LEDS *self, float period, uint8_t red, uint8_t green, uint8_t 
     timer_every(self->timer, period, __leds_bounce_write);
 }
 
-void leds_writeAll(_LEDS *self, uint8_t red, uint8_t green, uint8_t blue) {
+void leds_writeRGBs(_LEDS *self, uint8_t red, uint8_t green, uint8_t blue) {
     uint8_t i;
     for (i = 0; i < LEDS_NUM; i++)
-        leds_writeOne(self, i, red,green,blue);
+        leds_writeRGB(self, i, red,green,blue);
 }
 
 volatile uint8_t cycle_g = 0;
 void __leds_cycle(_LEDS *self) {
-    leds_writeOne(self, 4, cycle_g,cycle_g,cycle_g);
+    leds_writeRGB(self, 4, cycle_g,cycle_g,cycle_g);
     cycle_g++;
 }
 
-void leds_clear(_LEDS *self) {
-    leds_writeAll(self, 0,0,0);
+void leds_bar(_LEDS *self, float fill, uint8_t brightness) {
+    uint8_t leds_lit = fill*LEDS_NUM;
+    uint8_t i;
+    for (i = 0; i < leds_lit; i++) {
+        leds_writeWhite(self, i, brightness);
+    }
+    leds_writeWhite(self, i, (uint8_t)((fill*LEDS_NUM-leds_lit)*brightness));
 }
 
-void leds_writeOne(_LEDS *self, uint8_t led, uint8_t red, uint8_t green, uint8_t blue) {
+void leds_clear(_LEDS *self) {
+    leds_writeRGBs(self, 0,0,0);
+}
+
+void leds_writeRGB(_LEDS *self, uint8_t led, uint8_t red, uint8_t green, uint8_t blue) {
     leds_state[3*led] = green;
     leds_state[3*led+1] = red;
     leds_state[3*led+2] = blue;
+}
+
+void leds_writeWhite(_LEDS *self, uint8_t led, uint8_t brightness) {
+    leds_state[3*led] = brightness;
+    leds_state[3*led+1] = brightness;
+    leds_state[3*led+2] = brightness;
 }
 
 void leds_init(_LEDS *self, _PIN *pin, _OC *oc, _TIMER *timer) {
@@ -113,5 +128,5 @@ void leds_init(_LEDS *self, _PIN *pin, _OC *oc, _TIMER *timer) {
     oc_pwm(&oc1, self->pin, NULL, LEDS_FREQ, 0x0000);
     bitset(&IEC0, 2);
 
-    timer_every(self->timer, 0.1, __leds_cycle);
+    leds_bar(self, .4, 50);
 }

@@ -42,10 +42,13 @@ typedef struct _LEDS {
 extern _LEDS leds;
 
 void leds_init(_LEDS *self, _PIN *pin, _OC *oc, _TIMER *timer);
-void leds_writeAll(_LEDS *self, uint8_t red, uint8_t green, uint8_t blue);
-void leds_writeOne(_LEDS *self, uint8_t led, uint8_t red, uint8_t green, uint8_t blue);
+void leds_writeRGB(_LEDS *self, uint8_t led, uint8_t red, uint8_t green, uint8_t blue);
+void leds_writeWhite(_LEDS *self, uint8_t led, uint8_t brightness);
+
+void leds_writeRGBs(_LEDS *self, uint8_t red, uint8_t green, uint8_t blue);
 void leds_clear(_LEDS *self);
 
 void leds_bounce(_LEDS *self, float period, uint8_t red, uint8_t green, uint8_t blue);
+void leds_bar(_LEDS *self, float fill, uint8_t brightness);
 
 #endif
