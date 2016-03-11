@@ -37,6 +37,7 @@
 #define LED_NUM 1
 #define LEDS_FREQ 8e5
 #define LEDS_PERIOD 20 // cycles for LEDS_FREQ (FCY = 16e6)
+#define LEDS_RS_PERIOD 960 // cycles for 60us reset
 
 _LEDS leds;
 
@@ -44,24 +45,27 @@ uint8_t leds_state[3*LED_NUM];
 
 volatile WORD32 oc1tmp;
 void __leds_refresh(_TIMER *timer) {
-    led_toggle(&led1);
-    oc_pwm(leds.oc, leds.pin, NULL, LEDS_FREQ, LEDS_HIGH);
+    OC1RS = LEDS_PERIOD;
+    OC1R = 0x0000;
+    bitset(&IEC0, 2);
 }
 
 volatile uint8_t bitcount = 0;
 void __attribute__((interrupt, auto_psv)) _OC1Interrupt(void) {
     bitclear(&IFS0, 2);
+    if (!bitcount)
+        OC1RS = LEDS_PERIOD;
 
     // if (bitcount%2)
-        OC1R = LEDS_HIGH_R;
+    OC1R = LEDS_HIGH_R;
     // else
         // OC1R = LEDS_LOW_R;
 
     bitcount++;
-    if (bitcount == 3) {
+    if (bitcount == 8-1) {
         bitcount = 0;
+        OC1RS = LEDS_RS_PERIOD;
         OC1R = 0x0000;
-        // oc_free(leds.oc); // clears leds.pin
     }
 }
 
@@ -80,9 +84,16 @@ void leds_init(_LEDS *self, _PIN *pin, _OC *oc) {
     self->pin = pin;
     self->oc = oc;
 
-    // enable OC1 interrupt
-    oc_pwm(leds.oc, leds.pin, NULL, LEDS_FREQ, LEDS_HIGH);
+    OC1CON1 = 0x1C06;
+    OC1CON2 = 0x001F;
+
+    OC1RS = LEDS_PERIOD;
+    OC1R = 0x0000;
+    __builtin_write_OSCCONL(OSCCON&0xBF);
+    (WORD*)(RPOR0).b[0] = leds.oc.rpnum;
+    __builtin_write_OSCCONL(OSCCON|0x40);
+
     bitset(&IEC0, 2);
 
-    timer_every(&timer5, 60e-6, __leds_refresh);
+    // timer_every(&timer1, 60e-6, __leds_refresh);
 }
