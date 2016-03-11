@@ -118,7 +118,7 @@ void oc_free(_OC *self) {
 
 void oc_pwm(_OC *self, _PIN *pin, _TIMER *timer, float freq, uint16_t duty) {
     WORD32 temp;
-    
+
     if (timer) {
         *(self->OCxCON1) = ((timer->octselnum)<<10)|0x0006;
         *(self->OCxCON2) = 0x001F;
@@ -150,7 +150,9 @@ void oc_pwm(_OC *self, _PIN *pin, _TIMER *timer, float freq, uint16_t duty) {
 
 void oc_freq(_OC *self, float freq) {
     *(self->OCxCON1) = 0x1C06;
+    // 0001_1100_0000_0110
     *(self->OCxCON2) = 0x001F;
+    // 0000_0000_0001_1111
     if (freq<(FCY/65536.))
         *(self->OCxRS) = 0xFFFF;
     else

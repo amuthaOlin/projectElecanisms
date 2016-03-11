@@ -3,11 +3,9 @@
 #include "config.h"
 #include "common.h"
 #include "ui.h"
-#include "usb.h"
 #include "pin.h"
 #include "int.h"
 #include "i2c.h"
-#include "uart.h"
 
 void red() {
     led_toggle(&led1);

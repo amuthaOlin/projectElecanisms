@@ -31,34 +31,37 @@
 #include "timer.h"
 
 #define LEDS_HIGH 0x7AE1 // ~48% duty cycle
+#define LEDS_HIGH_R 0x0009 // high word of LEDS_HIGH*OC1RS
 #define LEDS_LOW 0x3D70 // ~24% duty cycle
+#define LEDS_LOW_R 0x0004 // high word of LEDS_LOW*OC1RS
 #define LED_NUM 1
-#define LEDS_FREQ 1e5
+#define LEDS_FREQ 8e5
+#define LEDS_PERIOD 20 // cycles for LEDS_FREQ (FCY = 16e6)
 
 _LEDS leds;
 
 uint8_t leds_state[3*LED_NUM];
 
+volatile WORD32 oc1tmp;
 void __leds_refresh(_TIMER *timer) {
     led_toggle(&led1);
     oc_pwm(leds.oc, leds.pin, NULL, LEDS_FREQ, LEDS_HIGH);
 }
 
 volatile uint8_t bitcount = 0;
-volatile WORD32 oc1tmp;
 void __attribute__((interrupt, auto_psv)) _OC1Interrupt(void) {
     bitclear(&IFS0, 2);
 
-    if (bitcount%2)
-        oc1tmp.ul = (uint32_t)0x7AE1*(uint32_t)OC1RS;
-    else
-        oc1tmp.ul = (uint32_t)0x3D70*(uint32_t)OC1RS;
-    OC1R = oc1tmp.w[1];
+    // if (bitcount%2)
+        OC1R = LEDS_HIGH_R;
+    // else
+        // OC1R = LEDS_LOW_R;
 
     bitcount++;
-    if (bitcount == 7) {
+    if (bitcount == 3) {
         bitcount = 0;
-        oc_free(leds.oc); // clears leds.pin
+        OC1R = 0x0000;
+        // oc_free(leds.oc); // clears leds.pin
     }
 }
 
@@ -78,7 +81,8 @@ void leds_init(_LEDS *self, _PIN *pin, _OC *oc) {
     self->oc = oc;
 
     // enable OC1 interrupt
+    oc_pwm(leds.oc, leds.pin, NULL, LEDS_FREQ, LEDS_HIGH);
     bitset(&IEC0, 2);
 
-    timer_every(&timer5, 1e4, __leds_refresh);
+    timer_every(&timer5, 60e-6, __leds_refresh);
 }
