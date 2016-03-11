@@ -40,5 +40,6 @@ typedef struct _LEDS {
 extern _LEDS leds;
 
 void leds_init(_LEDS *self, _PIN *pin, _OC *oc);
+void leds_writeOne(_LEDS *self, uint8_t led, uint8_t red, uint8_t green, uint8_t blue);
 
 #endif

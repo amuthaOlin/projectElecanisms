@@ -30,14 +30,14 @@
 #include "oc.h"
 #include "timer.h"
 
-#define LEDS_HIGH 0x3D70 // ~48% duty cycle (inverted)
-#define LEDS_LOW 0x7AE1 // ~24% duty cycle (inverted)
+#define LEDS_HIGH 0x7AE1 // ~48% duty cycle
+#define LEDS_LOW 0x3D70 // ~24% duty cycle
 #define LED_NUM 8
 #define LEDS_FREQ 8e5
 
 _LEDS leds;
 
-uint8_t *leds_state[3*LED_NUM];
+uint8_t leds_state[3*LED_NUM];
 
 volatile int16_t bitcount = 0;
 void __attribute__((interrupt, auto_psv)) _OC1Interrupt(void) {
@@ -45,11 +45,11 @@ void __attribute__((interrupt, auto_psv)) _OC1Interrupt(void) {
     if (!bitcount)
         oc_freq(leds.oc, LEDS_FREQ);
 
-    pin_write(self->pin, bit? LEDS_HIGH : LEDS_LOW);
+    pin_write(leds.pin, bitread(&leds_state[bitcount/8], bitcount%8)? LEDS_HIGH : LEDS_LOW);
 
     bitcount++;
     if (bitcount == 24*LED_NUM) {
-        bitcount = -1;
+        bitcount = 0;
         oc_freq(leds.oc, 16666);
         pin_write(leds.pin, 0);
     }
@@ -57,7 +57,13 @@ void __attribute__((interrupt, auto_psv)) _OC1Interrupt(void) {
 
 void init_leds(void) {
     // must pass OC1 for now
-    leds_init(&leds, &D[7], &oc1);
+    leds_init(&leds, &A[5], &oc1);
+}
+
+void leds_writeOne(_LEDS *self, uint8_t led, uint8_t red, uint8_t green, uint8_t blue) {
+    leds_state[led] = green;
+    leds_state[led+1] = red;
+    leds_state[led+2] = blue;
 }
 
 void leds_init(_LEDS *self, _PIN *pin, _OC *oc) {
@@ -67,4 +73,9 @@ void leds_init(_LEDS *self, _PIN *pin, _OC *oc) {
     oc_pwm(self->oc, self->pin, NULL, LEDS_FREQ, 0x0000);
     // enable OC1 interrupt
     bitset(&IEC0, 2);
+
+    uint8_t i;
+    for (i = 0; i < LED_NUM; i++) {
+        leds_writeOne(self, i, 0,100,255);
+    }
 }
