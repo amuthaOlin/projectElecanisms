@@ -47,7 +47,7 @@ void __attribute__((interrupt, auto_psv)) _OC1Interrupt(void) {
     if (!bitcount)
         OC1RS = LEDS_PERIOD;
 
-    OC1R = bitread(&leds_state[(uint16_t)(bitcount/8)], bitcount%8) ? LEDS_HIGH_R : LEDS_LOW_R;
+    OC1R = bitread(&leds_state[(uint16_t)(bitcount/8)], 7-bitcount%8) ? LEDS_HIGH_R : LEDS_LOW_R;
 
     bitcount++;
     if (bitcount == 24*LEDS_NUM+1) {
@@ -89,6 +89,12 @@ void leds_writeAll(_LEDS *self, uint8_t red, uint8_t green, uint8_t blue) {
         leds_writeOne(self, i, red,green,blue);
 }
 
+volatile uint8_t cycle_g = 0;
+void __leds_cycle(_LEDS *self) {
+    leds_writeOne(self, 4, cycle_g,cycle_g,cycle_g);
+    cycle_g++;
+}
+
 void leds_clear(_LEDS *self) {
     leds_writeAll(self, 0,0,0);
 }
@@ -107,5 +113,5 @@ void leds_init(_LEDS *self, _PIN *pin, _OC *oc, _TIMER *timer) {
     oc_pwm(&oc1, self->pin, NULL, LEDS_FREQ, 0x0000);
     bitset(&IEC0, 2);
 
-    leds_bounce(&leds, 0.1, 0,140,255);
+    timer_every(self->timer, 0.1, __leds_cycle);
 }
