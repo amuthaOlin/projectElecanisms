@@ -34,8 +34,8 @@
 #define LEDS_HIGH_R 0x0009 // high word of LEDS_HIGH*OC1RS
 #define LEDS_LOW 0x3D70 // ~24% duty cycle
 #define LEDS_LOW_R 0x0004 // high word of LEDS_LOW*OC1RS
-#define LED_NUM 1
-#define LEDS_FREQ 8e5
+#define LED_NUM 8
+#define LEDS_FREQ 2e5
 #define LEDS_PERIOD 80 // cycles for LEDS_FREQ (FCY = 16e6)
 #define LEDS_RS_PERIOD 960 // cycles for 60us reset
 
@@ -49,13 +49,10 @@ void __attribute__((interrupt, auto_psv)) _OC1Interrupt(void) {
     if (!bitcount)
         OC1RS = LEDS_PERIOD;
 
-    if (bitcount%2)
-        OC1R = LEDS_HIGH_R;
-    else
-        OC1R = LEDS_LOW_R;
+    OC1R = bitread(&leds_state[(uint16_t)(bitcount/8)], bitcount%8) ? LEDS_HIGH_R : LEDS_LOW_R;
 
     bitcount++;
-    if (bitcount == 8+1) {
+    if (bitcount == 24*LED_NUM+1) {
         OC1RS = LEDS_RS_PERIOD;
         OC1R = 0x0000;
         bitcount = 0;
@@ -77,16 +74,8 @@ void leds_init(_LEDS *self, _PIN *pin, _OC *oc) {
     self->pin = pin;
     self->oc = oc;
 
-    OC1CON1 = 0x1C06;
-    OC1CON2 = 0x001F;
-
-    OC1RS = LEDS_PERIOD;
-    OC1R = 0x0000;
-    __builtin_write_OSCCONL(OSCCON&0xBF);
-    ((WORD*)leds.pin->rpor)->b[0] = leds.oc->rpnum;
-    __builtin_write_OSCCONL(OSCCON|0x40);
-
+    oc_pwm(&oc1, self->pin, NULL, LEDS_FREQ, 0x0000);
     bitset(&IEC0, 2);
 
-    // timer_every(&timer1, 60e-6, __leds_refresh);
+    leds_writeOne(&leds, 2, 0,0,255);
 }
