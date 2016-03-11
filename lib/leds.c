@@ -45,20 +45,18 @@ void __leds_bit_low(_LEDS *self) {
     pin_write(self->pin, LEDS_HIGH);
 }
 
-void __leds_update(_TIMER *timer) {
-    oc_freq(leds.oc, LEDS_FREQ);
-}
-
-volatile uint16_t bitcount = 0;
+volatile int16_t bitcount = 0;
 void __attribute__((interrupt, auto_psv)) _OC1Interrupt(void) {
+    if (!bitcount)
+        oc_freq(leds.oc, LEDS_FREQ);
     bitclear(&IFS0, 2);
 
     __leds_bit_high(&leds);
 
     bitcount++;
     if (bitcount == 24*LED_NUM) {
-        bitcount = 0;
-        oc_freq(leds.oc, 1e-3);
+        bitcount = -1;
+        oc_freq(leds.oc, 16666);
         pin_write(leds.pin, 0);
     }
 }
@@ -73,7 +71,6 @@ void leds_init(_LEDS *self, _PIN *pin, _OC *oc) {
     self->oc = oc;
 
     oc_pwm(self->oc, self->pin, NULL, LEDS_FREQ, 0x0000);
-    timer_every(&timer5, 60e-6, __leds_update); // latch every 60uS
     // enable OC1 interrupt
     bitset(&IEC0, 2);
 }
