@@ -33,6 +33,7 @@
 #define LEDS_HIGH 0x7AE1 // ~48% duty cycle
 #define LEDS_LOW 0x3D70 // ~24% duty cycle
 #define LED_NUM 8
+#define LEDS_FREQ 8e5
 
 _LEDS leds;
 
@@ -44,26 +45,21 @@ void __leds_bit_low(_LEDS *self) {
     pin_write(self->pin, LEDS_HIGH);
 }
 
-void __leds_reset(_LEDS *self) {
-    oc_free(&oc1);
-    pin_write(self->pin, 1);
-    timer_delayMicro(7);
+void __leds_update(_TIMER *timer) {
+    oc_freq(leds.oc, LEDS_FREQ);
 }
 
 volatile uint16_t bitcount = 0;
 void __attribute__((interrupt, auto_psv)) _OC1Interrupt(void) {
-    if (!bitcount) {
-        oc_pwm(leds.oc, leds.pin, NULL, 8e5, 0x0000);
-    }
     bitclear(&IFS0, 2);
 
-    // actually write the RGB data
     __leds_bit_high(&leds);
 
     bitcount++;
     if (bitcount == 24*LED_NUM) {
         bitcount = 0;
-        __leds_reset(&leds);
+        oc_freq(leds.oc, 1e-3);
+        pin_write(leds.pin, 0);
     }
 }
 
@@ -76,7 +72,8 @@ void leds_init(_LEDS *self, _PIN *pin, _OC *oc) {
     self->pin = pin;
     self->oc = oc;
 
-    oc_pwm(self->oc, self->pin, NULL, 8e5, 0x0000);
-    // OC1 interrupt
+    oc_pwm(self->oc, self->pin, NULL, LEDS_FREQ, 0x0000);
+    timer_every(&timer5, 60e-6, __leds_update); // latch every 60uS
+    // enable OC1 interrupt
     bitset(&IEC0, 2);
 }

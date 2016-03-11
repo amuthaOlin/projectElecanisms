@@ -51,6 +51,7 @@ void oc_init(_OC *self, uint16_t *OCxCON1, uint16_t *OCxCON2,
              uint16_t rpnum);
 void oc_free(_OC *self);
 void oc_pwm(_OC *self, _PIN *out, _TIMER *timer, float freq, uint16_t duty);
+void oc_freq(_OC *self, float freq);
 void oc_servo(_OC *self, _PIN *out, _TIMER *timer, float interval, 
               float min_width, float max_width, uint16_t pos);
 
