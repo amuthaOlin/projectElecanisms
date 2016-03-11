@@ -39,19 +39,28 @@ _LEDS leds;
 
 uint8_t leds_state[3*LED_NUM];
 
+void __leds_refresh(_TIMER *timer) {
+    led_toggle(&led1);
+    oc_pwm(leds.oc, leds.pin, NULL, LEDS_FREQ, 0);
+}
+
 volatile int16_t bitcount = 0;
 void __attribute__((interrupt, auto_psv)) _OC1Interrupt(void) {
     bitclear(&IFS0, 2);
     if (!bitcount)
         oc_freq(leds.oc, LEDS_FREQ);
 
-    pin_write(leds.pin, bitread(&leds_state[(uint16_t)(bitcount/8)], 5)? LEDS_LOW : LEDS_HIGH);
+    if (bitcount > 24*3 && bitcount < 24*4) {
+        pin_write(leds.pin, LEDS_HIGH);
+        led_toggle(&led2);
+    } else {
+        pin_write(leds.pin, LEDS_LOW);
+    }
 
     bitcount++;
     if (bitcount == 24*LED_NUM-1) {
         bitcount = 0;
-        oc_freq(leds.oc, 16666);
-        pin_write(leds.pin, 0);
+        oc_free(leds.oc); // clears leds.pin
     }
 }
 
@@ -70,12 +79,8 @@ void leds_init(_LEDS *self, _PIN *pin, _OC *oc) {
     self->pin = pin;
     self->oc = oc;
 
-    oc_pwm(self->oc, self->pin, NULL, LEDS_FREQ, 0x0000);
     // enable OC1 interrupt
     bitset(&IEC0, 2);
 
-    uint8_t i;
-    // for (i = 0; i < LED_NUM; i++) {
-    // leds_writeOne(self, 2, 255,255,255);
-    // }
+    timer_every(&timer5, 80e-6, __leds_refresh);
 }
