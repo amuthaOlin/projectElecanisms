@@ -30,8 +30,8 @@
 #include "oc.h"
 #include "timer.h"
 
-#define LEDS_HIGH_R 0x0009 // high word of LEDS_HIGH*OC1RS
-#define LEDS_LOW_R 0x0004 // high word of LEDS_LOW*OC1RS
+#define LEDS_HIGH_R 0x000F // high word of LEDS_HIGH*OC1RS
+#define LEDS_LOW_R 0x0001 // high word of LEDS_LOW*OC1RS
 #define LEDS_NUM 8
 #define LEDS_FREQ 2e5
 #define LEDS_PERIOD FCY/(LEDS_FREQ*1.) // cycles for LEDS_FREQ (FCY = 16e6)
@@ -89,19 +89,27 @@ void leds_writeRGBs(_LEDS *self, uint8_t red, uint8_t green, uint8_t blue) {
         leds_writeRGB(self, i, red,green,blue);
 }
 
-volatile uint8_t cycle_g = 0;
+volatile uint8_t cycle_w = 0;
 void __leds_cycle(_LEDS *self) {
-    leds_writeRGB(self, 4, cycle_g,cycle_g,cycle_g);
-    cycle_g++;
+    leds_writeRGB(self, 4, cycle_w,cycle_w,cycle_w);
+    cycle_w++;
 }
 
+volatile uint8_t bar_r = 0;
+volatile uint8_t bar_g = 0;
+volatile uint8_t bar_b = 0;
 void leds_bar(_LEDS *self, float fill, uint8_t brightness) {
     uint8_t leds_lit = fill*LEDS_NUM;
     uint8_t i;
-    for (i = 0; i < leds_lit; i++) {
-        leds_writeWhite(self, i, brightness);
+
+    bar_g = fill*255;
+    bar_r = (1-fill)*255;
+
+    leds_clear(&leds);
+    for (i = 0; i <= leds_lit; i++) {
+        leds_writeRGB(self, i, bar_r,bar_g,bar_b);
     }
-    leds_writeWhite(self, i, (uint8_t)((fill*LEDS_NUM-leds_lit)*brightness));
+    leds_brighten(self, i-1, fill*LEDS_NUM-leds_lit);
 }
 
 void leds_clear(_LEDS *self) {
@@ -112,6 +120,12 @@ void leds_writeRGB(_LEDS *self, uint8_t led, uint8_t red, uint8_t green, uint8_t
     leds_state[3*led] = green;
     leds_state[3*led+1] = red;
     leds_state[3*led+2] = blue;
+}
+
+void leds_brighten(_LEDS *self, uint8_t led, float factor) {
+    leds_state[3*led] *= factor;
+    leds_state[3*led+1] *= factor;
+    leds_state[3*led+2] *= factor;
 }
 
 void leds_writeWhite(_LEDS *self, uint8_t led, uint8_t brightness) {
@@ -127,6 +141,4 @@ void leds_init(_LEDS *self, _PIN *pin, _OC *oc, _TIMER *timer) {
 
     oc_pwm(&oc1, self->pin, NULL, LEDS_FREQ, 0x0000);
     bitset(&IEC0, 2);
-
-    leds_bar(self, .4, 50);
 }
