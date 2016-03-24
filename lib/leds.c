@@ -106,9 +106,8 @@ void leds_bar(_LEDS *self, float fill, uint8_t brightness) {
     bar_r = (1-fill)*255;
 
     leds_clear(&leds);
-    for (i = 0; i <= leds_lit; i++) {
+    for (i = 0; i < leds_lit+1; i++)
         leds_writeRGB(self, i, bar_r,bar_g,bar_b);
-    }
     leds_brighten(self, i-1, fill*LEDS_NUM-leds_lit);
 }
 
