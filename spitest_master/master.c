@@ -11,7 +11,8 @@
 
 
 
-volatile uint8_t res, cmd;
+volatile WORD32 res1, res2, res3, cmd;
+
 _PIN *MISO  = &D[1];
 _PIN *MOSI  = &D[0];
 _PIN *SCK   = &D[2];
@@ -24,7 +25,8 @@ _PIN *Sint3 = &D[8];
 
 
 
-void init_master_pins(){
+void init_master_comms(){
+    spi_open(&spi1, &D[0], &D[1], &D[2], 1e6, 1);
     pin_digitalIn(Sint1);
     pin_digitalIn(Sint2);
     pin_digitalIn(Sint3);
@@ -35,24 +37,43 @@ void init_master_pins(){
     pin_set(CSn1);
     pin_set(CSn2);
     pin_set(CSn3);
+
+    int_attach(&int1, Sint1, 0, handle_sint1);
+    int_attach(&int2, Sint1, 0, handle_sint2);
+    int_attach(&int3, Sint1, 0, handle_sint3);
+
 }
 
-void recieve_and_send_spi(_PIN *CSn){
-    res = spi_transfer(&spi1, cmd, CSn);
+WORD32 recieve_and_send_spi(_PIN *CSn){
+    WORD32 res;
+    res.b[3] = spi_transfer(&spi1, cmd.b[3], CSn);
+    res.b[2] = spi_transfer(&spi1, cmd.b[2], CSn);
+    res.b[1] = spi_transfer(&spi1, cmd.b[1], CSn);
+    res.b[0] = spi_transfer(&spi1, cmd.b[0], CSn);
+    return res;
 }
 
 //recieve SPI interrupt handler
 void handle_sint1(_INT *intx) {
-    recieve_and_send_spi(CSn1);
+    res1 = recieve_and_send_spi(CSn1);
 }
 
 void handle_sint2(_INT *intx) {
-    recieve_and_send_spi(CSn2);
+    res2 = recieve_and_send_spi(CSn2);
 }
 
 void handle_sint3(_INT *intx) {
-    recieve_and_send_spi(CSn3);
+    res3 = recieve_and_send_spi(CSn3);
 }
+
+void game_init(){
+
+}
+
+void game_state(){
+    
+}
+
 
 
 int16_t main(void) {
@@ -63,14 +84,7 @@ int16_t main(void) {
     init_pin();
     init_int();
 
-    init_master_pins();
-
-
-    spi_open(&spi1, &D[0], &D[1], &D[2], 1e6, 1);
-
-    int_attach(&int1, Sint1, 0, handle_sint1);
-    int_attach(&int2, Sint1, 0, handle_sint2);
-    int_attach(&int3, Sint1, 0, handle_sint3);
+    init_master_comms();
 
     while (1) {
     }
