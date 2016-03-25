@@ -20,7 +20,8 @@ _PIN *Sint  = &D[4];
 volatile WORD32 res, cmd;
 
 
-WORD32 recieve_and_send_spi(cmd){
+WORD32 recieve_and_send_spi(){
+    printf("%s\n", );
     res.b[3] = spi_transfer_slave(&spi1, cmd.b[3], Sint);
     res.b[2] = spi_transfer_slave(&spi1, cmd.b[2], Sint);
     res.b[1] = spi_transfer_slave(&spi1, cmd.b[1], Sint);
@@ -29,7 +30,13 @@ WORD32 recieve_and_send_spi(cmd){
 }
 
 void handle_CSn(_INT *intx) {
-    res = recieve_and_send_spi(0x00);
+    led_toggle(&led1);
+    res = recieve_and_send_spi(0xF00F00FF0);
+
+    printf("res:%x\n\r",res);
+    if (res.l = 0x1F1F1F1F){
+        led_toggle(&led2);
+    }
 }
 
 
@@ -38,6 +45,7 @@ void init_slave_comms(void){
     pin_digitalOut(Sint);
     pin_clear(Sint);
     pin_digitalIn(CSn);
+    int_attach(&int1, CSn, 1, handle_CSn);
 }
 
 int16_t main(void) {
@@ -55,17 +63,17 @@ int16_t main(void) {
     timer_setPeriod(&timer1, 0.5);
     timer_start(&timer1);
 
-    int_attach(&int1, CSn, 1, handle_CSn);
+
 
     while(1) {
         if (timer_flag(&timer1)) {
             timer_lower(&timer1);
 
-            //res = spi_transfer_slave(&spi1, 0x5A, Sint);
+        //     //res = spi_transfer_slave(&spi1, 0x5A, Sint);
 
             led_toggle(&led3);
-            printf("Slave sent: 0x%x\r\n", 0x5A);
-            printf("Slave received: 0x%x\r\n", res);
+        //     printf("Slave sent: 0x%x\r\n", 0x5A);
+        //     printf("Slave received: 0x%x\r\n", res);
         }
     }
 }
