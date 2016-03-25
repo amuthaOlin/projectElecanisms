@@ -21,7 +21,8 @@ volatile WORD32 res, cmd;
 
 
 WORD32 recieve_and_send_spi(){
-    printf("%s\n", );
+    printf("cmd:%x%x\n\r",cmd.w[1],cmd.w[0]);
+    printf("BUFFER%x\n\r",*(spi1.SPIxBUF));
     res.b[3] = spi_transfer_slave(&spi1, cmd.b[3], Sint);
     res.b[2] = spi_transfer_slave(&spi1, cmd.b[2], Sint);
     res.b[1] = spi_transfer_slave(&spi1, cmd.b[1], Sint);
@@ -31,10 +32,9 @@ WORD32 recieve_and_send_spi(){
 
 void handle_CSn(_INT *intx) {
     led_toggle(&led1);
-    res = recieve_and_send_spi(0xF00F00FF0);
-
-    printf("res:%x\n\r",res);
-    if (res.l = 0x1F1F1F1F){
+    res = recieve_and_send_spi();
+    printf("res:%x%x\n\r",res.w[1],res.w[0]);
+    if (res.ul == 0xA1B2C3D4){
         led_toggle(&led2);
     }
 }
@@ -57,21 +57,28 @@ int16_t main(void) {
     init_timer();
     init_uart();
 
+    cmd.ul = 0xBEEFFACE;
     init_slave_comms();
 
 
     timer_setPeriod(&timer1, 0.5);
     timer_start(&timer1);
 
-
+    uint16_t switch_state3 = sw_read(&sw3);
 
     while(1) {
         if (timer_flag(&timer1)) {
             timer_lower(&timer1);
+            led_toggle(&led3);
+        if (sw_read(&sw3) != switch_state3){
+            switch_state3 = sw_read(&sw3);
+            cmd.ul = 0x567890EF;
+            recieve_and_send_spi();
+        }
 
         //     //res = spi_transfer_slave(&spi1, 0x5A, Sint);
 
-            led_toggle(&led3);
+
         //     printf("Slave sent: 0x%x\r\n", 0x5A);
         //     printf("Slave received: 0x%x\r\n", res);
         }

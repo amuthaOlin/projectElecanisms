@@ -33,8 +33,9 @@ WORD32 recieve_and_send_spi(_PIN *CSn){
     res.b[2] = spi_transfer(&spi1, cmd.b[2], CSn);
     res.b[1] = spi_transfer(&spi1, cmd.b[1], CSn);
     res.b[0] = spi_transfer(&spi1, cmd.b[0], CSn);
-    printf("res:%x\n\r",res);
-    printf("cmd0:%x\n\r",cmd.ul);
+    printf("BUFFER%x\n\r",*(spi1.SPIxBUF));
+    printf("res:%x%x\n\r",res.w[1],res.w[0]);
+    printf("cmd:%x%x\n\r",cmd.w[1],cmd.w[0]);
     return res;
 }
 
@@ -51,18 +52,22 @@ void handle_sint3(_INT *intx) {
     res3 = recieve_and_send_spi(CSn3);
 }
 
-void sendSlave(slave) {
+void send_all() {
+    send_slave(1);
+    send_slave(2);
+    send_slave(3);
+}
+
+
+void send_slave(slave) {
     if (slave == 1){
         res1 = recieve_and_send_spi(CSn1);
-        led_toggle(&led1);
     }
     if (slave == 2){
         res2 = recieve_and_send_spi(CSn2);
-        led_toggle(&led2);
     }
     if (slave == 3){
         res3 = recieve_and_send_spi(CSn3);
-        led_toggle(&led3);
     }
 }
 
@@ -80,6 +85,9 @@ void init_master_comms(){
     pin_set(CSn1);
     pin_set(CSn2);
     pin_set(CSn3);
+    led_off(&led1);
+    led_off(&led2);
+    led_off(&led3);
 
     int_attach(&int1, Sint1, 0, handle_sint1);
     int_attach(&int2, Sint1, 0, handle_sint2);
@@ -90,6 +98,8 @@ void init_master_comms(){
 
 void game_init(){
     init_master_comms();
+    cmd.ul = 0xA1B2C3D4;
+    send_all();
 
 }
 
@@ -107,31 +117,22 @@ int16_t main(void) {
     init_ui();
     init_pin();
     init_int();
+    
 
     game_init();
+    cmd.ul = 0xFACEBEEF;
 
-    timer_setPeriod(&timer1, 0.25);
-    timer_start(&timer1);
-    timer_setPeriod(&timer2, 0.5);
-    timer_start(&timer2);
-    timer_setPeriod(&timer3, 1.0);
-    timer_start(&timer3);
-    cmd = (WORD32)0x1F1F1F1F;
 
 
     while (1) {
-        if (timer_flag(&timer1)) {
-            timer_lower(&timer1);
-            sendSlave(1);
-
+        if (res1.ul == 0x567890EF){
+            led_toggle(&led1);
         }
-        if (timer_flag(&timer2)) {
-            timer_lower(&timer2);
-            sendSlave(2);
+        if (res2.ul == 0x567890EF){
+            led_toggle(&led2);
         }
-        if (timer_flag(&timer3)) {
-            timer_lower(&timer3);
-            sendSlave(3);
+        if (res3.ul == 0x567890EF){
+            led_toggle(&led3);
         }
     }
 }

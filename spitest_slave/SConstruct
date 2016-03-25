@@ -48,5 +48,5 @@ env.Append(BUILDERS = {'Load' : load})
 env.Hex('slave')
 env.List('slave')
 # To automatically load the hex file, you need to run scons like this:
-# >scons --site-dir ../site_scons
+# >sudo scons --site-dir ../site_scons
 env.Load('slave') # Uncomment this line to automatically load the hex file

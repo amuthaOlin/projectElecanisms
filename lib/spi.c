@@ -220,6 +220,7 @@ uint8_t spi_transfer(_SPI *self, uint8_t val, _PIN *CSn) {
     return (uint8_t)(*(self->SPIxBUF));
 }
 
+
 uint8_t spi_transfer_slave(_SPI *self, uint8_t val, _PIN *Sint) {
     *(self->SPIxBUF) = (uint16_t)val;
     pin_set(Sint);
