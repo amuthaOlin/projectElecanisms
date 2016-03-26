@@ -9,8 +9,6 @@
 #include "int.h"
 #include "timer.h"
 
-
-
 volatile WORD32 res1, res2, res3, cmd;
 
 _PIN *MISO  = &D[1];
@@ -22,10 +20,6 @@ _PIN *CSn2  = &D[5];
 _PIN *Sint2 = &D[6];
 _PIN *CSn3  = &D[7];
 _PIN *Sint3 = &D[8];
-
-
-
-
 
 WORD32 recieve_and_send_spi(_PIN *CSn){
     WORD32 res;
@@ -58,22 +52,21 @@ void send_all() {
     send_slave(3);
 }
 
-
-void send_slave(slave) {
-    if (slave == 1){
-        res1 = recieve_and_send_spi(CSn1);
-    }
-    if (slave == 2){
-        res2 = recieve_and_send_spi(CSn2);
-    }
-    if (slave == 3){
-        res3 = recieve_and_send_spi(CSn3);
+void send_slave(uint8_t slave) {
+    switch (slave) {
+        case 1:
+            res1 = recieve_and_send_spi(CSn1);
+            break;
+        case 2:
+            res2 = recieve_and_send_spi(CSn2);
+            break;
+        case 3:
+            res3 = recieve_and_send_spi(CSn3);
+            break;
     }
 }
 
-
-
-void init_master_comms(){
+void init_master_comms() {
     spi_open(&spi1, &D[0], &D[1], &D[2], 1e6, 1);
     pin_digitalIn(Sint1);
     pin_digitalIn(Sint2);
@@ -92,22 +85,18 @@ void init_master_comms(){
     int_attach(&int1, Sint1, 0, handle_sint1);
     int_attach(&int2, Sint1, 0, handle_sint2);
     int_attach(&int3, Sint1, 0, handle_sint3);
-
 }
 
 
-void game_init(){
+void game_init() {
     init_master_comms();
     cmd.ul = 0xA1B2C3D4;
     send_all();
-
 }
 
-void game_state(){
+void game_state() {
     
 }
-
-
 
 int16_t main(void) {
     init_clock();
@@ -118,11 +107,8 @@ int16_t main(void) {
     init_pin();
     init_int();
     
-
     game_init();
     cmd.ul = 0xFACEBEEF;
-
-
 
     while (1) {
         if (res1.ul == 0x567890EF){

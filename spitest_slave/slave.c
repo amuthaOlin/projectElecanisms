@@ -9,18 +9,15 @@
 #include "timer.h"
 #include "uart.h"
 
-
 _PIN *MISO  = &D[1];
 _PIN *MOSI  = &D[0];
 _PIN *SCK   = &D[2];
 _PIN *CSn   = &D[3];
 _PIN *Sint  = &D[4];
 
-
 volatile WORD32 res, cmd;
 
-
-WORD32 recieve_and_send_spi(){
+WORD32 recieve_and_send_spi() {
     printf("cmd:%x%x\n\r",cmd.w[1],cmd.w[0]);
     printf("BUFFER%x\n\r",*(spi1.SPIxBUF));
     res.b[3] = spi_transfer_slave(&spi1, cmd.b[3], Sint);
@@ -39,8 +36,7 @@ void handle_CSn(_INT *intx) {
     }
 }
 
-
-void init_slave_comms(void){
+void init_slave_comms(void) {
     spi_open_slave(&spi1, MOSI, MISO, SCK, 1);
     pin_digitalOut(Sint);
     pin_clear(Sint);
@@ -60,7 +56,6 @@ int16_t main(void) {
     cmd.ul = 0xBEEFFACE;
     init_slave_comms();
 
-
     timer_setPeriod(&timer1, 0.5);
     timer_start(&timer1);
 
@@ -78,10 +73,8 @@ int16_t main(void) {
 
         //     //res = spi_transfer_slave(&spi1, 0x5A, Sint);
 
-
         //     printf("Slave sent: 0x%x\r\n", 0x5A);
         //     printf("Slave received: 0x%x\r\n", res);
         }
     }
 }
-
