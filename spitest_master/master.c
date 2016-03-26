@@ -83,8 +83,8 @@ void init_master_comms() {
     led_off(&led3);
 
     int_attach(&int1, Sint1, 0, handle_sint1);
-    int_attach(&int2, Sint1, 0, handle_sint2);
-    int_attach(&int3, Sint1, 0, handle_sint3);
+    int_attach(&int2, Sint2, 0, handle_sint2);
+    int_attach(&int3, Sint3, 0, handle_sint3);
 }
 
 
