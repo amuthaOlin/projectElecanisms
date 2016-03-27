@@ -28,7 +28,8 @@ env.Program('slave', ['slave.c',
                         '../lib/timer.c', 
                         '../lib/int.c', 
                         '../lib/spi.c',
-                        '../lib/common.c'])
+                        '../lib/common.c',
+                        '../lib/spacecomms.h'])
 
 #print('Creating builder to load hex file via bootloader...')
 def load_function(target, source, env):

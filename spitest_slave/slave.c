@@ -8,6 +8,7 @@
 #include "spi.h"
 #include "timer.h"
 #include "uart.h"
+#include "spacecomms.h"
 
 _PIN *MISO  = &D[1];
 _PIN *MOSI  = &D[0];
@@ -15,7 +16,8 @@ _PIN *SCK   = &D[2];
 _PIN *CSn   = &D[3];
 _PIN *Sint  = &D[4];
 
-volatile WORD32 res, cmd, state;
+volatile WORD32 res, cmd;
+volatile WORD state;
 
 WORD32 recieve_and_send_spi() {
     // printf("Receive and Sending SPI\n\r");
@@ -56,13 +58,18 @@ void init_slave(void){
 }
 
 
-WORD32 pull_changes(){
-    
+void pull_changes(){
+    WORD last_state = state;
+    pull_state();    
+    printf("last:%u\n\r",last_state.w);
+    printf("state:%u\n\r",state.w);
+    if (last_state.w!= state.w){
+        led_toggle(&led1); 
+    }
 }
 
-pull_state(){
-    pin_read(&D[5]);
-    
+void pull_state(){
+    state.s.red_button = pin_read(&D[5]);
 
 }
 
@@ -76,10 +83,13 @@ int16_t main(void) {
     init_uart();
 
     cmd.ul = 0xBEEFFACE;
-    init_slave_comms();
+    init_slave();
 
     timer_setPeriod(&timer1, 0.5);
     timer_start(&timer1);
+
+    timer_setPeriod(&timer2, 0.01);
+    timer_start(&timer2);
 
     uint16_t switch_state3 = sw_read(&sw3);
     
@@ -96,7 +106,10 @@ int16_t main(void) {
             pin_set(Sint);
             pin_clear(Sint);
         }
-
+        if (timer_flag(&timer2)) {
+            timer_lower(&timer2);
+            pull_changes();
+        }
         //     //res = spi_transfer_slave(&spi1, 0x5A, Sint);
 
         //     printf("Slave sent: 0x%x\r\n", 0x5A);

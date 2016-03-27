@@ -25,6 +25,7 @@
 */
 #ifndef _COMMON_H_
 #define _COMMON_H_
+#include "spacecomms.h"
 
 #include <stdint.h>
 
@@ -49,6 +50,7 @@ typedef union {
     int16_t i;
     uint16_t w;
     uint8_t b[2];
+    SLAVE1_STATE s;
 } WORD;
 
 typedef union {
