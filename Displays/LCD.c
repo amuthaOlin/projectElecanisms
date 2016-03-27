@@ -64,7 +64,7 @@ void lcd_init(_I2C *i2c){
 	lcd_send(i2c, 0x06, INTERNAL_WRITE); // Set curson direction
 	delayMicroseconds(5000);
 
-	lcd_send(i2c, 0xC, INTERNAL_WRITE); // Display on, cursor off
+	lcd_send(i2c, 0x0C, INTERNAL_WRITE); // Display on, cursor off
 
 }
 
@@ -120,6 +120,14 @@ void lcd_send8(_I2C *i2c,uint8_t value, uint8_t command){
 
 void lcd_write(_I2C *i2c, uint8_t value){
 	lcd_send(i2c, value, DR_WRITE);
+	delayMicroseconds(1000);
+}
+
+void lcd_print(_I2C *i2c,char *str){
+   while (*str){
+   	lcd_write(i2c,*str);
+    str++;
+   }
 }
 
 
@@ -139,17 +147,19 @@ void init_delay(){
 }
 
 
-void lcd_goto(_I2C *i2c, uint8_t x, uint8_t y)   //x=col, y=row
+void lcd_goto(_I2C *i2c, uint8_t line, uint8_t col)   //x=col, y=row
 {
 uint8_t address;
 
-   switch(y)
+   switch(line)
      {
       case 1:
         address = 0x00;
+        led_on(&led1);
         break;
 
       case 2:
+      	// led_on(&led1);
         address = 0x40;
         break;
 
@@ -158,6 +168,21 @@ uint8_t address;
         break;
      }
 
-   address += x-1;
-   lcd_send(0, 0x80 | address, INTERNAL_WRITE);
+   address = address+col;
+   lcd_send(i2c, LCD_SETDDRAMADDR | address, INTERNAL_WRITE);
+}
+
+void lcd_cursor(_I2C *i2c, uint8_t cur){
+	switch(cur){
+		case 0:
+			lcd_send(i2c,0x0C, INTERNAL_WRITE);
+			break;
+
+		case 1:
+			lcd_send(i2c,0x0E, INTERNAL_WRITE);
+			break;
+
+		default:
+			break;
+	}
 }

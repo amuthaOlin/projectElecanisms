@@ -54,7 +54,6 @@
 #define DR_WRITE 0x09
 #define DR_READ 0x0B
 
-
 void init_lcd(_I2C *i2c, float freq);
 void lcd_init(_I2C *i2c);
 void lcd_display(_I2C *i2c);
@@ -66,8 +65,10 @@ void lcd_write(_I2C *i2c, uint8_t value);
 void i2c_write(_I2C *i2c, uint8_t ch);
 void init_delay();
 void delayMicroseconds(uint16_t uS);
-void lcd_goto(_I2C *i2c, uint8_t x, uint8_t y);
-
+void lcd_goto(_I2C *i2c, uint8_t line, uint8_t col);
+void lcd_send8(_I2C *i2c,uint8_t value, uint8_t command);
+void lcd_print(_I2C *i2c,char *str);
+void lcd_cursor(_I2C *i2c, uint8_t cur);
 
 #endif
 
