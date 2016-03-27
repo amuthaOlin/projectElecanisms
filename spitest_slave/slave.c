@@ -44,32 +44,7 @@ void handle_CSn(_INT *intx) {
     }
 }
 
-void init_slave_comms(void) {
-    spi_open_slave(&spi1, MOSI, MISO, SCK, 1);
-    pin_digitalOut(Sint);
-    pin_clear(Sint);
-    pin_digitalIn(CSn);
-    int_attach(&int1, CSn, 0, handle_CSn);
-}
-
-void init_slave(void){
-    init_slave_comms();
-    pull_state();
-}
-
-
-void pull_changes(){
-    WORD last_state = state;
-    pull_state();    
-    printf("last:%u\n\r",last_state.w);
-    printf("state:%u\n\r",state.w);
-    if (last_state.w!= state.w){
-        led_toggle(&led1); 
-    }
-}
-
-void pull_state(){
-    state.s.red_button = pin_read(&D[5]);
+void check_slider(){
     uint16_t slider = pin_read(&A[0]);
     if(slider<=100){
         state.s.slider = 0;
@@ -84,6 +59,38 @@ void pull_state(){
         state.s.slider = 3;
     }
 }
+
+void pull_state(){
+    state.s.red_button = pin_read(&D[5]);
+    check_slider()
+}
+
+
+void pull_changes(){
+    WORD last_state = state;
+    pull_state();    
+    printf("last:%u\n\r",last_state.w);
+    printf("state:%u\n\r",state.w);
+    if (last_state.w!= state.w){
+        led_toggle(&led1); 
+    }
+}
+
+void init_slave_comms(void) {
+    spi_open_slave(&spi1, MOSI, MISO, SCK, 1);
+    pin_digitalOut(Sint);
+    pin_clear(Sint);
+    pin_digitalIn(CSn);
+    int_attach(&int1, CSn, 0, handle_CSn);
+}
+
+void init_slave(void){
+    init_slave_comms();
+    pull_state();
+}
+
+
+
 
 int16_t main(void) {
     init_clock();
