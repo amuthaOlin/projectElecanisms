@@ -21,8 +21,6 @@ WORD32 recieve_and_send_spi() {
     // printf("Receive and Sending SPI\n\r");
     // printf("cmd:%x%x\n\r",cmd.w[1],cmd.w[0]);
     // printf("BUFFER:%x\n\r",*(spi1.SPIxBUF));
-    pin_set(Sint);
-    pin_clear(Sint);
     res.b[3] = spi_transfer_slave(&spi1, cmd.b[3]);
     res.b[2] = spi_transfer_slave(&spi1, cmd.b[2]);
     res.b[1] = spi_transfer_slave(&spi1, cmd.b[1]);
@@ -31,7 +29,11 @@ WORD32 recieve_and_send_spi() {
 }
 
 void handle_CSn(_INT *intx) {
-    // printf("CS called\n\r");
+
+    if (!sw_read(&sw2)){
+        return;
+    }
+    printf("CS called\n\r");
     led_toggle(&led1);
     res = recieve_and_send_spi();
     //printf("res:%x%x\n\r",res.w[1],res.w[0]);
@@ -44,8 +46,8 @@ void init_slave_comms(void) {
     spi_open_slave(&spi1, MOSI, MISO, SCK, 1);
     pin_digitalOut(Sint);
     pin_clear(Sint);
-    int_attach(&int1, CSn, 1, handle_CSn);
     pin_digitalIn(CSn);
+    int_attach(&int1, CSn, 0, handle_CSn);
 }
 
 int16_t main(void) {
@@ -74,7 +76,8 @@ int16_t main(void) {
             //printf("switch_press");
             switch_state3 = sw_read(&sw3);
             cmd.ul = 0x567890EF;
-            recieve_and_send_spi();
+            pin_set(Sint);
+            pin_clear(Sint);
         }
 
         //     //res = spi_transfer_slave(&spi1, 0x5A, Sint);
