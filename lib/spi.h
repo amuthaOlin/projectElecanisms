@@ -39,21 +39,25 @@ typedef struct {
     uint16_t *SPIxBUF;
     uint16_t *DINrpinr;
     uint8_t DINrpshift;
+    uint16_t *SSnrpinr;
+    uint8_t SSnrpshift;
     int16_t DOrpnum;
     int16_t SCKrpnum;
     _PIN *MISO;
     _PIN *MOSI;
     _PIN *SCK;
+    _PIN *SSn;
 } _SPI;
 
 extern _SPI spi1, spi2, spi3;
 
 void spi_init(_SPI *self, uint16_t *SPIxSTAT, uint16_t *SPIxCON1, 
               uint16_t *SPIxCON2, uint16_t *SPIxBUF, 
-              uint16_t *DINrpinr, uint8_t DINrpshift, 
+              uint16_t *DINrpinr, uint16_t *SSnrpinr,
+              uint8_t SSnrpshift, uint8_t DINrpshift, 
               int16_t DOrpnum, int16_t SCKrpnum);
 void spi_open(_SPI *self, _PIN *MISO, _PIN *MOSI, _PIN *SCK, float freq, uint8_t mode, uint8_t enhanced);
-void spi_open_slave(_SPI *self, _PIN *MISO, _PIN *MOSI, _PIN *SCK, uint8_t mode, uint8_t enhanced);
+void spi_open_slave(_SPI *self, _PIN *MISO, _PIN *MOSI, _PIN *SCK, _PIN *SSn, uint8_t mode, uint8_t enhanced);
 void spi_close(_SPI *self);
 uint8_t spi_transfer(_SPI *self, uint8_t val);
 WORD32 spi_queue(_SPI *self, WORD32 payload);

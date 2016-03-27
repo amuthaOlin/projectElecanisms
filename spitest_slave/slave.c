@@ -18,6 +18,7 @@ _PIN *Sint  = &D[4];
 volatile WORD32 res, cmd, state;
 
 void handle_CSn(_INT *intx) {
+    // pin_digitalIn(MISO);
     led_toggle(&led1);
     res = spi_read_slave(&spi1);
     //printf("res:%x%x\n\r",res.w[1],res.w[0]);
@@ -27,7 +28,8 @@ void handle_CSn(_INT *intx) {
 }
 
 void init_slave_comms(void) {
-    spi_open_slave(&spi1, MOSI, MISO, SCK, 1, 1);
+    spi_open_slave(&spi1, MOSI, MISO, SCK, CSn, 1, 1);
+    // pin_digitalIn(MISO); // only output when actually transmitting
     pin_digitalOut(Sint);
     pin_clear(Sint);
     pin_digitalIn(CSn);
@@ -77,6 +79,7 @@ int16_t main(void) {
             //printf("switch_press");
             switch_state3 = sw_read(&sw3);
             cmd.ul = 0x567890EF;
+            // pin_digitalOut(MISO);
             pin_set(Sint);
             pin_clear(Sint);
             spi_queue_slave(&spi1, cmd);
