@@ -26,10 +26,10 @@ WORD32 recieve_and_send_spi(_PIN *CSn){
     pin_clear(CSn);
     res = spi_queue(&spi1, cmd);
     pin_set(CSn);
-    // printf("====================\n\r");
-    // printf("Transaction complete\n\r");
-    // printf("Tx: %x%x%x%x\n\r", cmd.b[3], cmd.b[2], cmd.b[1], cmd.b[0]);
-    // printf("Rx: %x%x%x%x\n\r", res.b[3], res.b[2], res.b[1], res.b[0]);
+    printf("====================\n\r");
+    printf("Transaction complete\n\r");
+    printf("Tx: %x%x%x%x\n\r", cmd.b[3], cmd.b[2], cmd.b[1], cmd.b[0]);
+    printf("Rx: %x%x%x%x\n\r", res.b[3], res.b[2], res.b[1], res.b[0]);
     return res;
 }
 
@@ -93,7 +93,7 @@ void init_master_comms() {
 
 void game_init() {
     init_master_comms();
-    cmd.ul = 0xA1B2C3D4;
+    cmd.ul = 0xFACEBEEF;
     //send_all();
 }
 
@@ -111,7 +111,6 @@ int16_t main(void) {
     init_int();
     
     game_init();
-    cmd.ul = 0xFACEBEEF;
 
     while (1) {
         if (res1.ul == 0x567890EF){

@@ -57,6 +57,8 @@ void spi_open_slave(_SPI *self, _PIN *MISO, _PIN *MOSI, _PIN *SCK, uint8_t mode,
 void spi_close(_SPI *self);
 uint8_t spi_transfer(_SPI *self, uint8_t val);
 WORD32 spi_queue(_SPI *self, WORD32 payload);
+void spi_queue_slave(_SPI *self, WORD32 payload);
+WORD32 spi_read_slave(_SPI *self);
 uint8_t spi_transfer_slave(_SPI *self, uint8_t val);
 
 #endif
