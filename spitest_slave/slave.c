@@ -70,7 +70,19 @@ void pull_changes(){
 
 void pull_state(){
     state.s.red_button = pin_read(&D[5]);
-
+    uint16_t slider = pin_read(&A[0]);
+    if(slider<=100){
+        state.s.slider = 0;
+    }
+    else if(36000<=slider && slider <=42000){
+        state.s.slider = 1;
+    }
+    else if (49000<=slider && slider <=52000){
+        state.s.slider = 2;
+    }
+    else if (60000<=slider){
+        state.s.slider = 3;
+    }
 }
 
 int16_t main(void) {
