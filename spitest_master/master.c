@@ -26,9 +26,10 @@ WORD32 recieve_and_send_spi(_PIN *CSn){
     pin_clear(CSn);
     res = spi_queue(&spi1, cmd);
     pin_set(CSn);
-    // printf("BUFFER%x\n\r",*(spi1.SPIxBUF));
-    // printf("res:%x%x\n\r",res.w[1],res.w[0]);
-    // printf("cmd:%x%x\n\r",cmd.w[1],cmd.w[0]);
+    printf("====================\n\r");
+    printf("Transaction complete\n\r");
+    printf("Tx: %x%x%x%x\n\r", cmd.b[3], cmd.b[2], cmd.b[1], cmd.b[0]);
+    printf("Rx: %x%x%x%x\n\r", res.b[3], res.b[2], res.b[1], res.b[0]);
     return res;
 }
 
@@ -111,10 +112,10 @@ int16_t main(void) {
 
     while (1) {
         if (res1.ul == 0x567890EF){
-            led_toggle(&led2);
+            led_toggle(&led1);
         }
         if (res2.ul == 0x567890EF){
-            led_toggle(&led1);
+            led_toggle(&led2);
         }
         if (res3.ul == 0x567890EF){
             led_toggle(&led3);

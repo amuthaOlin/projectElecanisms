@@ -231,7 +231,7 @@ WORD32 spi_queue(_SPI *self, WORD32 payload) {
     *(self->SPIxBUF) = payload.b[1];
     *(self->SPIxBUF) = payload.b[0];
     // wait for 4 pending transactions
-    while (((WORD*)self->SPIxSTAT)->b[1]&0x07 < 4) {}
+    // while (((WORD*)self->SPIxSTAT)->b[1]&0x07 < 4) {}
     temp.b[3] = (uint8_t)*(self->SPIxBUF);
     temp.b[2] = (uint8_t)*(self->SPIxBUF);
     temp.b[1] = (uint8_t)*(self->SPIxBUF);
