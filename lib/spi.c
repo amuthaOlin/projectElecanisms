@@ -58,7 +58,7 @@ void spi_init(_SPI *self, uint16_t *SPIxSTAT, uint16_t *SPIxCON1,
     self->SCK = NULL;
 }
 
-void spi_open(_SPI *self, _PIN *MISO, _PIN *MOSI, _PIN *SCK, float freq, uint8_t mode) {
+void spi_open(_SPI *self, _PIN *MISO, _PIN *MOSI, _PIN *SCK, float freq, uint8_t mode, uint8_t enhanced) {
     uint16_t primary, secondary;
     uint16_t modebits[4] = { 0x0100, 0x0000, 0x0140, 0x0040 };
 
@@ -122,11 +122,14 @@ void spi_open(_SPI *self, _PIN *MISO, _PIN *MOSI, _PIN *SCK, float freq, uint8_t
     //   specified
     *(self->SPIxCON1) = 0x0020 | modebits[mode & 0x03] | primary | secondary;
     *(self->SPIxCON2) = 0;
+    if (enhanced) {
+        *(self->SPIxCON2) |= 0x0001;
+    }
     // Enable the SPI module and clear status flags
     *(self->SPIxSTAT) = 0x8000;
 }
 
-void spi_open_slave(_SPI *self, _PIN *MISO, _PIN *MOSI, _PIN *SCK, uint8_t mode) {
+void spi_open_slave(_SPI *self, _PIN *MISO, _PIN *MOSI, _PIN *SCK, uint8_t mode, uint8_t enhanced) {
     uint16_t primary, secondary;
     uint16_t modebits[4] = { 0x0100, 0x0000, 0x0140, 0x0040 };
 
@@ -175,6 +178,9 @@ void spi_open_slave(_SPI *self, _PIN *MISO, _PIN *MOSI, _PIN *SCK, uint8_t mode)
     }
 
     bitclear(self->SPIxSTAT, 6);
+    if (enhanced) {
+        *(self->SPIxCON2) |= 0x0001;
+    }
     // Enable the SPI module and clear status flags
     // clear SPIROV for slave mode
     bitset(self->SPIxSTAT, 15);
