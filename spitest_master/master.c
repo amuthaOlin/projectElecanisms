@@ -24,10 +24,7 @@ _PIN *Sint3 = &D[8];
 WORD32 recieve_and_send_spi(_PIN *CSn){
     WORD32 res;
     pin_clear(CSn);
-    res.b[3] = spi_transfer(&spi1, cmd.b[3]);
-    res.b[2] = spi_transfer(&spi1, cmd.b[2]);
-    // res.b[1] = spi_transfer(&spi1, cmd.b[1]);
-    // res.b[0] = spi_transfer(&spi1, cmd.b[0]);
+    res = spi_queue(&spi1, cmd);
     pin_set(CSn);
     // printf("BUFFER%x\n\r",*(spi1.SPIxBUF));
     // printf("res:%x%x\n\r",res.w[1],res.w[0]);
@@ -48,12 +45,6 @@ void handle_sint3(_INT *intx) {
     res3 = recieve_and_send_spi(CSn3);
 }
 
-void send_all() {
-    send_slave(1);
-    send_slave(2);
-    send_slave(3);
-}
-
 void send_slave(uint8_t slave) {
     switch (slave) {
         case 1:
@@ -68,8 +59,14 @@ void send_slave(uint8_t slave) {
     }
 }
 
+void send_all() {
+    send_slave(1);
+    send_slave(2);
+    send_slave(3);
+}
+
 void init_master_comms() {
-    spi_open(&spi1, &D[0], &D[1], &D[2], 1e6, 1);
+    spi_open(&spi1, &D[0], &D[1], &D[2], 1e6, 1, 1);
     pin_digitalIn(Sint1);
     pin_digitalIn(Sint2);
     pin_digitalIn(Sint3);
@@ -114,10 +111,10 @@ int16_t main(void) {
 
     while (1) {
         if (res1.ul == 0x567890EF){
-            led_toggle(&led1);
+            led_toggle(&led2);
         }
         if (res2.ul == 0x567890EF){
-            led_toggle(&led2);
+            led_toggle(&led1);
         }
         if (res3.ul == 0x567890EF){
             led_toggle(&led3);

@@ -224,6 +224,20 @@ uint8_t spi_transfer(_SPI *self, uint8_t val) {
     return (uint8_t)(*(self->SPIxBUF));
 }
 
+WORD32 spi_queue(_SPI *self, WORD32 payload) {
+    WORD32 temp;
+    *(self->SPIxBUF) = payload.b[3];
+    *(self->SPIxBUF) = payload.b[2];
+    *(self->SPIxBUF) = payload.b[1];
+    *(self->SPIxBUF) = payload.b[0];
+    // wait for 4 pending transactions
+    while (((WORD*)self->SPIxSTAT)->b[1]&0x07 < 4) {}
+    temp.b[3] = (uint8_t)*(self->SPIxBUF);
+    temp.b[2] = (uint8_t)*(self->SPIxBUF);
+    temp.b[1] = (uint8_t)*(self->SPIxBUF);
+    temp.b[0] = (uint8_t)*(self->SPIxBUF);
+    return temp;
+}
 
 uint8_t spi_transfer_slave(_SPI *self, uint8_t val) {
     *(self->SPIxBUF) = (uint16_t)val;

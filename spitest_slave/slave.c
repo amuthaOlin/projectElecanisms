@@ -21,10 +21,7 @@ WORD32 recieve_and_send_spi() {
     // printf("Receive and Sending SPI\n\r");
     // printf("cmd:%x%x\n\r",cmd.w[1],cmd.w[0]);
     // printf("BUFFER:%x\n\r",*(spi1.SPIxBUF));
-    res.b[3] = spi_transfer_slave(&spi1, cmd.b[3]);
-    res.b[2] = spi_transfer_slave(&spi1, cmd.b[2]);
-    // res.b[1] = spi_transfer_slave(&spi1, cmd.b[1]);
-    // res.b[0] = spi_transfer_slave(&spi1, cmd.b[0]);
+    res = spi_queue(&spi1, cmd);
     return res;
 }
 
@@ -43,7 +40,7 @@ void handle_CSn(_INT *intx) {
 }
 
 void init_slave_comms(void) {
-    spi_open_slave(&spi1, MOSI, MISO, SCK, 1);
+    spi_open_slave(&spi1, MOSI, MISO, SCK, 1, 1);
     pin_digitalOut(Sint);
     pin_clear(Sint);
     pin_digitalIn(CSn);
