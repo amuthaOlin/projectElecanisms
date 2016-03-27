@@ -93,7 +93,7 @@ void init_master_comms() {
 
 void game_init() {
     init_master_comms();
-    cmd.ul = 0xFACEBEEF;
+    cmd.ul = 0xA1B2C3D4;
     //send_all();
 }
 
