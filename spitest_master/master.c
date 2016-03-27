@@ -26,23 +26,26 @@ WORD32 recieve_and_send_spi(_PIN *CSn){
     pin_clear(CSn);
     res = spi_queue(&spi1, cmd);
     pin_set(CSn);
-    printf("====================\n\r");
-    printf("Transaction complete\n\r");
-    printf("Tx: %x%x%x%x\n\r", cmd.b[3], cmd.b[2], cmd.b[1], cmd.b[0]);
-    printf("Rx: %x%x%x%x\n\r", res.b[3], res.b[2], res.b[1], res.b[0]);
+    // printf("====================\n\r");
+    // printf("Transaction complete\n\r");
+    // printf("Tx: %x%x%x%x\n\r", cmd.b[3], cmd.b[2], cmd.b[1], cmd.b[0]);
+    // printf("Rx: %x%x%x%x\n\r", res.b[3], res.b[2], res.b[1], res.b[0]);
     return res;
 }
 
 //recieve SPI interrupt handler
 void handle_sint1(_INT *intx) {
+    // printf("PIC 1 interrupt\n\r");
     res1 = recieve_and_send_spi(CSn1);
 }
 
 void handle_sint2(_INT *intx) {
+    // printf("PIC 2 interrupt\n\r");
     res2 = recieve_and_send_spi(CSn2);
 }
 
 void handle_sint3(_INT *intx) {
+    // printf("PIC 3 interrupt\n\r");
     res3 = recieve_and_send_spi(CSn3);
 }
 
