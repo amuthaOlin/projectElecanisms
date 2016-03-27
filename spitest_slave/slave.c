@@ -15,7 +15,7 @@ _PIN *SCK   = &D[2];
 _PIN *CSn   = &D[3];
 _PIN *Sint  = &D[4];
 
-volatile WORD32 res, cmd;
+volatile WORD32 res, cmd, state;
 
 WORD32 recieve_and_send_spi() {
     // printf("Receive and Sending SPI\n\r");
@@ -23,8 +23,8 @@ WORD32 recieve_and_send_spi() {
     // printf("BUFFER:%x\n\r",*(spi1.SPIxBUF));
     res.b[3] = spi_transfer_slave(&spi1, cmd.b[3]);
     res.b[2] = spi_transfer_slave(&spi1, cmd.b[2]);
-    res.b[1] = spi_transfer_slave(&spi1, cmd.b[1]);
-    res.b[0] = spi_transfer_slave(&spi1, cmd.b[0]);
+    // res.b[1] = spi_transfer_slave(&spi1, cmd.b[1]);
+    // res.b[0] = spi_transfer_slave(&spi1, cmd.b[0]);
     return res;
 }
 
@@ -50,6 +50,22 @@ void init_slave_comms(void) {
     int_attach(&int1, CSn, 0, handle_CSn);
 }
 
+void init_slave(void){
+    init_slave_comms();
+    pull_state();
+}
+
+
+WORD32 pull_changes(){
+    
+}
+
+pull_state(){
+    pin_read(&D[5]);
+    
+
+}
+
 int16_t main(void) {
     init_clock();
     init_ui();
@@ -66,6 +82,7 @@ int16_t main(void) {
     timer_start(&timer1);
 
     uint16_t switch_state3 = sw_read(&sw3);
+    
 
     while(1) {
         if (timer_flag(&timer1)) {

@@ -26,8 +26,8 @@ WORD32 recieve_and_send_spi(_PIN *CSn){
     pin_clear(CSn);
     res.b[3] = spi_transfer(&spi1, cmd.b[3]);
     res.b[2] = spi_transfer(&spi1, cmd.b[2]);
-    res.b[1] = spi_transfer(&spi1, cmd.b[1]);
-    res.b[0] = spi_transfer(&spi1, cmd.b[0]);
+    // res.b[1] = spi_transfer(&spi1, cmd.b[1]);
+    // res.b[0] = spi_transfer(&spi1, cmd.b[0]);
     pin_set(CSn);
     // printf("BUFFER%x\n\r",*(spi1.SPIxBUF));
     // printf("res:%x%x\n\r",res.w[1],res.w[0]);
