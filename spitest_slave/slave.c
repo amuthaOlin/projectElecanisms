@@ -34,6 +34,12 @@ void init_slave_comms(void) {
     int_attach(&int1, CSn, 1, handle_CSn);
 }
 
+void slave_tx() {
+    spi_queue_slave(&spi1, cmd);
+    pin_set(Sint);
+    pin_clear(Sint);
+}
+
 void init_slave(void){
     init_slave_comms();
     pull_state();
@@ -72,15 +78,13 @@ int16_t main(void) {
         if (timer_flag(&timer1)) {
             timer_lower(&timer1);
             led_toggle(&led3);
-        }
-        if (sw_read(&sw3) != switch_state3){
-            //printf("switch_press");
-            switch_state3 = sw_read(&sw3);
-            spi_queue_slave(&spi1, cmd);
-            pin_set(Sint);
-            pin_clear(Sint);
-        }
 
+            slave_tx();
+        }
+        // if (sw_read(&sw3) != switch_state3){
+        //     switch_state3 = sw_read(&sw3);
+        //     slave_tx();
+        // }
         //     //res = spi_transfer_slave(&spi1, 0x5A, Sint);
 
         //     printf("Slave sent: 0x%x\r\n", 0x5A);
