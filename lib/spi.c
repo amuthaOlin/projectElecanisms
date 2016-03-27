@@ -212,19 +212,15 @@ void spi_close(_SPI *self) {
     }
 }
 
-uint8_t spi_transfer(_SPI *self, uint8_t val, _PIN *CSn) {
-    pin_clear(CSn);
+uint8_t spi_transfer(_SPI *self, uint8_t val) {
     *(self->SPIxBUF) = (uint16_t)val;
     while (bitread(self->SPIxSTAT, 0)==0) {}
-    pin_set(CSn);
     return (uint8_t)(*(self->SPIxBUF));
 }
 
 
-uint8_t spi_transfer_slave(_SPI *self, uint8_t val, _PIN *Sint) {
+uint8_t spi_transfer_slave(_SPI *self, uint8_t val) {
     *(self->SPIxBUF) = (uint16_t)val;
-    pin_set(Sint);
-    pin_clear(Sint);
     while (bitread(self->SPIxSTAT, 0)==0) {}
     return (uint8_t)(*(self->SPIxBUF));
 }

@@ -54,7 +54,7 @@ void spi_init(_SPI *self, uint16_t *SPIxSTAT, uint16_t *SPIxCON1,
 void spi_open(_SPI *self, _PIN *MISO, _PIN *MOSI, _PIN *SCK, float freq, uint8_t mode);
 void spi_open_slave(_SPI *self, _PIN *MISO, _PIN *MOSI, _PIN *SCK, uint8_t mode);
 void spi_close(_SPI *self);
-uint8_t spi_transfer(_SPI *self, uint8_t val,  _PIN *Sint);
-uint8_t spi_transfer_slave(_SPI *self, uint8_t val, _PIN *Sint);
+uint8_t spi_transfer(_SPI *self, uint8_t val);
+uint8_t spi_transfer_slave(_SPI *self, uint8_t val);
 
 #endif

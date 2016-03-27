@@ -23,13 +23,15 @@ _PIN *Sint3 = &D[8];
 
 WORD32 recieve_and_send_spi(_PIN *CSn){
     WORD32 res;
-    res.b[3] = spi_transfer(&spi1, cmd.b[3], CSn);
-    res.b[2] = spi_transfer(&spi1, cmd.b[2], CSn);
-    res.b[1] = spi_transfer(&spi1, cmd.b[1], CSn);
-    res.b[0] = spi_transfer(&spi1, cmd.b[0], CSn);
-    printf("BUFFER%x\n\r",*(spi1.SPIxBUF));
-    printf("res:%x%x\n\r",res.w[1],res.w[0]);
-    printf("cmd:%x%x\n\r",cmd.w[1],cmd.w[0]);
+    pin_clear(CSn);
+    res.b[3] = spi_transfer(&spi1, cmd.b[3]);
+    res.b[2] = spi_transfer(&spi1, cmd.b[2]);
+    res.b[1] = spi_transfer(&spi1, cmd.b[1]);
+    res.b[0] = spi_transfer(&spi1, cmd.b[0]);
+    pin_set(CSn);
+    // printf("BUFFER%x\n\r",*(spi1.SPIxBUF));
+    // printf("res:%x%x\n\r",res.w[1],res.w[0]);
+    // printf("cmd:%x%x\n\r",cmd.w[1],cmd.w[0]);
     return res;
 }
 
@@ -82,16 +84,16 @@ void init_master_comms() {
     led_off(&led2);
     led_off(&led3);
 
-    int_attach(&int1, Sint1, 0, handle_sint1);
-    int_attach(&int2, Sint2, 0, handle_sint2);
-    int_attach(&int3, Sint3, 0, handle_sint3);
+    int_attach(&int1, Sint1, 1, handle_sint1);
+    int_attach(&int2, Sint2, 1, handle_sint2);
+    int_attach(&int3, Sint3, 1, handle_sint3);
 }
 
 
 void game_init() {
     init_master_comms();
     cmd.ul = 0xA1B2C3D4;
-    send_all();
+    //send_all();
 }
 
 void game_state() {
