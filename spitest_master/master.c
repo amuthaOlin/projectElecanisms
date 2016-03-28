@@ -123,6 +123,12 @@ void game_state() {
     
 }
 
+float fill = 1;
+void bar_down(_TIMER *timer) {
+    leds_bar(&leds, fill, 1);
+    fill -= .01;
+}
+
 int16_t main(void) {
     init_clock();
     init_uart();
@@ -138,7 +144,7 @@ int16_t main(void) {
     
     game_init();
 
-    leds_bar(&leds, 0.7, 1);
+    timer_every(&timer1, .05, bar_down);
 
     while (1) {}
 }
