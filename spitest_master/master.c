@@ -104,7 +104,7 @@ void game_init() {
     // cmd.d.packet = 0;
     // cmd.d.actaddr = 0;
     // cmd.d.actact = 1;
-    send_all();
+    // send_all();
 }
 
 void game_state() {
