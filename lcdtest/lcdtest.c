@@ -17,7 +17,8 @@ int16_t main(void) {
     init_pin();
     init_i2c();
     init_timer();
-    init_delay();
+    timer_initDelayMicro(&timer5);
+    
     led_on(&led3);
 
     init_lcd();
@@ -37,7 +38,7 @@ int16_t main(void) {
     i2c_stop(lcd1.i2c);
 
     while(1) {
-        delayMicroseconds(500);
+        timer_delayMicro(500);
         led_toggle(&led2);
     }
 }

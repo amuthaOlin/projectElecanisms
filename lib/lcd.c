@@ -69,19 +69,39 @@ void __lcd_i2c_write(_LCD *self, uint8_t ch) {
     i2c_stop(self->i2c);
 }
 
-void delayMicroseconds(uint16_t uS) {
-    uint16_t count=0;
-    while (count < uS) {
-        if (timer_flag(&timer5)) {
-            timer_lower(&timer5);
-            count +=1;
-        }
-    }
+void __lcd_enableToggle() {
+    _IOWriteVal ^= ENABLE_TOGGLE;
 }
 
-void init_lcd(void) {
-    init_delay();
+void __lcd_enablePulse(_LCD *self) {
+    __lcd_enableToggle();
+    __lcd_i2c_write(self, _IOWriteVal);
+    timer_delayMicro(100);
+    __lcd_enableToggle();
+    __lcd_i2c_write(self, _IOWriteVal);
+    timer_delayMicro(1000);
+}
 
+void __lcd_send(_LCD *self, uint8_t value, uint8_t command) {
+    uint8_t MS = value & 0x78;
+    uint8_t LS = value << 4;
+    _IOWriteVal = command | MS;
+    __lcd_i2c_write(self, _IOWriteVal);
+    __lcd_enablePulse(self);
+    _IOWriteVal= command | LS;
+    __lcd_i2c_write(self, _IOWriteVal);
+    __lcd_enablePulse(self);
+}
+
+void __lcd_send8(_LCD *self, uint8_t value, uint8_t command) {
+    value = value << 4;
+    _IOWriteVal = command | value;
+    __lcd_i2c_write(self, _IOWriteVal);
+    __lcd_enablePulse(self);
+}
+
+
+void init_lcd(void) {
     lcd_init(&lcd1, &i2c1, 1e3, 0x07);
 }
 
@@ -95,98 +115,61 @@ void lcd_init(_LCD *self, _I2C *i2c, float freq, uint8_t addr) {
 
     __lcd_i2c_write(self, 0x00);
 
-    delayMicroseconds(15000);
+    timer_delayMicro(15000);
 
     // Some bullshit according to pg 46
-    lcd_send8(self, 0x03, INTERNAL_WRITE);
-    delayMicroseconds(5000);
+    __lcd_send8(self, 0x03, INTERNAL_WRITE);
+    timer_delayMicro(5000);
 
-    lcd_send8(self, 0x03, INTERNAL_WRITE);//0b00110000
-    delayMicroseconds(5000);
+    __lcd_send8(self, 0x03, INTERNAL_WRITE);//0b00110000
+    timer_delayMicro(5000);
 
-    lcd_send8(self, 0x03, INTERNAL_WRITE);//0b00110000
-    delayMicroseconds(5000);
+    __lcd_send8(self, 0x03, INTERNAL_WRITE);//0b00110000
+    timer_delayMicro(5000);
 
     // Put it in 4 bit mode
-    lcd_send8(self, 0x02, INTERNAL_WRITE);//0b00110000
-    delayMicroseconds(5000);
+    __lcd_send8(self, 0x02, INTERNAL_WRITE);//0b00110000
+    timer_delayMicro(5000);
 
-    lcd_send(self, 0x28, INTERNAL_WRITE); // Set rows and direction
-    delayMicroseconds(50);
+    __lcd_send(self, 0x28, INTERNAL_WRITE); // Set rows and direction
+    timer_delayMicro(50);
 
-    lcd_send(self, 0x80, INTERNAL_WRITE); // Display off, cursor off
-    delayMicroseconds(50);
+    __lcd_send(self, 0x80, INTERNAL_WRITE); // Display off, cursor off
+    timer_delayMicro(50);
     
-    lcd_send(self, 0x01, INTERNAL_WRITE); // Go to home position
-    delayMicroseconds(2000);
+    __lcd_send(self, 0x01, INTERNAL_WRITE); // Go to home position
+    timer_delayMicro(2000);
 
-    lcd_send(self, 0x06, INTERNAL_WRITE); // Set curson direction
-    delayMicroseconds(5000);
+    __lcd_send(self, 0x06, INTERNAL_WRITE); // Set curson direction
+    timer_delayMicro(5000);
 
-    lcd_send(self, 0x0C, INTERNAL_WRITE); // Display on, cursor off
+    __lcd_send(self, 0x0C, INTERNAL_WRITE); // Display on, cursor off
 }
 
-void lcd_display(_LCD *self) {
-    _displaycontrol |= LCD_DISPLAYON;
-    lcd_send(self, _displaycontrol | LCD_DISPLAYCONTROL, INTERNAL_WRITE);
-}
-
-void lcd_displayoff(_LCD *self) {
-    _displaycontrol &= ~LCD_DISPLAYON;
-    lcd_send(self, _displaycontrol | LCD_DISPLAYCONTROL, INTERNAL_WRITE);
+void lcd_display(_LCD *self, uint8_t on) {
+    if (on) {
+        _displaycontrol |= LCD_DISPLAYON;
+    } else {
+        _displaycontrol &= ~LCD_DISPLAYON;
+    }
+    __lcd_send(self, _displaycontrol | LCD_DISPLAYCONTROL, INTERNAL_WRITE);
 }
 
 void lcd_clear(_LCD *self) {
-    lcd_send(self, LCD_CLEARDISPLAY, INTERNAL_WRITE);
-    delayMicroseconds(2000);
+    __lcd_send(self, LCD_CLEARDISPLAY, INTERNAL_WRITE);
+    timer_delayMicro(2000);
 }
 
-void enableToggle() {
-    _IOWriteVal ^= ENABLE_TOGGLE;
-}
-
-void enablePulse(_LCD *self) {
-    enableToggle();
-    __lcd_i2c_write(self, _IOWriteVal);
-    delayMicroseconds(100);
-    enableToggle();
-    __lcd_i2c_write(self, _IOWriteVal);
-    delayMicroseconds(1000);
-}
-
-void lcd_send(_LCD *self, uint8_t value, uint8_t command) {
-    uint8_t MS= value & 0x78;
-    uint8_t LS= value << 4;
-    _IOWriteVal = command | MS;
-    __lcd_i2c_write(self, _IOWriteVal);
-    enablePulse(self);
-    _IOWriteVal= command | LS;
-    __lcd_i2c_write(self, _IOWriteVal);
-    enablePulse(self);
-}
-
-void lcd_send8(_LCD *self, uint8_t value, uint8_t command) {
-    value = value << 4;
-    _IOWriteVal = command | value;
-    __lcd_i2c_write(self, _IOWriteVal);
-    enablePulse(self);
-}
-
-void lcd_write(_LCD *self, uint8_t value) {
-    lcd_send(self, value, DR_WRITE);
-    delayMicroseconds(1000);
+void lcd_putc(_LCD *self, uint8_t c) {
+    __lcd_send(self, c, DR_WRITE);
+    timer_delayMicro(1000);
 }
 
 void lcd_print(_LCD *self, char *str) {
     while (*str) {
-        lcd_write(self, *str);
+        lcd_putc(self, *str);
         str++;
     }
-}
-
-void init_delay() {
-    timer_setPeriod(&timer5, 1e-6);
-    timer_start(&timer5);
 }
 
 void lcd_goto(_LCD *self, uint8_t line, uint8_t col) { //x=col, y=row
@@ -194,10 +177,8 @@ void lcd_goto(_LCD *self, uint8_t line, uint8_t col) { //x=col, y=row
     switch(line) {
         case 1:
             address = 0x00;
-            // led_on(&led1);
             break;
         case 2:
-            // led_on(&led1);
             address = 0x40;
             break;
         default:
@@ -206,19 +187,17 @@ void lcd_goto(_LCD *self, uint8_t line, uint8_t col) { //x=col, y=row
     }
 
     address = address+col;
-    lcd_send(self, LCD_SETDDRAMADDR | address, INTERNAL_WRITE);
+    __lcd_send(self, LCD_SETDDRAMADDR | address, INTERNAL_WRITE);
 }
 
 void lcd_cursor(_LCD *self, uint8_t cur) {
     switch(cur) {
         case 0:
-            lcd_send(self,0x0C, INTERNAL_WRITE);
+            __lcd_send(self, 0x0C, INTERNAL_WRITE);
             break;
-
         case 1:
-            lcd_send(self,0x0E, INTERNAL_WRITE);
+            __lcd_send(self, 0x0E, INTERNAL_WRITE);
             break;
-
         default:
             break;
     }
