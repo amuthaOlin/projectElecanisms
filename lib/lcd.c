@@ -1,7 +1,9 @@
 #include <p24FJ128GB206.h>
+
+#include "common.h"
 #include "lcd.h"
 #include "timer.h"
-#include "common.h"
+#include "ui.h"
 
 // I2C Reg (MSB) P7 P6 P5 P4 P3 P2 P1 P0
 // Driver pin    D7 D6 D5 D4 ?  E  RW RS

@@ -33,8 +33,3 @@ void enableToggle();
 void enablePulse(_LCD *self);
 
 #endif
-
-
-
-
-
