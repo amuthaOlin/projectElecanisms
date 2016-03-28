@@ -30,7 +30,7 @@ env.Program('slave', ['slave.c',
                         '../lib/int.c', 
                         '../lib/spi.c',
                         '../lib/common.c',
-                        '../Displays/LCD.h',
+                        '../Displays/LCD.c',
                         '../lib/spacecomms.h'])
 
 #print('Creating builder to load hex file via bootloader...')

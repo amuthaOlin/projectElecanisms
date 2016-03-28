@@ -6,6 +6,8 @@
 #include "pin.h"
 #include "int.h"
 #include "spi.h"
+#include "i2c.h"
+#include "../Displays/LCD.h"
 #include "timer.h"
 #include "uart.h"
 #include "spacecomms.h"
@@ -21,25 +23,34 @@ volatile WORD state;
 
 void handle_CSn(_INT *intx) {
     res = spi_read_slave(&spi1);
-    //printf("res:%x%x\n\r",res.w[1],res.w[0]);
+    // printf("res:%x%x\n\r",res.w[1],res.w[0]);
     if (res.w == 0xA1B2) {
         led_toggle(&led2);
     }
 }
 
+WORD last_state;
 void check_slider(){
     uint16_t slider = pin_read(&A[0]);
-    if(slider<=100){
+    if(slider <= 100){
         state.s.slider = 0;
     }
-    else if(36000<=slider && slider <=42000){
+    else if(36000 <= slider && slider <= 42000) {
         state.s.slider = 1;
     }
-    else if (49000<=slider && slider <=52000){
+    else if (49000 <= slider && slider <= 52000) {
         state.s.slider = 2;
+        if (last_state.s.slider != 2) {
+            lcd_clear(&i2c3);
+            lcd_print(&i2c3, "Good job!");
+        }
     }
-    else if (60000<=slider){
+    else if (60000 <= slider) {
         state.s.slider = 3;
+    }
+    else {
+        lcd_clear(&i2c3);
+        lcd_print(&i2c3, "Set slider to 4!");
     }
 }
 
@@ -55,12 +66,11 @@ void slave_tx() {
     pin_clear(Sint);
 }
 
-WORD last_state;
 void pull_changes(){
     last_state = state;
     pull_state();
-    printf("last:%x\n\r",last_state.w);
-    printf("state:%x\n\r",state.w);
+    // printf("last:%x\n\r", last_state.w);
+    // printf("state:%x\n\r", state.w);
     if (last_state.w != state.w){
         led_toggle(&led1); 
         slave_tx();
@@ -74,6 +84,8 @@ void init_slave_comms(void) {
     pin_clear(Sint);
     pin_digitalIn(CSn);
     int_attach(&int1, CSn, 1, handle_CSn);
+
+    lcd_print(&i2c3, "Set slider to 4!");
 }
 
 void init_slave(void){
@@ -89,31 +101,26 @@ int16_t main(void) {
     init_spi();
     init_timer();
     init_uart();
+    init_i2c();
+    init_delay();
+    init_lcd(&i2c3, 1e3);
 
     cmd.w = 0xBEEF;
     init_slave();
 
+    timer_setPeriod(&timer3, 0.5);
+    timer_start(&timer3);
 
-    timer_setPeriod(&timer1, 0.5);
-    timer_start(&timer1);
-
-    timer_setPeriod(&timer2, 0.01);
-    timer_start(&timer2);
+    timer_every(&timer2, .01, pull_changes);
 
     uint16_t switch_state3 = sw_read(&sw3);
-    
 
     while(1) {
-        if (timer_flag(&timer1)) {
-            timer_lower(&timer1);
+        if (timer_flag(&timer3)) {
+            timer_lower(&timer3);
             led_toggle(&led3);
         }
-        if (timer_flag(&timer2)) {
-            timer_lower(&timer2);
-            pull_changes();
-        }
-        //     printf("Slave sent: 0x%x\r\n", 0x5A);
-        //     printf("Slave received: 0x%x\r\n", res);
-        
+        // printf("Slave sent: 0x%x\r\n", 0x5A);
+        // printf("Slave received: 0x%x\r\n", res);   
     }
 }
