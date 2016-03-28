@@ -45,6 +45,7 @@ typedef struct _TIMER {
 } _TIMER;
 
 extern _TIMER timer1, timer2, timer3, timer4, timer5;
+extern _TIMER *timerDelay;
 
 void timer_init(_TIMER *self, uint16_t *TxCON, uint16_t *PRx, 
                 uint16_t *TMRx, uint16_t *IFSy, uint16_t *IECy, 
@@ -65,5 +66,8 @@ void timer_every(_TIMER *self, float interval, void (*callback)(_TIMER *self));
 void timer_after(_TIMER *self, float delay, uint16_t num_times, 
                  void (*callback)(_TIMER *self));
 void timer_cancel(_TIMER *self);
+
+void timer_initDelayMicro(_TIMER *timer);
+void timer_delayMicro(uint16_t usec);
 
 #endif
