@@ -134,7 +134,9 @@ void leds_writeWhite(_LEDS *self, uint8_t led, uint8_t brightness) {
 }
 
 void leds_setPin(_LEDS *self, _PIN *pin) {
+    oc_free(&oc1);
     self->pin = pin;
+    oc_pwm(&oc1, self->pin, NULL, LEDS_FREQ, 0x0000);
 }
 
 void leds_init(_LEDS *self, _PIN *pin, _OC *oc, _TIMER *timer) {
