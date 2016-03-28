@@ -8,6 +8,18 @@
 #include "leds.h"
 #include "i2c.h"
 
+volatile float fill1 = 1;
+void update_bar1() {
+    leds_bar(&ledbar1, fill1, 0.1);
+    fill1 -= .01;
+}
+
+volatile float fill2 = 1;
+void update_bar2() {
+    leds_bar(&ledbar2, fill2, 0.1);
+    fill2 -= .02;
+}
+
 int16_t main(void) {
     init_clock();
     init_ui();
@@ -18,8 +30,8 @@ int16_t main(void) {
 
     led_on(&led3);
 
-    leds_bar(&ledbar1, 0.5, 1);
-    leds_bar(&ledbar2, 0.75, 1);
+    timer_every(&timer1, 0.05, update_bar1);
+    timer_every(&timer2, 0.05, update_bar2);
 
     while(1) {}
 }

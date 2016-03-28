@@ -102,7 +102,7 @@ void __leds_cycle(_LEDS *self) {
 volatile uint8_t bar_r = 0;
 volatile uint8_t bar_g = 0;
 volatile uint8_t bar_b = 0;
-void leds_bar(_LEDS *self, float fill, uint8_t brightness) {
+void leds_bar(_LEDS *self, float fill, float bri) {
     uint8_t leds_lit = fill*self->num;
     uint8_t i;
 
@@ -111,8 +111,8 @@ void leds_bar(_LEDS *self, float fill, uint8_t brightness) {
 
     leds_clear(self);
     for (i = 0; i < leds_lit+1; i++)
-        leds_writeRGB(self, i, bar_r,bar_g,bar_b);
-    leds_brighten(self, i-1, (fill*self->num)-leds_lit);
+        leds_writeRGB(self, i, bar_r*bri,bar_g*bri,bar_b*bri);
+    leds_brighten(self, i-1, ((fill*self->num)-leds_lit)*bri);
 }
 
 void leds_clear(_LEDS *self) {
