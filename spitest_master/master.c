@@ -10,7 +10,7 @@
 #include "int.h"
 #include "timer.h"
 
-volatile WORD32 res1, res2, res3, cmd;
+volatile WORD res1, res2, res3, cmd;
 
 _PIN *MISO  = &D[1];
 _PIN *MOSI  = &D[0];
@@ -22,8 +22,8 @@ _PIN *Sint2 = &D[6];
 _PIN *CSn3  = &D[7];
 _PIN *Sint3 = &D[8];
 
-WORD32 recieve_and_send_spi(_PIN *CSn){
-    WORD32 res;
+WORD recieve_and_send_spi(_PIN *CSn){
+    WORD res;
     pin_clear(CSn);
     res = spi_queue(&spi1, cmd);
     pin_set(CSn);
@@ -38,21 +38,21 @@ WORD32 recieve_and_send_spi(_PIN *CSn){
 void handle_sint1(_INT *intx) {
     // printf("PIC 1 interrupt\n\r");
     res1 = recieve_and_send_spi(CSn1);
-    if (res1.ul == 0x567890EF)
+    if (res1.w == 0x5678)
         led_toggle(&led1);
 }
 
 void handle_sint2(_INT *intx) {
     // printf("PIC 2 interrupt\n\r");
     res2 = recieve_and_send_spi(CSn2);
-    if (res2.ul == 0x567890EF)
+    if (res2.w == 0x5678)
         led_toggle(&led2);
 }
 
 void handle_sint3(_INT *intx) {
     // printf("PIC 3 interrupt\n\r");
     res3 = recieve_and_send_spi(CSn3);
-    if (res3.ul == 0x567890EF)
+    if (res3.w == 0x5678)
         led_toggle(&led3);
 }
 
@@ -100,9 +100,9 @@ void init_master_comms() {
 
 void game_init() {
     init_master_comms();
-    cmd.d.packet = 0;
-    cmd.d.actaddr = 0;
-    cmd.d.actact = 1;
+    // cmd.d.packet = 0;
+    // cmd.d.actaddr = 0;
+    // cmd.d.actact = 1;
     send_all();
 }
 
@@ -121,6 +121,8 @@ int16_t main(void) {
     init_leds();
     
     game_init();
+
+    leds_bar(&leds, 0.7, 1);
 
     while (1) {}
 }

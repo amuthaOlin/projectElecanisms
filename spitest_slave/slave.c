@@ -16,14 +16,14 @@ _PIN *SCK   = &D[2];
 _PIN *CSn   = &D[3];
 _PIN *Sint  = &D[4];
 
-volatile WORD32 res, cmd;
+volatile WORD res, cmd;
 volatile WORD state;
 
 void handle_CSn(_INT *intx) {
     led_toggle(&led1);
     res = spi_read_slave(&spi1);
     //printf("res:%x%x\n\r",res.w[1],res.w[0]);
-    if (res.ul == 0xA1B2C3D4) {
+    if (res.w == 0xA1B2) {
         led_toggle(&led2);
     }
 }
@@ -91,7 +91,7 @@ int16_t main(void) {
     init_timer();
     init_uart();
 
-    cmd.ul = 0xBEEFFACE;
+    cmd.ul = 0xBEEF;
     init_slave();
 
 
