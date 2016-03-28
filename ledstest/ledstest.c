@@ -25,6 +25,7 @@ int16_t main(void) {
     led_on(&led3);
 
     // timer_every(&timer1, .05, updateBar);
+    leds_setPin(&leds, &D[9]);
     leds_bounce(&leds, .25, 255,255,255);
 
     while(1) {}
