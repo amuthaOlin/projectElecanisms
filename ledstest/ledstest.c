@@ -8,12 +8,6 @@
 #include "leds.h"
 #include "i2c.h"
 
-volatile float fill = 1;
-void updateBar(_TIMER *timer) {
-    leds_bar(&ledbar1, fill, 1);
-    fill -= .01;
-}
-
 int16_t main(void) {
     init_clock();
     init_ui();
@@ -24,7 +18,8 @@ int16_t main(void) {
 
     led_on(&led3);
 
-    timer_every(&timer1, .05, updateBar);
+    leds_bar(&ledbar1, 0.5, 1);
+    leds_bar(&ledbar2, 0.75, 1);
 
     while(1) {}
 }
