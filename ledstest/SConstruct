@@ -11,7 +11,7 @@ env = Environment(PIC = '24FJ128GB206',
 #Path for OSX
 env.PrependENVPath('PATH', '/Applications/microchip/xc16/v1.25/bin')
 #Path for Linux
-#env.PrependENVPath('PATH', '/opt/microchip/xc16/v1.25/bin')
+#env.PrependENVPath('PATH', '/opt/microchip/xc16/v1.23/bin')
 bin2hex = Builder(action = 'xc16-bin2hex $SOURCE -omf=elf',
                   suffix = 'hex', 
                   src_suffix = 'elf')
@@ -21,15 +21,12 @@ list = Builder(action = 'xc16-objdump -S -D $SOURCE > $TARGET',
                src_suffix = 'elf')
 env.Append(BUILDERS = {'List' : list})
 
-env.Program('master', ['master.c',
+env.Program('ledstest', ['ledstest.c',
                         '../lib/ui.c', 
                         '../lib/pin.c', 
-                        '../lib/uart.c', 
-                        '../lib/timer.c', 
                         '../lib/oc.c', 
-                        '../lib/leds.c', 
-                        '../lib/int.c', 
-                        '../lib/spi.c',
+                        '../lib/timer.c', 
+                        '../lib/leds.c',
                         '../lib/common.c'])
 
 #print('Creating builder to load hex file via bootloader...')
@@ -47,8 +44,8 @@ load = Builder(action=load_function,
 
 env.Append(BUILDERS = {'Load' : load})
 
-env.Hex('master')
-env.List('master')
+env.Hex('ledstest')
+env.List('ledstest')
 # To automatically load the hex file, you need to run scons like this:
 # >scons --site-dir ../site_scons
-env.Load('master') # Uncomment this line to automatically load the hex file
+env.Load('ledstest') # Uncomment this line to automatically load the hex file

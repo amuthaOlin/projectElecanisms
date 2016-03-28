@@ -5,12 +5,17 @@
 #include "pin.h"
 #include "uart.h"
 #include "spi.h"
+#include "leds.h"
 #include "ui.h"
 #include "int.h"
 #include "timer.h"
 #include "spacecomms.h"
+#include "oc.h"
 
 volatile WORD res1, res2, res3, cmd, expected_res1, expected_res2, expected_res3;
+
+
+
 
 
 _PIN *MISO  = &D[1];
@@ -112,10 +117,10 @@ void init_master_comms() {
 
 void game_init() {
     init_master_comms();
-    cmd.d.packet = 0;
-    cmd.d.actaddr = 0;
-    cmd.d.actact = 1;
-    send_all();
+    // cmd.d.packet = 0;
+    // cmd.d.actaddr = 0;
+    // cmd.d.actact = 1;
+    // send_all();
 }
 
 void game_state() {
@@ -129,9 +134,15 @@ int16_t main(void) {
     init_timer();
     init_ui();
     init_pin();
+    init_oc();
     init_int();
+    init_leds();
+
+    leds_setPin(&leds, &D[9]);
     
     game_init();
+
+    leds_bar(&leds, 0.7, 1);
 
     while (1) {}
 }

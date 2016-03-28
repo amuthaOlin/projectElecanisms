@@ -103,8 +103,6 @@ void oc_init(_OC *self, uint16_t *OCxCON1, uint16_t *OCxCON2,
 }
 
 void oc_free(_OC *self) {
-    *(self->OCxCON1) = 0;
-    *(self->OCxCON2) = 0;
     if (self->pin) {
         __builtin_write_OSCCONL(OSCCON&0xBF);
         *(self->pin->rpor) &= ~(0x3F<<(self->pin->rpshift));
@@ -114,10 +112,27 @@ void oc_free(_OC *self) {
         pin_clear(self->pin);
         self->pin = NULL;
     }
+    *(self->OCxCON1) = 0;
+    *(self->OCxCON2) = 0;
 }
 
 void oc_pwm(_OC *self, _PIN *pin, _TIMER *timer, float freq, uint16_t duty) {
     WORD32 temp;
+
+    if (timer) {
+        *(self->OCxCON1) = ((timer->octselnum)<<10)|0x0006;
+        *(self->OCxCON2) = 0x001F;
+        timer_setFreq(timer, freq);
+        *(self->OCxRS) = *(timer->PRx);
+        *(self->OCxTMR) = 0;
+        timer_start(timer);
+    } else {
+        oc_freq(self, freq);
+    }
+    temp.ul = (uint32_t)duty*(uint32_t)(*(self->OCxRS));
+    *(self->OCxR) = temp.w[1];
+    self->pin->write = __pwmWrite;
+    self->pin->read = __pwmRead;
 
     if (pin->rpnum==-1)
         return;
@@ -131,25 +146,17 @@ void oc_pwm(_OC *self, _PIN *pin, _TIMER *timer, float freq, uint16_t duty) {
     } else if (pin->owner!=(void *)self) {
         return;
     }
-    if (timer) {
-        *(self->OCxCON1) = ((timer->octselnum)<<10)|0x0006;
-        *(self->OCxCON2) = 0x001F;
-        timer_setFreq(timer, freq);
-        *(self->OCxRS) = *(timer->PRx);
-        *(self->OCxTMR) = 0;
-        timer_start(timer);
-    } else {
-        *(self->OCxCON1) = 0x1C06;
-        *(self->OCxCON2) = 0x001F;
-        if (freq<(FCY/65536.))
-            *(self->OCxRS) = 0xFFFF;
-        else
-            *(self->OCxRS) = (uint16_t)(FCY/freq-1.);
-    }
-    temp.ul = (uint32_t)duty*(uint32_t)(*(self->OCxRS));
-    *(self->OCxR) = temp.w[1];
-    self->pin->write = __pwmWrite;
-    self->pin->read = __pwmRead;
+}
+
+void oc_freq(_OC *self, float freq) {
+    *(self->OCxCON1) = 0x1C06;
+    // 0001_1100_0000_0110
+    *(self->OCxCON2) = 0x001F;
+    // 0000_0000_0001_1111
+    if (freq<(FCY/65536.))
+        *(self->OCxRS) = 0xFFFF;
+    else
+        *(self->OCxRS) = (uint16_t)(FCY/freq-1.);
 }
 
 void oc_servo(_OC *self, _PIN *pin, _TIMER *timer, float interval, 

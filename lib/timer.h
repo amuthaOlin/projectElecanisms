@@ -64,6 +64,7 @@ void timer_disableInterrupt(_TIMER *self);
 void timer_every(_TIMER *self, float interval, void (*callback)(_TIMER *self));
 void timer_after(_TIMER *self, float delay, uint16_t num_times, 
                  void (*callback)(_TIMER *self));
+void timer_delayMicro(uint16_t uS);
 void timer_cancel(_TIMER *self);
 
 #endif
