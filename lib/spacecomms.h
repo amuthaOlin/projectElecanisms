@@ -15,6 +15,27 @@ typedef struct SLAVE1_STATE {
   unsigned slider:2;
   unsigned green_button:1;
   unsigned :13;
+} SLAVE_STATE;
+
+typedef struct SLAVE1_STATE {
+  unsigned red_button:1;
+  unsigned slider:2;
+  unsigned green_button:1;
+  unsigned :13;
 } SLAVE1_STATE;
+
+typedef struct SLAVE1_STATE {
+  unsigned red_button:1;
+  unsigned slider:2;
+  unsigned green_button:1;
+  unsigned :13;
+} SLAVE2_STATE;
+
+typedef struct SLAVE1_STATE {
+  unsigned red_button:1;
+  unsigned slider:2;
+  unsigned green_button:1;
+  unsigned :13;
+} SLAVE3_STATE;
 
 #endif
