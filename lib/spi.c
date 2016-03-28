@@ -232,13 +232,13 @@ uint8_t spi_transfer(_SPI *self, uint8_t val) {
     return (uint8_t)(*(self->SPIxBUF));
 }
 
-WORD32 spi_queue(_SPI *self, WORD32 payload) {
-    WORD32 temp;
+WORD spi_queue(_SPI *self, WORD payload) {
+    WORD temp;
     uint8_t trash;
-    *(self->SPIxBUF) = payload.b[3];
-    *(self->SPIxBUF) = payload.b[2];
     *(self->SPIxBUF) = payload.b[1];
     *(self->SPIxBUF) = payload.b[0];
+    *(self->SPIxBUF) = 0;
+    *(self->SPIxBUF) = 0;
     *(self->SPIxBUF) = 0;
     *(self->SPIxBUF) = 0;
     *(self->SPIxBUF) = 0;
@@ -246,10 +246,10 @@ WORD32 spi_queue(_SPI *self, WORD32 payload) {
     // wait for 4 pending transactions
     // while (((WORD*)self->SPIxSTAT)->b[1]&0x07 < 4) {}
     while (bitread(self->SPIxSTAT, 0)==0) {}
-    temp.b[3] = (uint8_t)*(self->SPIxBUF);
-    temp.b[2] = (uint8_t)*(self->SPIxBUF);
     temp.b[1] = (uint8_t)*(self->SPIxBUF);
     temp.b[0] = (uint8_t)*(self->SPIxBUF);
+    trash = (uint8_t)*(self->SPIxBUF);
+    trash = (uint8_t)*(self->SPIxBUF);
     trash = (uint8_t)*(self->SPIxBUF);
     trash = (uint8_t)*(self->SPIxBUF);
     trash = (uint8_t)*(self->SPIxBUF);
@@ -257,25 +257,25 @@ WORD32 spi_queue(_SPI *self, WORD32 payload) {
     return temp;
 }
 
-void spi_queue_slave(_SPI *self, WORD32 payload) {
+void spi_queue_slave(_SPI *self, WORD payload) {
     WORD32 temp;
-    *(self->SPIxBUF) = payload.b[3];
-    *(self->SPIxBUF) = payload.b[2];
     *(self->SPIxBUF) = payload.b[1];
     *(self->SPIxBUF) = payload.b[0];
     *(self->SPIxBUF) = 0;
     *(self->SPIxBUF) = 0;
     *(self->SPIxBUF) = 0;
     *(self->SPIxBUF) = 0;
+    *(self->SPIxBUF) = 0;
+    *(self->SPIxBUF) = 0;
 }
 
-WORD32 spi_read_slave(_SPI *self) {
-    WORD32 temp;
+WORD spi_read_slave(_SPI *self) {
+    WORD temp;
     uint8_t trash;
-    temp.b[3] = (uint8_t)*(self->SPIxBUF);
-    temp.b[2] = (uint8_t)*(self->SPIxBUF);
     temp.b[1] = (uint8_t)*(self->SPIxBUF);
     temp.b[0] = (uint8_t)*(self->SPIxBUF);
+    trash = (uint8_t)*(self->SPIxBUF);
+    trash = (uint8_t)*(self->SPIxBUF);
     trash = (uint8_t)*(self->SPIxBUF);
     trash = (uint8_t)*(self->SPIxBUF);
     trash = (uint8_t)*(self->SPIxBUF);

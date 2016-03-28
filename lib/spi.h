@@ -60,9 +60,9 @@ void spi_open(_SPI *self, _PIN *MISO, _PIN *MOSI, _PIN *SCK, float freq, uint8_t
 void spi_open_slave(_SPI *self, _PIN *MISO, _PIN *MOSI, _PIN *SCK, _PIN *SSn, uint8_t mode, uint8_t enhanced);
 void spi_close(_SPI *self);
 uint8_t spi_transfer(_SPI *self, uint8_t val);
-WORD32 spi_queue(_SPI *self, WORD32 payload);
-void spi_queue_slave(_SPI *self, WORD32 payload);
-WORD32 spi_read_slave(_SPI *self);
+WORD spi_queue(_SPI *self, WORD payload);
+void spi_queue_slave(_SPI *self, WORD payload);
+WORD spi_read_slave(_SPI *self);
 uint8_t spi_transfer_slave(_SPI *self, uint8_t val);
 
 #endif
