@@ -133,6 +133,10 @@ void leds_writeWhite(_LEDS *self, uint8_t led, uint8_t brightness) {
     leds_state[3*led+2] = brightness;
 }
 
+void leds_setPin(_LEDS *self, _PIN *pin) {
+    self->pin = pin;
+}
+
 void leds_init(_LEDS *self, _PIN *pin, _OC *oc, _TIMER *timer) {
     self->pin = pin;
     self->oc = oc;
