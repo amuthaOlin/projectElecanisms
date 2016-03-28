@@ -67,7 +67,7 @@ void __lcd_enablePulse(_LCD *self) {
     timer_delayMicro(100);
     self->io_write_val ^= ENABLE_TOGGLE;
     __lcd_i2c_write(self, self->io_write_val);
-    timer_delayMicro(1000);
+    // timer_delayMicro(1000);
 }
 
 void __lcd_send(_LCD *self, uint8_t value, uint8_t command) {
@@ -90,7 +90,7 @@ void __lcd_send8(_LCD *self, uint8_t value, uint8_t command) {
 
 
 void init_lcd(void) {
-    lcd_init(&lcd1, &i2c1, 1e3, 0x07);
+    lcd_init(&lcd1, &i2c3, 1e3, 0x07);
 }
 
 void lcd_init(_LCD *self, _I2C *i2c, float freq, uint8_t addr) {
@@ -159,7 +159,7 @@ void lcd_clear(_LCD *self) {
 
 void lcd_putc(_LCD *self, char c) {
     __lcd_send(self, c, DR_WRITE);
-    timer_delayMicro(1000);
+    // timer_delayMicro(1000);
 }
 
 void lcd_print(_LCD *self, char *str) {
@@ -200,7 +200,7 @@ void lcd_cursor(_LCD *self, uint8_t cur) {
     }
 }
 
-void lcd_print2(_I2C *i2c, char* line1, char* line2){
+void lcd_print2(_LCD *self, char* line1, char* line2){
     char str[56] ="                                                        ";
     int i =0;
     while (*line1){
@@ -215,5 +215,5 @@ void lcd_print2(_I2C *i2c, char* line1, char* line2){
         line2++;
     }
     char* strptr=str;
-    lcd_print(i2c,strptr);
+    lcd_print(self,strptr);
 }

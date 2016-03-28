@@ -28,7 +28,6 @@ int16_t main(void) {
     lcd_stop(&lcd1);
 
     while(1) {
-        timer_delayMicro(500);
-        led_toggle(&led2);
+        //
     }
 }
