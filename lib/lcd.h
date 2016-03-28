@@ -2,30 +2,35 @@
 #define _LCD_H_
 
 #include <stdint.h>
-#include "common.h"
 #include "timer.h"
 #include "i2c.h"
 
 void init_lcd(void);
 
 typedef struct {
-    _I2C *i2c
+    _I2C *i2c;
+
+    float freq;
+    uint8_t addr_write;
+    uint8_t addr_read;
 } _LCD;
 
-void lcd_init(_I2C *i2c, float freq);
-void lcd_display(_I2C *i2c);
-void lcd_clear(_I2C *i2c);
-void lcd_send(_I2C *i2c, uint8_t value, uint8_t command);
-void enableToggle();
-void enablePulse(_I2C *i2c);
-void lcd_write(_I2C *i2c, uint8_t value);
-void i2c_write(_I2C *i2c, uint8_t ch);
+extern _LCD lcd1, lcd2, lcd3, lcd4;
+
+void lcd_init(_LCD *self, _I2C *i2c, float freq, uint8_t addr);
+void lcd_display(_LCD *self);
+void lcd_clear(_LCD *self);
+void lcd_send(_LCD *self, uint8_t value, uint8_t command);
+void lcd_write(_LCD *self, uint8_t value);
+void lcd_goto(_LCD *self, uint8_t line, uint8_t col);
+void lcd_send8(_LCD *self, uint8_t value, uint8_t command);
+void lcd_print(_LCD *self, char *str);
+void lcd_cursor(_LCD *self, uint8_t cur);
+
 void init_delay();
 void delayMicroseconds(uint16_t uS);
-void lcd_goto(_I2C *i2c, uint8_t line, uint8_t col);
-void lcd_send8(_I2C *i2c,uint8_t value, uint8_t command);
-void lcd_print(_I2C *i2c,char *str);
-void lcd_cursor(_I2C *i2c, uint8_t cur);
+void enableToggle();
+void enablePulse(_LCD *self);
 
 #endif
 

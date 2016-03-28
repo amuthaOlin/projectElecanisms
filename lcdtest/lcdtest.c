@@ -2,7 +2,7 @@
 #include <stdint.h>
 #include "config.h"
 #include "common.h"
-#include "ui.h"
+// #include "ui.h"
 #include "pin.h"
 #include "i2c.h"
 #include "timer.h"
@@ -16,14 +16,14 @@ int16_t main(void) {
     init_pin();
     init_i2c();
     init_timer();
-    init_ui();
+    // init_ui();
     init_delay();
     // led_on(&led3);
-    led_off(&led1);
-    led_on(&led1);
+    // led_off(&led1);
+    // led_on(&led1);
 
     init_lcd();
-    led_on(&led2);
+    // led_on(&led2);
 
     lcd_write(&lcd1, 'S');
     lcd_write(&lcd1, 'P');
@@ -40,6 +40,6 @@ int16_t main(void) {
 
     while(1) {
         delayMicroseconds(500);
-        led_toggle(&led2);
+        // led_toggle(&led2);
     }
 }
