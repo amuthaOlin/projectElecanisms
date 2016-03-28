@@ -47,19 +47,24 @@ void check_slider(){
 void pull_state(){
     state.s.red_button = pin_read(&D[5]);
     state.s.green_button = pin_read(&D[5]);
-    check_slider()
+    check_slider();
 }
 
+void slave_tx() {
+    spi_queue_slave(&spi1, cmd);
+    pin_set(Sint);
+    pin_clear(Sint);
+}
 
 void pull_changes(){
     WORD last_state = state;
     pull_state();    
     //printf("last:%u\n\r",last_state.w);
     //printf("state:%u\n\r",state.w);
-    if (last_state.w!= state.w){
+    if (last_state.w != state.w){
         led_toggle(&led1); 
     }
-    cmd.w = state.w
+    cmd.w = state.w;
     slave_tx();
 }
 
@@ -71,19 +76,10 @@ void init_slave_comms(void) {
     int_attach(&int1, CSn, 1, handle_CSn);
 }
 
-void slave_tx() {
-    spi_queue_slave(&spi1, cmd);
-    pin_set(Sint);
-    pin_clear(Sint);
-}
-
 void init_slave(void){
     init_slave_comms();
     pull_state();
 }
-
-
-
 
 int16_t main(void) {
     init_clock();
@@ -94,7 +90,7 @@ int16_t main(void) {
     init_timer();
     init_uart();
 
-    cmd.ul = 0xBEEF;
+    cmd.w = 0xBEEF;
     init_slave();
 
 

@@ -1,7 +1,7 @@
 #ifndef _LCD_H_
 #define _LCD_H_
 
-#include "i2c.h"
+#include "../lib/i2c.h"
 
 
 // I2C Reg (MSB) P7 P6 P5 P4 P3 P2 P1 P0
