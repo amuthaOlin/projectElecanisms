@@ -1,5 +1,5 @@
 /*
-** Copyright (c) 2013, Bradley A. Minch
+** Copyright (c) 2016, Evan Dorsky
 ** All rights reserved.
 **
 ** Redistribution and use in source and binary forms, with or without
@@ -23,36 +23,36 @@
 ** ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
 ** POSSIBILITY OF SUCH DAMAGE.
 */
-#ifndef _OC_H_
-#define _OC_H_
+#ifndef _LEDS_H_
+#define _LEDS_H_
 
 #include <stdint.h>
 #include "pin.h"
 #include "timer.h"
+#include "oc.h"
 
-void init_oc(void);
+void init_leds(void);
 
-typedef struct {
-    uint16_t *OCxCON1;
-    uint16_t *OCxCON2;
-    uint16_t *OCxRS;
-    uint16_t *OCxR;
-    uint16_t *OCxTMR;
-    uint16_t rpnum;
-    uint16_t servooffset;
-    uint16_t servomultiplier;
+typedef struct _LEDS {
     _PIN *pin;
-} _OC;
+    _OC *oc;
+    _TIMER *timer;
 
-extern _OC oc1, oc2, oc3, oc4, oc5, oc6, oc7, oc8, oc9;
+    uint16_t num;
+    uint8_t state[num];
+} _LEDS;
 
-void oc_init(_OC *self, uint16_t *OCxCON1, uint16_t *OCxCON2, 
-             uint16_t *OCxRS, uint16_t *OCxR, uint16_t *OCxTMR, 
-             uint16_t rpnum);
-void oc_free(_OC *self);
-void oc_pwm(_OC *self, _PIN *out, _TIMER *timer, float freq, uint16_t duty);
-void oc_freq(_OC *self, float freq);
-void oc_servo(_OC *self, _PIN *out, _TIMER *timer, float interval, 
-              float min_width, float max_width, uint16_t pos);
+extern _LEDS leds;
+
+void leds_init(_LEDS *self, _PIN *pin, _OC *oc, _TIMER *timer, uint16_t num);
+void leds_writeRGB(_LEDS *self, uint8_t led, uint8_t red, uint8_t green, uint8_t blue);
+void leds_writeWhite(_LEDS *self, uint8_t led, uint8_t brightness);
+void leds_brighten(_LEDS *self, uint8_t led, float factor);
+
+void leds_writeRGBs(_LEDS *self, uint8_t red, uint8_t green, uint8_t blue);
+void leds_clear(_LEDS *self);
+
+void leds_bounce(_LEDS *self, float period, uint8_t red, uint8_t green, uint8_t blue);
+void leds_bar(_LEDS *self, float fill, uint8_t brightness);
 
 #endif
