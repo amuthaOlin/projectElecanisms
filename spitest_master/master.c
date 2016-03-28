@@ -12,11 +12,7 @@
 #include "spacecomms.h"
 #include "oc.h"
 
-volatile WORD res1, res2, res3, cmd, expected_res1, expected_res2, expected_res3;
-
-
-
-
+volatile WORD res1, res2, res3, cmd;
 
 _PIN *MISO  = &D[1];
 _PIN *MOSI  = &D[0];
@@ -44,7 +40,7 @@ WORD recieve_and_send_spi(_PIN *CSn){
 void handle_sint1(_INT *intx) {
     // printf("PIC 1 interrupt\n\r");
     res1 = recieve_and_send_spi(CSn1);
-    if (res1.w = expected_res1.w){
+    if (res1.s.red_button == 1) {
         led_toggle(&led1);
     }
 
@@ -53,7 +49,7 @@ void handle_sint1(_INT *intx) {
 void handle_sint2(_INT *intx) {
     // printf("PIC 2 interrupt\n\r");
     res2 = recieve_and_send_spi(CSn2);
-    if (res2.w == expected_res2.w){
+    if (res2.s.slider == 2) {
         led_toggle(&led2);
     }
 }
@@ -61,16 +57,16 @@ void handle_sint2(_INT *intx) {
 void handle_sint3(_INT *intx) {
     // printf("PIC 3 interrupt\n\r");
     res3 = recieve_and_send_spi(CSn3);
-    if (res3.w == expected_res3.w){
+    if (res3.s.green_button == 1) {
         led_toggle(&led3);
     }
 }
 
 
 void send_command(){
-    expected_res1.s.red_button = 1;
-    expected_res2.s.slider = 2;
-    expected_res3.s.green_button = 1;
+    // expected_res1.s.red_button = 1;
+    // expected_res2.s.slider = 2;
+    // expected_res3.s.green_button = 1;
 }
 
 void send_slave(uint8_t slave) {

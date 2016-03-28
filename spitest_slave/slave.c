@@ -20,7 +20,6 @@ volatile WORD res, cmd;
 volatile WORD state;
 
 void handle_CSn(_INT *intx) {
-    led_toggle(&led1);
     res = spi_read_slave(&spi1);
     //printf("res:%x%x\n\r",res.w[1],res.w[0]);
     if (res.w == 0xA1B2) {
@@ -56,16 +55,17 @@ void slave_tx() {
     pin_clear(Sint);
 }
 
+WORD last_state;
 void pull_changes(){
-    WORD last_state = state;
-    pull_state();    
-    //printf("last:%u\n\r",last_state.w);
-    //printf("state:%u\n\r",state.w);
+    last_state = state;
+    pull_state();
+    printf("last:%x\n\r",last_state.w);
+    printf("state:%x\n\r",state.w);
     if (last_state.w != state.w){
         led_toggle(&led1); 
+        slave_tx();
     }
     cmd.w = state.w;
-    slave_tx();
 }
 
 void init_slave_comms(void) {
