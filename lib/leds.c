@@ -63,7 +63,7 @@ void init_leds(void) { // init the objects and set up the unified controller
     leds_init(&ledbar3, 8, 16);
     leds_init(&ledcenter, 60, 24);
 
-    oc_pwm(&oc1, &A[5], NULL, LEDS_FREQ, 0x0000);
+    oc_pwm(&oc1, &D[9], NULL, LEDS_FREQ, 0x0000);
     bitset(&IEC0, 2); // enable OC1 interrupt
 }
 
