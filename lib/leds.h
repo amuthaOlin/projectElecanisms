@@ -35,7 +35,7 @@ void init_leds(void);
 
 typedef struct _LEDS {
     uint16_t num;
-    uint8_t *state;
+    uint16_t stateptr;
 } _LEDS;
 
 extern _LEDS ledbar1, ledbar2, ledbar3, ledcenter;

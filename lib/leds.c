@@ -32,14 +32,14 @@
 
 #define LEDS_HIGH_R 0x000F // high word of LEDS_HIGH*OC1RS
 #define LEDS_LOW_R 0x0001 // high word of LEDS_LOW*OC1RS
-#define LEDS_NUM 84 // 8*3 + 60
+#define LEDS_NUM 16 // 8*3 + 60
 #define LEDS_FREQ 2e5
 #define LEDS_PERIOD 80 // cycles for LEDS_FREQ (FCY = 16e6)
 #define LEDS_RS_PERIOD 960 // cycles for 60us reset
 
 _LEDS ledbar1, ledbar2, ledbar3, ledcenter;
 
-uint8_t leds_state[LEDS_NUM];
+uint8_t leds_state[3*LEDS_NUM];
 
 volatile uint16_t bitcount = 0;
 void __attribute__((interrupt, auto_psv)) _OC1Interrupt(void) {
@@ -69,7 +69,7 @@ void init_leds(void) { // init the objects and set up the unified controller
 
 void leds_init(_LEDS *self, uint16_t num, uint16_t stateptr) {
     self->num = num;
-    self->state = &leds_state[stateptr];
+    self->stateptr = stateptr;
 }
 
 // volatile uint8_t bounce_led = 0;
@@ -89,7 +89,7 @@ void leds_init(_LEDS *self, uint16_t num, uint16_t stateptr) {
 
 void leds_writeRGBs(_LEDS *self, uint8_t red, uint8_t green, uint8_t blue) {
     uint8_t i;
-    for (i = 0; i < LEDS_NUM; i++)
+    for (i = 0; i < self->num; i++)
         leds_writeRGB(self, i, red,green,blue);
 }
 
@@ -103,16 +103,16 @@ volatile uint8_t bar_r = 0;
 volatile uint8_t bar_g = 0;
 volatile uint8_t bar_b = 0;
 void leds_bar(_LEDS *self, float fill, uint8_t brightness) {
-    uint8_t leds_lit = fill*LEDS_NUM;
+    uint8_t leds_lit = fill*self->num;
     uint8_t i;
 
     bar_g = fill*255;
     bar_r = (1-fill)*255;
 
-    leds_clear(&self);
+    leds_clear(self);
     for (i = 0; i < leds_lit+1; i++)
         leds_writeRGB(self, i, bar_r,bar_g,bar_b);
-    leds_brighten(self, i-1, fill*LEDS_NUM-leds_lit);
+    leds_brighten(self, i-1, (fill*self->num)-leds_lit);
 }
 
 void leds_clear(_LEDS *self) {
@@ -120,19 +120,19 @@ void leds_clear(_LEDS *self) {
 }
 
 void leds_writeRGB(_LEDS *self, uint8_t led, uint8_t red, uint8_t green, uint8_t blue) {
-    self->state[3*led] = green;
-    self->state[3*led+1] = red;
-    self->state[3*led+2] = blue;
+    leds_state[3*(self->stateptr + led)] = green;
+    leds_state[3*(self->stateptr + led)+1] = red;
+    leds_state[3*(self->stateptr + led)+2] = blue;
 }
 
 void leds_brighten(_LEDS *self, uint8_t led, float factor) {
-    self->state[3*led] *= factor;
-    self->state[3*led+1] *= factor;
-    self->state[3*led+2] *= factor;
+    leds_state[3*(self->stateptr + led)] *= factor;
+    leds_state[3*(self->stateptr + led)+1] *= factor;
+    leds_state[3*(self->stateptr + led)+2] *= factor;
 }
 
 void leds_writeWhite(_LEDS *self, uint8_t led, uint8_t brightness) {
-    self->state[3*led] = brightness;
-    self->state[3*led+1] = brightness;
-    self->state[3*led+2] = brightness;
+    leds_state[3*(self->stateptr + led)] = brightness;
+    leds_state[3*(self->stateptr + led)+1] = brightness;
+    leds_state[3*(self->stateptr + led)+2] = brightness;
 }
