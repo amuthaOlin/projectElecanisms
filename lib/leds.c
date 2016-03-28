@@ -32,12 +32,14 @@
 
 #define LEDS_HIGH_R 0x000F // high word of LEDS_HIGH*OC1RS
 #define LEDS_LOW_R 0x0001 // high word of LEDS_LOW*OC1RS
-#define LEDS_NUM 60
+#define LEDS_NUM 84 // 8*3 + 60
 #define LEDS_FREQ 2e5
 #define LEDS_PERIOD 80 // cycles for LEDS_FREQ (FCY = 16e6)
 #define LEDS_RS_PERIOD 960 // cycles for 60us reset
 
-_LEDS leds;
+_LEDS ledbar1, ledbar2, ledbar3, ledcenter;
+
+uint8_t leds_state[LEDS_NUM];
 
 volatile uint16_t bitcount = 0;
 void __attribute__((interrupt, auto_psv)) _OC1Interrupt(void) {
@@ -55,20 +57,19 @@ void __attribute__((interrupt, auto_psv)) _OC1Interrupt(void) {
     }
 }
 
-void init_leds(void) {
-    leds_init(&leds, &A[5], &oc1, &timer5, );
+void init_leds(void) { // init the objects and set up the unified controller
+    leds_init(&leds, NULL, 8, 0);
+    leds_init(&leds, NULL, 8, 8);
+    leds_init(&leds, NULL, 8, 16);
+    leds_init(&leds, NULL, 60, 24);
+
+    oc_pwm(&oc1, &A[5], NULL, LEDS_FREQ, 0x0000);
+    bitset(&IEC0, 2); // enable OC1 interrupt
 }
 
-void leds_init(_LEDS *self, _PIN *pin, _OC *oc, _TIMER *timer, uint16_t num) {
-    self->pin = pin;
-    self->oc = oc;
-    self->timer = timer;
+void leds_init(_LEDS *self, uint16_t num, uint16_t stateptr) {
     self->num = num;
-
-    self->state = { 0 };
-
-    oc_pwm(&oc1, self->pin, NULL, LEDS_FREQ, 0x0000);
-    bitset(&IEC0, 2);
+    self->state = leds_state;
 }
 
 volatile uint8_t bounce_led = 0;
@@ -84,13 +85,6 @@ void __leds_bounce_write(_TIMER *timer) {
         bounce_dir = -1;
     if (bounce_led < 1)
         bounce_dir = 1;
-}
-
-void leds_bounce(_LEDS *self, float period, uint8_t red, uint8_t green, uint8_t blue) {
-    bounce_r = red;
-    bounce_g = green;
-    bounce_b = blue;
-    timer_every(self->timer, period, __leds_bounce_write);
 }
 
 void leds_writeRGBs(_LEDS *self, uint8_t red, uint8_t green, uint8_t blue) {

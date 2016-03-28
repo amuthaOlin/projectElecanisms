@@ -34,17 +34,13 @@
 void init_leds(void);
 
 typedef struct _LEDS {
-    _PIN *pin;
-    _OC *oc;
-    _TIMER *timer;
-
     uint16_t num;
-    uint8_t state[num];
+    uint16_t *state;
 } _LEDS;
 
-extern _LEDS leds;
+extern _LEDS ledbar1, ledbar2, ledbar3, ledcenter;
 
-void leds_init(_LEDS *self, _PIN *pin, _OC *oc, _TIMER *timer, uint16_t num);
+void leds_init(_LEDS *self, uint16_t num, uint16_t stateptr);
 void leds_writeRGB(_LEDS *self, uint8_t led, uint8_t red, uint8_t green, uint8_t blue);
 void leds_writeWhite(_LEDS *self, uint8_t led, uint8_t brightness);
 void leds_brighten(_LEDS *self, uint8_t led, float factor);
