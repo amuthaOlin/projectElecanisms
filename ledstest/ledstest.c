@@ -10,7 +10,7 @@
 
 volatile float fill = 1;
 void updateBar(_TIMER *timer) {
-    leds_bar(&leds, fill, 1);
+    leds_bar(&ledbar1, fill, 1);
     fill -= .01;
 }
 
@@ -24,8 +24,7 @@ int16_t main(void) {
 
     led_on(&led3);
 
-    // timer_every(&timer1, .05, updateBar);
-    leds_bounce(&leds, .05, 255,255,255);
+    timer_every(&timer1, .05, updateBar);
 
     while(1) {}
 }

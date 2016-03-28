@@ -35,7 +35,7 @@ void init_leds(void);
 
 typedef struct _LEDS {
     uint16_t num;
-    uint16_t *state;
+    uint8_t *state;
 } _LEDS;
 
 extern _LEDS ledbar1, ledbar2, ledbar3, ledcenter;
@@ -48,7 +48,7 @@ void leds_brighten(_LEDS *self, uint8_t led, float factor);
 void leds_writeRGBs(_LEDS *self, uint8_t red, uint8_t green, uint8_t blue);
 void leds_clear(_LEDS *self);
 
-void leds_bounce(_LEDS *self, float period, uint8_t red, uint8_t green, uint8_t blue);
+// void leds_bounce(_LEDS *self, float period, uint8_t red, uint8_t green, uint8_t blue);
 void leds_bar(_LEDS *self, float fill, uint8_t brightness);
 
 #endif
