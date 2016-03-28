@@ -51,6 +51,7 @@ typedef union {
     uint16_t w;
     uint8_t b[2];
     SLAVE1_STATE s;
+    SPACK_DIR d;
 } WORD;
 
 typedef union {
