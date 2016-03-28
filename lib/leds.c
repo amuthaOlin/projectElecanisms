@@ -32,14 +32,16 @@
 
 #define LEDS_HIGH_R 0x000F // high word of LEDS_HIGH*OC1RS
 #define LEDS_LOW_R 0x0001 // high word of LEDS_LOW*OC1RS
-#define LEDS_NUM 60
+#define LEDS_NUM 11
 #define LEDS_FREQ 2e5
 #define LEDS_PERIOD 80 // cycles for LEDS_FREQ (FCY = 16e6)
 #define LEDS_RS_PERIOD 960 // cycles for 60us reset
 
 _LEDS leds;
 
-volatile uint16_t bitcount = 0;
+uint8_t leds_state[3*LEDS_NUM];
+
+volatile uint8_t bitcount = 0;
 void __attribute__((interrupt, auto_psv)) _OC1Interrupt(void) {
     bitclear(&IFS0, 2);
     if (!bitcount)
@@ -56,19 +58,7 @@ void __attribute__((interrupt, auto_psv)) _OC1Interrupt(void) {
 }
 
 void init_leds(void) {
-    leds_init(&leds, &A[5], &oc1, &timer5, );
-}
-
-void leds_init(_LEDS *self, _PIN *pin, _OC *oc, _TIMER *timer, uint16_t num) {
-    self->pin = pin;
-    self->oc = oc;
-    self->timer = timer;
-    self->num = num;
-
-    self->state = { 0 };
-
-    oc_pwm(&oc1, self->pin, NULL, LEDS_FREQ, 0x0000);
-    bitset(&IEC0, 2);
+    leds_init(&leds, &A[5], &oc1, &timer5);
 }
 
 volatile uint8_t bounce_led = 0;
@@ -141,4 +131,13 @@ void leds_writeWhite(_LEDS *self, uint8_t led, uint8_t brightness) {
     leds_state[3*led] = brightness;
     leds_state[3*led+1] = brightness;
     leds_state[3*led+2] = brightness;
+}
+
+void leds_init(_LEDS *self, _PIN *pin, _OC *oc, _TIMER *timer) {
+    self->pin = pin;
+    self->oc = oc;
+    self->timer = timer;
+
+    oc_pwm(&oc1, self->pin, NULL, LEDS_FREQ, 0x0000);
+    bitset(&IEC0, 2);
 }
