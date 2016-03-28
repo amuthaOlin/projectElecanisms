@@ -69,6 +69,7 @@ void lcd_goto(_I2C *i2c, uint8_t line, uint8_t col);
 void lcd_send8(_I2C *i2c,uint8_t value, uint8_t command);
 void lcd_print(_I2C *i2c,char *str);
 void lcd_cursor(_I2C *i2c, uint8_t cur);
+void lcd_print2(_I2C *i2c, char* line1, char* line2);
 
 #endif
 
