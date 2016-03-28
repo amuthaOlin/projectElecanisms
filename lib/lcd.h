@@ -13,13 +13,18 @@ typedef struct {
     float freq;
     uint8_t addr_write;
     uint8_t addr_read;
+
+    uint8_t io_write_val;
+    uint8_t display_control;
+    uint8_t display_mode;
 } _LCD;
 
 extern _LCD lcd1, lcd2, lcd3, lcd4;
 
 void lcd_init(_LCD *self, _I2C *i2c, float freq, uint8_t addr);
+void lcd_stop(_LCD *self);
 
-void lcd_putc(_LCD *self, uint8_t c);
+void lcd_putc(_LCD *self, char c);
 void lcd_print(_LCD *self, char *str);
 void lcd_clear(_LCD *self);
 

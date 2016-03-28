@@ -18,24 +18,14 @@ int16_t main(void) {
     init_i2c();
     init_timer();
     timer_initDelayMicro(&timer5);
-    
+
     led_on(&led3);
 
     init_lcd();
     led_on(&led2);
 
-    lcd_write(&lcd1, 'S');
-    lcd_write(&lcd1, 'P');
-    lcd_write(&lcd1, 'A');
-    lcd_write(&lcd1, 'C');
-    lcd_write(&lcd1, 'E');
-    lcd_write(&lcd1, ' ');
-    lcd_write(&lcd1, 'T');
-    lcd_write(&lcd1, 'E');
-    lcd_write(&lcd1, 'A');
-    lcd_write(&lcd1, 'M');
-    lcd_write(&lcd1, '!');
-    i2c_stop(lcd1.i2c);
+    lcd_print(&lcd1, "SPACE TEAM!");
+    lcd_stop(&lcd1);
 
     while(1) {
         timer_delayMicro(500);

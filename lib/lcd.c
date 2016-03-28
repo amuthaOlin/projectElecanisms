@@ -8,10 +8,6 @@
 // I2C Reg (MSB) P7 P6 P5 P4 P3 P2 P1 P0
 // Driver pin    D7 D6 D5 D4 ?  E  RW RS
 
-// IO commands
-#define IOWRITE 0x4E
-#define IOREAD  0x4F
-
 //
 #define LCD_FUNCTIONSET 0x20
 #define DISPLAYMASK 0x08
@@ -56,47 +52,39 @@
 
 _LCD lcd1, lcd2, lcd3, lcd4;
 
-uint8_t _displaycontrol;
-uint8_t _displaymode;
-uint8_t _IOWriteVal;
-
 void __lcd_i2c_write(_LCD *self, uint8_t ch) {
     i2c_start(self->i2c);
-    i2c_putc(self->i2c, IOWRITE);
+    i2c_putc(self->i2c, self->addr_write);
     i2c_idle(self->i2c);
     i2c_putc(self->i2c, ch); 
     i2c_idle(self->i2c);
     i2c_stop(self->i2c);
 }
 
-void __lcd_enableToggle() {
-    _IOWriteVal ^= ENABLE_TOGGLE;
-}
-
 void __lcd_enablePulse(_LCD *self) {
-    __lcd_enableToggle();
-    __lcd_i2c_write(self, _IOWriteVal);
+    self->io_write_val ^= ENABLE_TOGGLE;
+    __lcd_i2c_write(self, self->io_write_val);
     timer_delayMicro(100);
-    __lcd_enableToggle();
-    __lcd_i2c_write(self, _IOWriteVal);
+    self->io_write_val ^= ENABLE_TOGGLE;
+    __lcd_i2c_write(self, self->io_write_val);
     timer_delayMicro(1000);
 }
 
 void __lcd_send(_LCD *self, uint8_t value, uint8_t command) {
     uint8_t MS = value & 0x78;
     uint8_t LS = value << 4;
-    _IOWriteVal = command | MS;
-    __lcd_i2c_write(self, _IOWriteVal);
+    self->io_write_val = command | MS;
+    __lcd_i2c_write(self, self->io_write_val);
     __lcd_enablePulse(self);
-    _IOWriteVal= command | LS;
-    __lcd_i2c_write(self, _IOWriteVal);
+    self->io_write_val= command | LS;
+    __lcd_i2c_write(self, self->io_write_val);
     __lcd_enablePulse(self);
 }
 
 void __lcd_send8(_LCD *self, uint8_t value, uint8_t command) {
     value = value << 4;
-    _IOWriteVal = command | value;
-    __lcd_i2c_write(self, _IOWriteVal);
+    self->io_write_val = command | value;
+    __lcd_i2c_write(self, self->io_write_val);
     __lcd_enablePulse(self);
 }
 
@@ -108,8 +96,13 @@ void init_lcd(void) {
 void lcd_init(_LCD *self, _I2C *i2c, float freq, uint8_t addr) {
     self->i2c = i2c;
     self->freq = freq;
+                    // 0x40 == vendor prefix
     self->addr_write = 0x40 + (addr << 1);
     self->addr_read = 0x40 + (addr << 1)+1;
+    self->display_control = 0x00;
+    self->display_mode = 0x00;
+
+    self->io_write_val = 0x00;
 
     i2c_open(self->i2c, freq);
 
@@ -146,13 +139,17 @@ void lcd_init(_LCD *self, _I2C *i2c, float freq, uint8_t addr) {
     __lcd_send(self, 0x0C, INTERNAL_WRITE); // Display on, cursor off
 }
 
+void lcd_stop(_LCD *self) {
+    i2c_stop(self->i2c);
+}
+
 void lcd_display(_LCD *self, uint8_t on) {
     if (on) {
-        _displaycontrol |= LCD_DISPLAYON;
+        self->display_control |= LCD_DISPLAYON;
     } else {
-        _displaycontrol &= ~LCD_DISPLAYON;
+        self->display_control &= ~LCD_DISPLAYON;
     }
-    __lcd_send(self, _displaycontrol | LCD_DISPLAYCONTROL, INTERNAL_WRITE);
+    __lcd_send(self, self->display_control | LCD_DISPLAYCONTROL, INTERNAL_WRITE);
 }
 
 void lcd_clear(_LCD *self) {
@@ -160,7 +157,7 @@ void lcd_clear(_LCD *self) {
     timer_delayMicro(2000);
 }
 
-void lcd_putc(_LCD *self, uint8_t c) {
+void lcd_putc(_LCD *self, char c) {
     __lcd_send(self, c, DR_WRITE);
     timer_delayMicro(1000);
 }
