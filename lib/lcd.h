@@ -31,5 +31,5 @@ void lcd_clear(_LCD *self);
 void lcd_display(_LCD *self, uint8_t on);
 void lcd_goto(_LCD *self, uint8_t line, uint8_t col);
 void lcd_cursor(_LCD *self, uint8_t cur);
-
+void lcd_print2(_I2C *i2c, char* line1, char* line2);
 #endif

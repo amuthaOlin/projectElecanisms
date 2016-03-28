@@ -199,3 +199,21 @@ void lcd_cursor(_LCD *self, uint8_t cur) {
             break;
     }
 }
+
+void lcd_print2(_I2C *i2c, char* line1, char* line2){
+    char str[56] ="                                                        ";
+    int i =0;
+    while (*line1){
+        str[i]=*line1;
+        i=i+1;
+        line1++;
+    }
+    i =40;
+    while (*line2){
+        str[i]=*line2;
+        i=i+1;
+        line2++;
+    }
+    char* strptr=str;
+    lcd_print(i2c,strptr);
+}
