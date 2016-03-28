@@ -21,16 +21,17 @@ list = Builder(action = 'xc16-objdump -S -D $SOURCE > $TARGET',
                src_suffix = 'elf')
 env.Append(BUILDERS = {'List' : list})
 
-env.Program('master', ['master.c',
+env.Program('console2', ['console2.c',
                         '../lib/ui.c', 
                         '../lib/pin.c', 
                         '../lib/uart.c', 
                         '../lib/timer.c', 
-                        '../lib/oc.c', 
-                        '../lib/leds.c', 
+                        '../lib/i2c.c', 
                         '../lib/int.c', 
                         '../lib/spi.c',
-                        '../lib/common.c'])
+                        '../lib/common.c',
+                        '../Displays/LCD.h',
+                        '../lib/spacecomms.h'])
 
 #print('Creating builder to load hex file via bootloader...')
 def load_function(target, source, env):
@@ -47,8 +48,8 @@ load = Builder(action=load_function,
 
 env.Append(BUILDERS = {'Load' : load})
 
-env.Hex('master')
-env.List('master')
+env.Hex('console2')
+env.List('console2')
 # To automatically load the hex file, you need to run scons like this:
-# >scons --site-dir ../site_scons
-env.Load('master') # Uncomment this line to automatically load the hex file
+# >sudo scons --site-dir ../site_scons
+env.Load('console2') # Uncomment this line to automatically load the hex file

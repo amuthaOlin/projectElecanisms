@@ -50,8 +50,6 @@ typedef union {
     int16_t i;
     uint16_t w;
     uint8_t b[2];
-    SLAVE1_STATE s;
-    SPACK_DIR d;
 } WORD;
 
 typedef union {
@@ -59,6 +57,11 @@ typedef union {
     uint32_t ul;
     uint16_t w[2];
     uint8_t b[4];
+    SLAVE_STATE s;
+    SLAVE1_STATE s1;
+    SLAVE2_STATE s2;
+    SLAVE_STATE s3;
+    SPACK_DIR d;
 } WORD32;
 
 uint8_t parity(uint16_t v);
