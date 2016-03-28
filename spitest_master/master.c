@@ -121,6 +121,8 @@ int16_t main(void) {
     init_oc();
     init_int();
     init_leds();
+
+    leds_setPin(&leds, &D[9]);
     
     game_init();
 
