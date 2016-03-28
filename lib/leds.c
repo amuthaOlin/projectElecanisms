@@ -32,7 +32,7 @@
 
 #define LEDS_HIGH_R 0x000F // high word of LEDS_HIGH*OC1RS
 #define LEDS_LOW_R 0x0001 // high word of LEDS_LOW*OC1RS
-#define LEDS_NUM 11
+#define LEDS_NUM 8
 #define LEDS_FREQ 2e5
 #define LEDS_PERIOD 80 // cycles for LEDS_FREQ (FCY = 16e6)
 #define LEDS_RS_PERIOD 960 // cycles for 60us reset
@@ -41,7 +41,7 @@ _LEDS leds;
 
 uint8_t leds_state[3*LEDS_NUM];
 
-volatile uint8_t bitcount = 0;
+volatile uint16_t bitcount = 0;
 void __attribute__((interrupt, auto_psv)) _OC1Interrupt(void) {
     bitclear(&IFS0, 2);
     if (!bitcount)
