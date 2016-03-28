@@ -13,6 +13,7 @@ typedef struct SPACK_DIR {
 typedef struct SLAVE1_STATE {
   unsigned red_button:1;
   unsigned slider:2;
+  unsigned green_button:1;
   unsigned :13;
 } SLAVE1_STATE;
 

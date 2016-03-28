@@ -16,7 +16,7 @@ _PIN *SCK   = &D[2];
 _PIN *CSn   = &D[3];
 _PIN *Sint  = &D[4];
 
-volatile WORD32 res, cmd;
+volatile WORD res, cmd;
 volatile WORD state;
 
 void handle_CSn(_INT *intx) {
@@ -46,6 +46,7 @@ void check_slider(){
 
 void pull_state(){
     state.s.red_button = pin_read(&D[5]);
+    state.s.green_button = pin_read(&D[5]);
     check_slider()
 }
 
@@ -53,11 +54,13 @@ void pull_state(){
 void pull_changes(){
     WORD last_state = state;
     pull_state();    
-    printf("last:%u\n\r",last_state.w);
-    printf("state:%u\n\r",state.w);
+    //printf("last:%u\n\r",last_state.w);
+    //printf("state:%u\n\r",state.w);
     if (last_state.w!= state.w){
         led_toggle(&led1); 
     }
+    cmd.w = state.w
+    slave_tx();
 }
 
 void init_slave_comms(void) {
