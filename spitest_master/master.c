@@ -9,6 +9,7 @@
 #include "ui.h"
 #include "int.h"
 #include "timer.h"
+#include "oc.h"
 
 volatile WORD res1, res2, res3, cmd;
 
@@ -117,6 +118,7 @@ int16_t main(void) {
     init_timer();
     init_ui();
     init_pin();
+    init_oc();
     init_int();
     init_leds();
     
