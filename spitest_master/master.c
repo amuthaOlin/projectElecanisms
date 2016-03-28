@@ -24,34 +24,35 @@ _PIN *Sint3 = &D[8];
 WORD32 recieve_and_send_spi(_PIN *CSn){
     WORD32 res;
     pin_clear(CSn);
-    res.b[3] = spi_transfer(&spi1, cmd.b[3]);
-    res.b[2] = spi_transfer(&spi1, cmd.b[2]);
-    // res.b[1] = spi_transfer(&spi1, cmd.b[1]);
-    // res.b[0] = spi_transfer(&spi1, cmd.b[0]);
+    res = spi_queue(&spi1, cmd);
     pin_set(CSn);
-    // printf("BUFFER%x\n\r",*(spi1.SPIxBUF));
-    // printf("res:%x%x\n\r",res.w[1],res.w[0]);
-    // printf("cmd:%x%x\n\r",cmd.w[1],cmd.w[0]);
+    // printf("====================\n\r");
+    // printf("Transaction complete\n\r");
+    // printf("Tx: %x%x%x%x\n\r", cmd.b[3], cmd.b[2], cmd.b[1], cmd.b[0]);
+    // printf("Rx: %x%x%x%x\n\r", res.b[3], res.b[2], res.b[1], res.b[0]);
     return res;
 }
 
 //recieve SPI interrupt handler
 void handle_sint1(_INT *intx) {
+    // printf("PIC 1 interrupt\n\r");
     res1 = recieve_and_send_spi(CSn1);
+    if (res1.ul == 0x567890EF)
+        led_toggle(&led1);
 }
 
 void handle_sint2(_INT *intx) {
+    // printf("PIC 2 interrupt\n\r");
     res2 = recieve_and_send_spi(CSn2);
+    if (res2.ul == 0x567890EF)
+        led_toggle(&led2);
 }
 
 void handle_sint3(_INT *intx) {
+    // printf("PIC 3 interrupt\n\r");
     res3 = recieve_and_send_spi(CSn3);
-}
-
-void send_all() {
-    send_slave(1);
-    send_slave(2);
-    send_slave(3);
+    if (res3.ul == 0x567890EF)
+        led_toggle(&led3);
 }
 
 void send_slave(uint8_t slave) {
@@ -68,8 +69,14 @@ void send_slave(uint8_t slave) {
     }
 }
 
+void send_all() {
+    send_slave(1);
+    send_slave(2);
+    send_slave(3);
+}
+
 void init_master_comms() {
-    spi_open(&spi1, &D[0], &D[1], &D[2], 1e6, 1);
+    spi_open(&spi1, &D[0], &D[1], &D[2], 1e6, 1, 1);
     pin_digitalIn(Sint1);
     pin_digitalIn(Sint2);
     pin_digitalIn(Sint3);
@@ -112,19 +119,8 @@ int16_t main(void) {
     init_int();
     
     game_init();
-    cmd.ul = 0xFACEBEEF;
 
-    while (1) {
-        if (res1.ul == 0x567890EF){
-            led_toggle(&led1);
-        }
-        if (res2.ul == 0x567890EF){
-            led_toggle(&led2);
-        }
-        if (res3.ul == 0x567890EF){
-            led_toggle(&led3);
-        }
-    }
+    while (1) {}
 }
 
 // SPACK_DIR dirpacket = workspackunion.whateveryoucallthepackdir;

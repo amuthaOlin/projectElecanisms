@@ -19,27 +19,11 @@ _PIN *Sint  = &D[4];
 volatile WORD32 res, cmd;
 volatile WORD state;
 
-WORD32 recieve_and_send_spi() {
-    // printf("Receive and Sending SPI\n\r");
-    // printf("cmd:%x%x\n\r",cmd.w[1],cmd.w[0]);
-    // printf("BUFFER:%x\n\r",*(spi1.SPIxBUF));
-    res.b[3] = spi_transfer_slave(&spi1, cmd.b[3]);
-    res.b[2] = spi_transfer_slave(&spi1, cmd.b[2]);
-    // res.b[1] = spi_transfer_slave(&spi1, cmd.b[1]);
-    // res.b[0] = spi_transfer_slave(&spi1, cmd.b[0]);
-    return res;
-}
-
 void handle_CSn(_INT *intx) {
-
-    if (!sw_read(&sw2)){
-        return;
-    }
-    printf("CS called\n\r");
     led_toggle(&led1);
-    res = recieve_and_send_spi();
+    res = spi_read_slave(&spi1);
     //printf("res:%x%x\n\r",res.w[1],res.w[0]);
-    if (res.ul == 0xA1B2C3D4){
+    if (res.ul == 0xA1B2C3D4) {
         led_toggle(&led2);
     }
 }
@@ -77,11 +61,17 @@ void pull_changes(){
 }
 
 void init_slave_comms(void) {
-    spi_open_slave(&spi1, MOSI, MISO, SCK, 1);
+    spi_open_slave(&spi1, MOSI, MISO, SCK, CSn, 1, 1);
     pin_digitalOut(Sint);
     pin_clear(Sint);
     pin_digitalIn(CSn);
-    int_attach(&int1, CSn, 0, handle_CSn);
+    int_attach(&int1, CSn, 1, handle_CSn);
+}
+
+void slave_tx() {
+    spi_queue_slave(&spi1, cmd);
+    pin_set(Sint);
+    pin_clear(Sint);
 }
 
 void init_slave(void){
@@ -104,6 +94,7 @@ int16_t main(void) {
     cmd.ul = 0xBEEFFACE;
     init_slave();
 
+
     timer_setPeriod(&timer1, 0.5);
     timer_start(&timer1);
 
@@ -118,19 +109,10 @@ int16_t main(void) {
             timer_lower(&timer1);
             led_toggle(&led3);
         }
-        if (sw_read(&sw3) != switch_state3){
-            //printf("switch_press");
-            switch_state3 = sw_read(&sw3);
-            cmd.ul = 0x567890EF;
-            pin_set(Sint);
-            pin_clear(Sint);
-        }
         if (timer_flag(&timer2)) {
             timer_lower(&timer2);
             pull_changes();
         }
-        //     //res = spi_transfer_slave(&spi1, 0x5A, Sint);
-
         //     printf("Slave sent: 0x%x\r\n", 0x5A);
         //     printf("Slave received: 0x%x\r\n", res);
         
