@@ -26,6 +26,7 @@ env.Program('master', ['master.c',
                         '../lib/pin.c', 
                         '../lib/uart.c', 
                         '../lib/timer.c', 
+                        '../lib/leds.c', 
                         '../lib/int.c', 
                         '../lib/spi.c',
                         '../lib/common.c'])

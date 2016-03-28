@@ -5,6 +5,7 @@
 #include "pin.h"
 #include "uart.h"
 #include "spi.h"
+#include "leds.h"
 #include "ui.h"
 #include "int.h"
 #include "timer.h"
@@ -117,6 +118,7 @@ int16_t main(void) {
     init_ui();
     init_pin();
     init_int();
+    init_leds();
     
     game_init();
 
