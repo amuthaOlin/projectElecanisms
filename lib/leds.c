@@ -32,9 +32,9 @@
 
 #define LEDS_HIGH_R 0x000F // high word of LEDS_HIGH*OC1RS
 #define LEDS_LOW_R 0x0001 // high word of LEDS_LOW*OC1RS
-#define LEDS_NUM 84 // 8*3 + 60
+#define LEDS_NUM 84 // 8*3+60
 #define LEDS_FREQ 2e5
-#define LEDS_PERIOD 80 // cycles for LEDS_FREQ (FCY = 16e6)
+#define LEDS_PERIOD FCY/(LEDS_FREQ*1.) // cycles for LEDS_FREQ (FCY = 16e6)
 #define LEDS_RS_PERIOD 960 // cycles for 60us reset
 
 _LEDS ledbar1, ledbar2, ledbar3, ledcenter;
@@ -64,6 +64,7 @@ void init_leds(void) { // init the objects and set up the unified controller
     leds_init(&ledcenter, 60, 24);
 
     oc_pwm(&oc1, &D[9], NULL, LEDS_FREQ, 0x0000);
+    IPC0 |= 0x0700; // OC1 interrupt highest priority
     bitset(&IEC0, 2); // enable OC1 interrupt
 }
 
@@ -110,7 +111,7 @@ void leds_bar(_LEDS *self, float fill, float bri) {
     bar_r = (1-fill)*255;
 
     leds_clear(self);
-    for (i = 0; i < leds_lit+1; i++)
+    for (i = 0; i < leds_lit; i++)
         leds_writeRGB(self, i, bar_r*bri,bar_g*bri,bar_b*bri);
     leds_brighten(self, i-1, ((fill*self->num)-leds_lit)*bri);
 }
