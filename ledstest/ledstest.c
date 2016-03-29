@@ -32,6 +32,12 @@ int16_t main(void) {
 
     timer_every(&timer1, 0.05, update_bar1);
     timer_every(&timer2, 0.05, update_bar2);
+    leds_writeRGB(&ledbar3, 4, 60,0,80);
+    leds_writeRGB(&ledcenter, 0, 60,0,80);
+    leds_writeRGB(&ledcenter, 1, 60,0,80);
+    leds_writeRGB(&ledcenter, 2, 60,0,80);
+    leds_writeRGB(&ledcenter, 3, 60,0,80);
+    leds_writeRGB(&ledcenter, 4, 60,0,80);
 
     while(1) {}
 }

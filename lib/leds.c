@@ -32,7 +32,7 @@
 
 #define LEDS_HIGH_R 0x000F // high word of LEDS_HIGH*OC1RS
 #define LEDS_LOW_R 0x0001 // high word of LEDS_LOW*OC1RS
-#define LEDS_NUM 16 // 8*3 + 60
+#define LEDS_NUM 84 // 8*3 + 60
 #define LEDS_FREQ 2e5
 #define LEDS_PERIOD 80 // cycles for LEDS_FREQ (FCY = 16e6)
 #define LEDS_RS_PERIOD 960 // cycles for 60us reset
