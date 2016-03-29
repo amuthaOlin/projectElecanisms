@@ -7,6 +7,7 @@
 #include "i2c.h"
 #include "timer.h"
 #include "lcd.h"
+#include "strmanip.h"
 
 // I2C Reg (MSB) P7 P6 P5 P4 P3 P2 P1 P0
 // Driver pin    D7 D6 D5 D4 ?  E  RW RS
@@ -19,12 +20,13 @@ int16_t main(void) {
     init_timer();
     timer_initDelayMicro(&timer5);
 
-    led_on(&led3);
-
     init_lcd();
-    led_on(&led2);
 
-    lcd_print(&lcd1, "SPACE TEAM!");
+    char string[17]="space team";
+    char* strptr=string;
+    CamelCase(strptr);
+    Caesar(strptr,1,2);
+    lcd_print(&lcd1, strptr);
     lcd_stop(&lcd1);
 
     while(1) {
