@@ -104,6 +104,9 @@ volatile uint8_t bar_r = 0;
 volatile uint8_t bar_g = 0;
 volatile uint8_t bar_b = 0;
 void leds_bar(_LEDS *self, float fill, float bri) {
+    if (fill > 1) fill = 1;
+    if (fill < 0) fill = 0;
+
     uint8_t leds_lit = fill*self->num;
     uint8_t i;
 

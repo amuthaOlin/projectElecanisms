@@ -25,6 +25,7 @@ env.Program('ledstest', ['ledstest.c',
                         '../lib/ui.c', 
                         '../lib/pin.c', 
                         '../lib/oc.c', 
+                        '../lib/uart.c', 
                         '../lib/timer.c', 
                         '../lib/leds.c',
                         '../lib/common.c'])
