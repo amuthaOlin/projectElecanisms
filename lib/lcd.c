@@ -90,15 +90,24 @@ void __lcd_send8(_LCD *self, uint8_t value, uint8_t command) {
 
 
 void init_lcd(void) {
-    lcd_init(&lcd1, &i2c3, 1e3, 0x07);
+    lcd_init(&lcd1, &i2c3, 1e3, 0x07,'T');
 }
 
-void lcd_init(_LCD *self, _I2C *i2c, float freq, uint8_t addr) {
+void lcd_init(_LCD *self, _I2C *i2c, float freq, uint8_t addr, char vendor) {
     self->i2c = i2c;
     self->freq = freq;
-                    // 0x40 == vendor prefix
-    self->addr_write = 0x40 + (addr << 1);
-    self->addr_read = 0x40 + (addr << 1)+1;
+                    
+    switch(vendor){
+        case 'T':// 0x40 == vendor prefix for PCF8574T
+            self->addr_write = 0x40 + (addr << 1);
+            self->addr_read = 0x40 + (addr << 1)+1;
+            break;
+        case 'A':// 0x70 == vendor prefix PCF8574AT
+            self->addr_write = 0x70 + (addr << 1);
+            self->addr_read = 0x70 + (addr << 1)+1;
+            break;
+    }
+
     self->display_control = 0x00;
     self->display_mode = 0x00;
 

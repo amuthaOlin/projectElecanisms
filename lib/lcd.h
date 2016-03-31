@@ -21,7 +21,7 @@ typedef struct {
 
 extern _LCD lcd1, lcd2, lcd3, lcd4;
 
-void lcd_init(_LCD *self, _I2C *i2c, float freq, uint8_t addr);
+void lcd_init(_LCD *self, _I2C *i2c, float freq, uint8_t addr, char vendor);
 void lcd_stop(_LCD *self);
 
 void lcd_putc(_LCD *self, char c);
