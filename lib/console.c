@@ -2,44 +2,45 @@
 #include "common.h"
 #include "console.h"
 
-_CONSOLE console1, console2, console3;
+_CONSOLE console;
 
-void slave_tx() {
-    spi_queue_slave(&spi1, cmd);
-    pin_set(Sint);
-    pin_clear(Sint);
+void init_console(void) {
+	console_init(&console1, poll_state)  
 }
 
-void handle_CSn(_INT *intx) {
-    res = spi_read_slave(&spi1);
-    //printf("res:%x%x\n\r",res.l[1],res.l[0]);
-    if (res.l == 0xA1B2) {
-        led_toggle(&led2);
-    }
+void console_init(_CONSOLE *self, _PIN *MISO, _PIN *MOSI, _PIN *SCK, _PIN *Sint, _PIN *CSn, _SPI *spi, void (*poll)(_CONSOLE *self)){
+	self->Sint = Sint;
+	self->CSn = CSn;
+	self->poll = poll;
+	self->spi = spi
+	spi_open_slave(self->spi, self->MOSI, self->MISO, self->SCK, self->CSn, 1, 1);
+    pin_digitalOut(self->Sint);
+    pin_clear(self->Sint);
+    pin_digitalIn(self->CSn);
+    int_attach(&int1, self->CSn, 1, handle_CSn);
+    self->poll();
+
 }
 
-void init_slave_comms(void) {
-    spi_open_slave(&spi1, MOSI, MISO, SCK, CSn, 1, 1);
-    pin_digitalOut(Sint);
-    pin_clear(Sint);
-    pin_digitalIn(CSn);
-    int_attach(&int1, CSn, 1, handle_CSn);
+void console_tx(_CONSOLE *self) {
+    spi_queue_slave(&spi1, self->cmd);
+    pin_set(self->Sint);
+    pin_clear(self->Sint);
 }
+
+
 
 WORD32 last_state;
-void poll_changes(){
-    last_state = state;
-    poll_state();
+void console_poll_changes(_CONSOLE *self){
+    last_state = self->state;
+    self->poll();
     //printf("last:%x\n\r",last_state.l);
-    //printf("state:%x\n\r",state.l);
-    if (last_state.l != state.l){
-        led_toggle(&led1); 
-        slave_tx();
+    //printf("state:%x\n\r",self->state.l);
+    if (last_state.l != self->state.l){
+        //led_toggle(&led1);
+        self->cmd.l = self->state.l; 
+        console_tx();
     }
-    cmd.l = state.l;
+    
 }
 
-void init_slave(void){
-    init_slave_comms();
-    poll_state();
-}

@@ -15,10 +15,13 @@
 
 
 void poll_state(){
-    state.s1.red_button = pin_read(&D[5]);
+    console.state.s1.red_button = pin_read(&D[5]);
 }
 
-
+void handle_CSn(_INT *intx) {
+    console.res = spi_read_slave(console.spi1);
+    //printf("res:%x%x\n\r",res.l[1],res.l[0]);
+}
 
 int16_t main(void) {
     init_clock();
@@ -40,7 +43,7 @@ int16_t main(void) {
     while(1) {
         if (timer_flag(&timer4)) {
             timer_lower(&timer4);
-            poll_changes();
+            console.console_poll_changes();
         }
         //     printf("Slave sent: 0x%x\r\n", 0x5A);
         //     printf("Slave received: 0x%x\r\n", res);
