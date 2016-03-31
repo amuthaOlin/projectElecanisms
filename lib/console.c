@@ -39,7 +39,7 @@ void console_poll_changes(_CONSOLE *self){
     if (last_state.l != self->state.l){
         //led_toggle(&led1);
         self->cmd.l = self->state.l; 
-        console_tx();
+        console_tx(&console);
     }
     
 }
