@@ -5,15 +5,15 @@
 _CONSOLE console;
 
 void init_console(void) {
-	console_init(&console1, poll_state)  
+	console_init(&console, _PIN *MISO, _PIN *MOSI, _PIN *SCK, _PIN *Sint, _PIN *CSn, _SPI *spi1, poll_state);  
 }
 
 void console_init(_CONSOLE *self, _PIN *MISO, _PIN *MOSI, _PIN *SCK, _PIN *Sint, _PIN *CSn, _SPI *spi, void (*poll)(_CONSOLE *self)){
 	self->Sint = Sint;
 	self->CSn = CSn;
 	self->poll = poll;
-	self->spi = spi
-	spi_open_slave(self->spi, self->MOSI, self->MISO, self->SCK, self->CSn, 1, 1);
+	self->spi = spi;
+	spi_open_slave(self->spi, MOSI, MISO, SCK, CSn, 1, 1);
     pin_digitalOut(self->Sint);
     pin_clear(self->Sint);
     pin_digitalIn(self->CSn);
@@ -23,7 +23,7 @@ void console_init(_CONSOLE *self, _PIN *MISO, _PIN *MOSI, _PIN *SCK, _PIN *Sint,
 }
 
 void console_tx(_CONSOLE *self) {
-    spi_queue_slave(&spi1, self->cmd);
+    spi_queue_slave(self->spi, self->cmd);
     pin_set(self->Sint);
     pin_clear(self->Sint);
 }
