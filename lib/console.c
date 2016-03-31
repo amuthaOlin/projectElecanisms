@@ -26,3 +26,20 @@ void init_slave_comms(void) {
     int_attach(&int1, CSn, 1, handle_CSn);
 }
 
+WORD32 last_state;
+void poll_changes(){
+    last_state = state;
+    poll_state();
+    //printf("last:%x\n\r",last_state.l);
+    //printf("state:%x\n\r",state.l);
+    if (last_state.l != state.l){
+        led_toggle(&led1); 
+        slave_tx();
+    }
+    cmd.l = state.l;
+}
+
+void init_slave(void){
+    init_slave_comms();
+    poll_state();
+}

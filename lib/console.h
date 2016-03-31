@@ -15,23 +15,26 @@
 void init_console(void);
 
 typedef struct {
-	WORD32 res, cmd;
+	WORD32 res
+	WORD32 cmd;
 	WORD32 state;
 
+	_PIN *MISO;
+	_PIN *MOSI;
+	_PIN *SCK;
+	_PIN *CSn;
+	_PIN *Sint;
+	void (*poll_state)(struct _CONSOLE *self);
 
-	
-	_PIN *MISO  = &D[1];
-	_PIN *MOSI  = &D[0];
-	_PIN *SCK   = &D[2];
-	_PIN *CSn   = &D[3];
-	_PIN *Sint  = &D[4];
 } _CONSOLE;
 
 extern _CONSOLE console1, console2, console3;
 
 
-void slave_tx();
+void slave_tx(void);
 void handle_CSn(_INT *intx);
 void init_slave_comms(void);
+void poll_changes(void);
+void init_slave(void);
 
 #endif
