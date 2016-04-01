@@ -38,7 +38,7 @@ int16_t main(void) {
     init_console();
 
     console.cmd.l = 0xBEEFFACE;
-    init_slave();
+
 
     timer_setPeriod(&timer4, 0.01);
     timer_start(&timer4);
