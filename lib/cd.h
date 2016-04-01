@@ -28,20 +28,27 @@
 
 #include <stdint.h>
 #include "pin.h"
+#include "leds.h"
 
 void init_cd(void);
 
 typedef struct _CD {
     float dur_sec;
     float step_sec;
-    
-    uint16_t ticks;
+
+    _LEDS *ledbar;
+
+    uint16_t ticks_start;
+    uint16_t ticks_dur;
     uint8_t flag;
+    uint8_t active;
 } _CD;
 
 extern _CD cd1, cd2, cd3;
 
-void cd_init(_CD *self, float step_sec);
-void cd_start(_CD *self, float dur_sec);
+void cd_init(_CD *self, float step_sec, _LEDS *ledbar);
+void cd_start(_CD *self, float dur_sec, uint16_t ticks_start);
+void cd_update(_CD *self, uint16_t ticks_cur);
+void cd_update_all(uint32_t ticks_cur);
 
 #endif

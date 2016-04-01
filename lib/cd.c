@@ -30,17 +30,41 @@
 _CD cd1, cd2, cd3;
 
 void init_cd(void) {
-    cd_init(&cd1);
-    cd_init(&cd2);
-    cd_init(&cd3);
+    cd_init(&cd1, 1e-3, &ledbar1);
+    cd_init(&cd2, 1e-3, &ledbar2);
+    cd_init(&cd3, 1e-3, &ledbar3);
 }
 
-void cd_init(_CD *self, float step_sec) {
+void cd_init(_CD *self, float step_sec, _LEDS *ledbar) {
     self->step_sec = step_sec;
     self->flag = 0;
+    self->ledbar = ledbar;
+    self->active = 0;
 }
 
-void cd_start(_CD *self, float dur_sec) {
+void cd_start(_CD *self, float dur_sec, uint16_t ticks_start) {
+    self->flag = 0;
     self->dur_sec = dur_sec;
-    self->ticks = (uint16_t)(dur_sec/step_sec);
+
+    self->ticks_dur = (uint16_t)(dur_sec/self->step_sec);
+    self->ticks_start = ticks_start;
+
+    self->active = 1;
+}
+
+void cd_update(_CD *self, uint16_t ticks_cur) {
+    if (!self->active) return;
+    
+    uint16_t ticks_consumed = ticks_cur - self->ticks_start;
+    if (ticks_consumed > self->ticks_dur) {
+        self->flag = 1;
+    }
+
+    leds_bar(&ledbar1, (float)ticks_consumed/self->ticks_dur, 1);
+}
+
+void cd_update_all(uint32_t ticks_cur) {
+    cd_update(&cd1, ticks_cur);
+    cd_update(&cd2, ticks_cur);
+    cd_update(&cd3, ticks_cur);
 }

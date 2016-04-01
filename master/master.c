@@ -7,10 +7,13 @@
 #include "spi.h"
 #include "leds.h"
 #include "ui.h"
+#include "cd.h"
 #include "int.h"
 #include "timer.h"
 #include "spacecomms.h"
 #include "oc.h"
+
+#define GAME_TICK 1e-3 // seconds
 
 volatile WORD32 res1, res2, res3, cmd, expected_res1, expected_res2, expected_res3;
 
@@ -108,14 +111,15 @@ void init_master_comms() {
     int_attach(&int3, Sint3, 1, handle_sint3);
 }
 
-volatile uint32_t game_clock = 0;
+volatile uint32_t game_clock = 0; // time unit of "ticks"
 void game_loop() {
     game_clock++;
+    cd_update_all(game_clock);
 }
 
 void game_init() {
     init_master_comms();
-    timer_every(&timer1, 1e-3, game_loop);
+    timer_every(&timer1, GAME_TICK, game_loop);
 }
 
 int16_t main(void) {
@@ -128,6 +132,11 @@ int16_t main(void) {
     init_oc();
     init_int();
     init_leds();
+    init_cd();
+
+    cd1.step_sec = GAME_TICK;
+    cd2.step_sec = GAME_TICK;
+    cd3.step_sec = GAME_TICK;
     
     game_init();
 
