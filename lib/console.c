@@ -5,7 +5,7 @@
 _CONSOLE console;
 
 void init_console(void) {
-	console_init(&console, &D[1], &D[0], &D[2], &D[4], &D[3], _SPI *spi1, poll_state);  
+	console_init(&console, &D[1], &D[0], &D[2], &D[4], &D[3], &spi1, poll_state);  
 }
 
 void console_init(_CONSOLE *self, _PIN *MISO, _PIN *MOSI, _PIN *SCK, _PIN *Sint, _PIN *CSn, _SPI *spi, void (*poll)(_CONSOLE *self)){
