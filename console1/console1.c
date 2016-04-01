@@ -11,13 +11,6 @@
 #include "spacecomms.h"
 #include "console.h"
 
-_PIN *MISO  = &D[1];
-_PIN *MOSI  = &D[0];
-_PIN *SCK   = &D[2];
-_PIN *CSn   = &D[3];
-_PIN *Sint  = &D[4];
-
-
 void poll_state(){
     console.state.s1.red_button = pin_read(&D[5]);
 }
@@ -37,21 +30,18 @@ int16_t main(void) {
     init_uart();
     init_console();
 
-    console.cmd.l = 0xBEEFFACE;
-
+    console_attach_poll(&console, poll_state);
+    int_attach(&int1, console.spi->SSn, 1, handle_CSn);
 
     timer_setPeriod(&timer4, 0.01);
     timer_start(&timer4);
-
-   
 
     while(1) {
         if (timer_flag(&timer4)) {
             timer_lower(&timer4);
             console_poll_changes(&console);
         }
-        //     printf("Slave sent: 0x%x\r\n", 0x5A);
-        //     printf("Slave received: 0x%x\r\n", res);
-        
+        // printf("Slave sent: 0x%x\r\n", 0x5A);
+        // printf("Slave received: 0x%x\r\n", res);
     }
 }
