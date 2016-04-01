@@ -114,7 +114,7 @@ void init_master_comms() {
 volatile uint32_t game_clock = 0; // time unit of "ticks"
 void game_loop() {
     game_clock++;
-    led_toggle(&led1);
+    led_toggle(&led3);
 
     cd_update_all(game_clock);
 }
@@ -123,7 +123,9 @@ void game_init() {
     init_master_comms();
     timer_every(&timer1, GAME_TICK, game_loop);
 
-    cd_start(&cd2, 3.0, game_clock);
+    cd_start(&cd1, 1, game_clock);
+    cd_start(&cd2, 2, game_clock);
+    cd_start(&cd3, 3, game_clock);
 }
 
 int16_t main(void) {
@@ -143,8 +145,6 @@ int16_t main(void) {
     cd3.step_sec = GAME_TICK;
     
     game_init();
-
-    leds_bar(&ledbar1, .5, 1);
 
     while (1) {}
 }

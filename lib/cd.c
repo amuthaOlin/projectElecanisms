@@ -56,16 +56,13 @@ void cd_start(_CD *self, float dur_sec, uint16_t ticks_start) {
 void cd_update(_CD *self, uint16_t ticks_cur) {
     if (!self->active) return;
 
-    led_toggle(&led3);
-
     uint16_t ticks_consumed = ticks_cur - self->ticks_start;
+    
     if (ticks_consumed > self->ticks_dur) {
         self->flag = 1;
+        self->active = 0;
+        return;
     }
-
-    printf("Ticks consumed: %f\r\n", (float)ticks_consumed);
-    printf("Ticks total: %f\r\n", (float)self->ticks_dur);
-    printf("==============\r\n");
 
     leds_bar(self->ledbar, (float)(self->ticks_dur-ticks_consumed)/self->ticks_dur, 1);
 }
