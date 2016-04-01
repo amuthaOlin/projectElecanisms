@@ -43,7 +43,6 @@ void handle_sint1(_INT *intx) {
     if (res1.l == expected_res1.l) {
         led_toggle(&led1);
     }
-
 }
 
 void handle_sint2(_INT *intx) {
@@ -61,7 +60,6 @@ void handle_sint3(_INT *intx) {
         led_toggle(&led3);
     }
 }
-
 
 void send_command(){
     expected_res1.s1.red_button = 1;
@@ -110,17 +108,14 @@ void init_master_comms() {
     int_attach(&int3, Sint3, 1, handle_sint3);
 }
 
+volatile uint32_t game_clock = 0;
+void game_loop() {
+    game_clock++;
+}
 
 void game_init() {
     init_master_comms();
-    // cmd.d.packet = 0;
-    // cmd.d.actaddr = 0;
-    // cmd.d.actact = 1;
-    // send_all();
-}
-
-void game_state() {
-    
+    timer_every(&timer1, 1e-3, game_loop);
 }
 
 int16_t main(void) {
@@ -133,12 +128,10 @@ int16_t main(void) {
     init_oc();
     init_int();
     init_leds();
-
-    leds_setPin(&leds, &D[9]);
     
     game_init();
 
-    leds_bar(&leds, 0.7, 1);
+    leds_bar(&ledbar3, 0.7, 1);
 
     while (1) {}
 }
