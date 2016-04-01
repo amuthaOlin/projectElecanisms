@@ -26,6 +26,7 @@
 #include <p24FJ128GB206.h>
 #include "common.h"
 #include "cd.h"
+#include "ui.h"
 
 _CD cd1, cd2, cd3;
 
@@ -54,13 +55,19 @@ void cd_start(_CD *self, float dur_sec, uint16_t ticks_start) {
 
 void cd_update(_CD *self, uint16_t ticks_cur) {
     if (!self->active) return;
-    
+
+    led_toggle(&led3);
+
     uint16_t ticks_consumed = ticks_cur - self->ticks_start;
     if (ticks_consumed > self->ticks_dur) {
         self->flag = 1;
     }
 
-    leds_bar(&ledbar1, (float)ticks_consumed/self->ticks_dur, 1);
+    printf("Ticks consumed: %f\r\n", (float)ticks_consumed);
+    printf("Ticks total: %f\r\n", (float)self->ticks_dur);
+    printf("==============\r\n");
+
+    leds_bar(self->ledbar, (float)(self->ticks_dur-ticks_consumed)/self->ticks_dur, 1);
 }
 
 void cd_update_all(uint32_t ticks_cur) {

@@ -13,7 +13,7 @@
 #include "spacecomms.h"
 #include "oc.h"
 
-#define GAME_TICK 1e-3 // seconds
+#define GAME_TICK 1e-2 // seconds
 
 volatile WORD32 res1, res2, res3, cmd, expected_res1, expected_res2, expected_res3;
 
@@ -114,12 +114,16 @@ void init_master_comms() {
 volatile uint32_t game_clock = 0; // time unit of "ticks"
 void game_loop() {
     game_clock++;
+    led_toggle(&led1);
+
     cd_update_all(game_clock);
 }
 
 void game_init() {
     init_master_comms();
     timer_every(&timer1, GAME_TICK, game_loop);
+
+    cd_start(&cd2, 3.0, game_clock);
 }
 
 int16_t main(void) {
@@ -140,7 +144,7 @@ int16_t main(void) {
     
     game_init();
 
-    leds_bar(&ledbar3, 0.7, 1);
+    leds_bar(&ledbar1, .5, 1);
 
     while (1) {}
 }
