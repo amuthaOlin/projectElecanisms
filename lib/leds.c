@@ -43,6 +43,7 @@ uint8_t leds_state[3*LEDS_NUM];
 
 volatile uint16_t bitcount = 0;
 void __attribute__((interrupt, auto_psv)) _OC1Interrupt(void) {
+    disable_interrupts();
     bitclear(&IFS0, 2);
     if (!bitcount)
         OC1RS = LEDS_PERIOD;
@@ -55,6 +56,7 @@ void __attribute__((interrupt, auto_psv)) _OC1Interrupt(void) {
         OC1R = 0x0000;
         bitcount = 0;
     }
+    enable_interrupts();
 }
 
 void init_leds(void) { // init the objects and set up the unified controller
@@ -64,7 +66,7 @@ void init_leds(void) { // init the objects and set up the unified controller
     leds_init(&ledcenter, 60, 24);
 
     oc_pwm(&oc1, &D[9], NULL, LEDS_FREQ, 0x0000);
-    IPC0 |= 0x0700; // OC1 interrupt highest priority
+    IPC0 |= 0x0300; // OC1 interrupt low priority
     bitset(&IEC0, 2); // enable OC1 interrupt
 }
 
