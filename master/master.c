@@ -14,8 +14,9 @@
 #include "oc.h"
 
 #define GAME_TICK 1e-2 // seconds
+volatile uint32_t game_clock = 0; // time unit of "ticks"
 
-volatile WORD32 res1, res2, res3, cmd, expected_res1, expected_res2, expected_res3;
+volatile WORD32 res[3];
 
 _PIN *MISO  = &D[1];
 _PIN *MOSI  = &D[0];
@@ -27,7 +28,7 @@ _PIN *Sint2 = &D[6];
 _PIN *CSn3  = &D[7];
 _PIN *Sint3 = &D[8];
 
-WORD32 recieve_and_send_spi(_PIN *CSn){
+WORD32 master_tx(_PIN *CSn, WORD32 cmd){
     WORD32 res;
     pin_clear(CSn);
     res = spi_queue(&spi1, cmd);
@@ -41,53 +42,32 @@ WORD32 recieve_and_send_spi(_PIN *CSn){
 
 //recieve SPI interrupt handler
 void handle_sint1(_INT *intx) {
-    // printf("PIC 1 interrupt\n\r");
-    res1 = recieve_and_send_spi(CSn1);
-    if (res1.l == expected_res1.l) {
-        led_toggle(&led1);
-    }
+    res[0] = master_tx(CSn1, (WORD32)0x00000000);
 }
 
 void handle_sint2(_INT *intx) {
-    // printf("PIC 2 interrupt\n\r");
-    res2 = recieve_and_send_spi(CSn2);
-    if (res2.l == expected_res2.l) {
-        led_toggle(&led2);
-    }
+    res[1] = master_tx(CSn2, (WORD32)0x00000000);
 }
 
 void handle_sint3(_INT *intx) {
-    // printf("PIC 3 interrupt\n\r");
-    res3 = recieve_and_send_spi(CSn3);
-    if (res3.l == expected_res3.l) {
-        led_toggle(&led3);
-    }
+    res[2] = master_tx(CSn3, (WORD32)0x00000000);
 }
 
-void send_command(){
-    expected_res1.s1.red_button = 1;
-    expected_res2.s2.slider = 2;
-    expected_res3.s3.green_button = 1;
-}
-
-void send_slave(uint8_t slave) {
+void send_command(uint8_t slave, SPACK_DIR cmd) {
     switch (slave) {
         case 1:
-            res1 = recieve_and_send_spi(CSn1);
+            res[0] = master_tx(CSn1, (WORD32)cmd);
+            cd_start(&cd1, 1, game_clock);
             break;
         case 2:
-            res2 = recieve_and_send_spi(CSn2);
+            res[1] = master_tx(CSn2, (WORD32)cmd);
+            cd_start(&cd2, 4, game_clock);
             break;
         case 3:
-            res3 = recieve_and_send_spi(CSn3);
+            res[2] = master_tx(CSn3, (WORD32)cmd);
+            cd_start(&cd3, 9, game_clock);
             break;
     }
-}
-
-void send_all() {
-    send_slave(1);
-    send_slave(2);
-    send_slave(3);
 }
 
 void init_master_comms() {
@@ -111,12 +91,21 @@ void init_master_comms() {
     int_attach(&int3, Sint3, 1, handle_sint3);
 }
 
-volatile uint32_t game_clock = 0; // time unit of "ticks"
 void game_loop() {
     game_clock++;
     led_toggle(&led3);
 
     cd_update_all(game_clock);
+
+    if (cd1.flag) { // if the flag comes up, the command failed
+        // penalty for console n
+    }
+    if (cd2.flag) {
+
+    }
+    if (cd3.flag) {
+
+    }
 }
 
 void game_init() {
