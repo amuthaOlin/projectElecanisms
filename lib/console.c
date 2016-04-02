@@ -15,8 +15,6 @@ void console_init(_CONSOLE *self, _PIN *MISO, _PIN *MOSI, _PIN *SCK, _PIN *Sint,
     self->state = (WORD32)0;
     self->last_state = (WORD32)0;
 
-    self->state.s0.red_button = 1;
-
     spi_open_slave(self->spi, MOSI, MISO, SCK, CSn, 1, 1);
 
     pin_digitalOut(self->Sint);
