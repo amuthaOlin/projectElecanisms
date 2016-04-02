@@ -28,12 +28,13 @@
 #include "cd.h"
 #include "ui.h"
 
-_CD cd1, cd2, cd3;
+_CD cd1, cd2, cd3, cdcenter;
 
 void init_cd(void) {
     cd_init(&cd1, 1e-3, &ledbar1);
     cd_init(&cd2, 1e-3, &ledbar2);
     cd_init(&cd3, 1e-3, &ledbar3);
+    cd_init(&cdcenter, 1e-3, &ledcenter);
 }
 
 void cd_init(_CD *self, float step_sec, _LEDS *ledbar) {
@@ -71,4 +72,5 @@ void cd_update_all(uint32_t ticks_cur) {
     cd_update(&cd1, ticks_cur);
     cd_update(&cd2, ticks_cur);
     cd_update(&cd3, ticks_cur);
+    cd_update(&cdcenter, ticks_cur);
 }

@@ -53,6 +53,7 @@ typedef union {
 } WORD;
 
 typedef union {
+    int i;
     int32_t l;
     uint32_t ul;
     uint16_t w[2];
