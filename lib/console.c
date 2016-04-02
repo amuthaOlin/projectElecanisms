@@ -12,6 +12,10 @@ void init_console(void) {
 void console_init(_CONSOLE *self, _PIN *MISO, _PIN *MOSI, _PIN *SCK, _PIN *Sint, _PIN *CSn, _SPI *spi){
     self->Sint = Sint;
     self->spi = spi;
+    self->state = (WORD32)0;
+    self->last_state = (WORD32)0;
+
+    self->state.s0.red_button = 1;
 
     spi_open_slave(self->spi, MOSI, MISO, SCK, CSn, 1, 1);
 
@@ -30,11 +34,9 @@ void console_tx(_CONSOLE *self, WORD32 cmd) {
 }
 
 void console_poll_changes(_CONSOLE *self) {
-    self->last_state = self->state;
+    self->last_state = (*self).state;
     self->poll(self);
-    // printf("Last state: %x\r\n",self->last_state.l);
-    // printf("Curr state: %x\r\n",self->state.l);
-    if (self->last_state.l != self->state.l){
+    if (self->last_state.l != self->state.l) {
         console_tx(self, self->state);
     }
 }

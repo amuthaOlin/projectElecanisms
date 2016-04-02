@@ -11,10 +11,10 @@
 #include "spacecomms.h"
 #include "console.h"
 
-void poll_state() {
+void poll_state(_CONSOLE *self) {
     led_toggle(&led3);
-    console.state.s0.red_button = pin_read(&D[5]);
-    led_write(&led2, console.state.s0.red_button);
+    self->state.s0.red_button = (uint8_t)pin_read(&D[5]);
+    led_write(&led2, self->state.s0.red_button);
 }
 
 void handle_CSn(_INT *intx) {

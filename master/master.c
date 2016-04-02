@@ -30,11 +30,11 @@ _PIN *Sint1 = &D[6];
 _PIN *SSn2  = &D[7];
 _PIN *Sint2 = &D[8];
 
-WORD32 master_tx(_PIN *CSn, WORD32 cmd){
+WORD32 master_tx(_PIN *SSn, WORD32 cmd){
     WORD32 tmp;
-    pin_clear(CSn);
+    pin_clear(SSn);
     tmp = spi_queue(&spi1, cmd);
-    pin_set(CSn);
+    pin_set(SSn);
     // printf("====================\n\r");
     // printf("Transaction complete\n\r");
     // printf("Tx: %x%x%x%x\n\r", cmd.b[3], cmd.b[2], cmd.b[1], cmd.b[0]);
@@ -42,20 +42,22 @@ WORD32 master_tx(_PIN *CSn, WORD32 cmd){
     return tmp;
 }
 
-// if the state is correct, send the command again
 void handle_sint0(_INT *intx) {
-    res[0] = master_tx(SSn0, (WORD32)0x00000000);
+    led_off(&led1);
+    res[0] = master_tx(SSn0, (WORD32)0xdeadbeef);
 }
 
 void handle_sint1(_INT *intx) {
-    res[1] = master_tx(SSn1, (WORD32)0x00000000);
+    res[1] = master_tx(SSn1, (WORD32)0xdeadbeef);
 }
 
 void handle_sint2(_INT *intx) {
-    res[2] = master_tx(SSn2, (WORD32)0x00000000);
+    res[2] = master_tx(SSn2, (WORD32)0xdeadbeef);
 }
 
 void send_command(uint8_t slave, WORD32 cmd) {
+    printf("============\r\n");
+    printf("Send command!\r\n");
     switch (slave) {
         case 0:
             res[0] = master_tx(SSn0, cmd);
@@ -99,26 +101,25 @@ void game_loop() {
     cd_update_all(game_clock);
 
     if (res[0].l == desired_state[0].l) {
-       send_command(0, cmd[0]);
+        // send_command(0, cmd[0]);
     }
     if (res[1].l == desired_state[1].l) {
-       send_command(1, cmd[1]);
+        // send_command(1, cmd[1]);
+        led_off(&led2);
     }
     if (res[2].l == desired_state[2].l) {
-       send_command(2, cmd[2]);
+        // send_command(2, cmd[2]);
+        led_off(&led3);
     }
 
     if (cd1.flag) {
         // advance game countdown
-        led_off(&led1);
     }
     if (cd2.flag) {
         // advance game countdown
-        led_off(&led2);
     }
     if (cd3.flag) {
         // advance game countdown
-        led_off(&led3);
     }
     if (cdcenter.flag) {
         // game over
