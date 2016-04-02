@@ -18,7 +18,7 @@ volatile uint32_t game_clock = 0; // time unit of "ticks"
 
 volatile WORD32 res[3];
 volatile WORD32 cmd[3];
-volatile WORD32 desired_state[3];
+WORD32 desired_state[3];
 
 _PIN *MISO  = &D[1];
 _PIN *MOSI  = &D[0];
@@ -35,24 +35,34 @@ WORD32 master_tx(_PIN *SSn, WORD32 cmd){
     pin_clear(SSn);
     tmp = spi_queue(&spi1, cmd);
     pin_set(SSn);
-    // printf("====================\n\r");
-    // printf("Transaction complete\n\r");
-    // printf("Tx: %x%x%x%x\n\r", cmd.b[3], cmd.b[2], cmd.b[1], cmd.b[0]);
-    // printf("Rx: %x%x%x%x\n\r", tmp.b[3], tmp.b[2], tmp.b[1], tmp.b[0]);
     return tmp;
 }
 
 void handle_sint0(_INT *intx) {
-    led_off(&led1);
-    res[0] = master_tx(SSn0, (WORD32)0xdeadbeef);
+    res[0] = master_tx(SSn0, (WORD32)0xFEEDF00D);
+    printf("===\r\n");
+    printf("%x\r\n", res[0]);
+    printf("%x\r\n", desired_state[0]);
+    if (res[0].l == desired_state[0].l) {
+        // send_command(0, cmd[0]);
+        led_off(&led1);
+    }
 }
 
 void handle_sint1(_INT *intx) {
-    res[1] = master_tx(SSn1, (WORD32)0xdeadbeef);
+    res[1] = master_tx(SSn1, (WORD32)0xFEEDF00D);
+    if (res[1].l == desired_state[1].l) {
+        // send_command(1, cmd[1]);
+        led_off(&led2);
+    }
 }
 
 void handle_sint2(_INT *intx) {
-    res[2] = master_tx(SSn2, (WORD32)0xdeadbeef);
+    res[2] = master_tx(SSn2, (WORD32)0xFEEDF00D);
+    if (res[2].l == desired_state[2].l) {
+        // send_command(2, cmd[2]);
+        led_off(&led3);
+    }
 }
 
 void send_command(uint8_t slave, WORD32 cmd) {
@@ -100,18 +110,6 @@ void game_loop() {
 
     cd_update_all(game_clock);
 
-    if (res[0].l == desired_state[0].l) {
-        // send_command(0, cmd[0]);
-    }
-    if (res[1].l == desired_state[1].l) {
-        // send_command(1, cmd[1]);
-        led_off(&led2);
-    }
-    if (res[2].l == desired_state[2].l) {
-        // send_command(2, cmd[2]);
-        led_off(&led3);
-    }
-
     if (cd1.flag) {
         // advance game countdown
     }
@@ -139,16 +137,16 @@ void game_init() {
     cmd[1] = (WORD32)cmdtest;
     cmd[2] = (WORD32)cmdtest;
 
-    SLAVE0_STATE s0state;
-    s0state.red_button = 1;
-    SLAVE1_STATE s1state;
-    s1state.slider = 2;
-    SLAVE2_STATE s2state;
-    s2state.green_button = 1;
+    WORD32 s0state = (WORD32)0;
+    s0state.s0.red_button = 1;
+    WORD32 s1state = (WORD32)0;
+    s1state.s1.slider = 2;
+    WORD32 s2state = (WORD32)0;
+    s2state.s2.green_button = 1;
 
-    desired_state[0] = (WORD32)s0state;
-    desired_state[1] = (WORD32)s1state;
-    desired_state[2] = (WORD32)s2state;
+    desired_state[0] = s0state;
+    desired_state[1] = s1state;
+    desired_state[2] = s2state;
 
     cd_start(&cdcenter, 3, game_clock);
 }
