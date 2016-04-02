@@ -34,21 +34,23 @@ void init_cd(void);
 
 typedef struct _CD {
     float dur_sec;
-    float step_sec;
+    float tick_sec;
 
     _LEDS *ledbar;
 
-    uint16_t ticks_start;
-    uint16_t ticks_dur;
+    int32_t ticks_start;
+    int32_t ticks_dur;
+    int32_t ticks_offset;
     uint8_t flag;
     uint8_t active;
 } _CD;
 
 extern _CD cd1, cd2, cd3, cdcenter;
 
-void cd_init(_CD *self, float step_sec, _LEDS *ledbar);
-void cd_start(_CD *self, float dur_sec, uint16_t ticks_start);
-void cd_update(_CD *self, uint16_t ticks_cur);
-void cd_update_all(uint32_t ticks_cur);
+void cd_init(_CD *self, float tick_sec, _LEDS *ledbar);
+void cd_start(_CD *self, float dur_sec, int32_t ticks_start);
+void cd_update(_CD *self, int32_t ticks_cur);
+void cd_advance(_CD *self, float off_sec);
+void cd_update_all(int32_t ticks_cur);
 
 #endif

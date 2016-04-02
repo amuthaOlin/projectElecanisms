@@ -14,7 +14,7 @@
 #include "oc.h"
 
 #define GAME_TICK 1e-2 // seconds
-volatile uint32_t game_clock = 0; // time unit of "ticks"
+volatile int32_t game_clock = 0; // time unit of "ticks"
 
 volatile WORD32 res[3];
 volatile WORD32 cmd[3];
@@ -38,6 +38,23 @@ WORD32 master_tx(_PIN *SSn, WORD32 cmd){
     return tmp;
 }
 
+void send_command(uint8_t slave, WORD32 cmd) {
+    switch (slave) {
+        case 0:
+            res[0] = master_tx(SSn1, cmd);
+            cd_start(&cd1, 1, game_clock);
+            break;
+        case 1:
+            res[1] = master_tx(SSn2, cmd);
+            cd_start(&cd2, 4, game_clock);
+            break;
+        case 2:
+            res[2] = master_tx(SSn3, cmd);
+            cd_start(&cd3, 9, game_clock);
+            break;
+    }
+}
+
 void handle_sint1(_INT *intx) {
     res[0] = master_tx(SSn1, (WORD32)0xFEEDF00D);
     if (res[0].l == desired_state[0].l) {
@@ -59,23 +76,6 @@ void handle_sint3(_INT *intx) {
     if (res[2].l == desired_state[2].l) {
         send_command(2, cmd[2]);
         led_off(&led3);
-    }
-}
-
-void send_command(uint8_t slave, WORD32 cmd) {
-    switch (slave) {
-        case 0:
-            res[0] = master_tx(SSn1, cmd);
-            cd_start(&cd1, 1, game_clock);
-            break;
-        case 1:
-            res[1] = master_tx(SSn2, cmd);
-            cd_start(&cd2, 4, game_clock);
-            break;
-        case 2:
-            res[2] = master_tx(SSn3, cmd);
-            cd_start(&cd3, 9, game_clock);
-            break;
     }
 }
 
@@ -107,15 +107,19 @@ void game_loop() {
 
     if (cd1.flag) {
         leds_writeRGBs(&ledbar1, 255,0,0);
+        cd_advance(&cdcenter, 2.0);
     }
     if (cd2.flag) {
         leds_writeRGBs(&ledbar2, 255,0,0);
+        cd_advance(&cdcenter, 2.0);
     }
     if (cd3.flag) {
         leds_writeRGBs(&ledbar3, 255,0,0);
+        cd_advance(&cdcenter, 2.0);
     }
     if (cdcenter.flag) {
         leds_writeRGB(&ledcenter, 0, 255,0,0);
+        // game over
     }
 }
 
@@ -161,9 +165,9 @@ int16_t main(void) {
     init_leds();
     init_cd();
 
-    cd1.step_sec = GAME_TICK;
-    cd2.step_sec = GAME_TICK;
-    cd3.step_sec = GAME_TICK;
+    cd1.tick_sec = GAME_TICK;
+    cd2.tick_sec = GAME_TICK;
+    cd3.tick_sec = GAME_TICK;
     
     game_init();
 
