@@ -113,8 +113,8 @@ void leds_bar(_LEDS *self, float fill, float bri) {
     bar_g = fill*255;
     bar_r = (1-fill)*255;
 
-    leds_clear(self);
-    for (i = 0; i < leds_lit; i++)
+    leds_writeRGB(self, leds_lit+2, 0,0,0);
+    for (i = 0; i < leds_lit+1; i++)
         leds_writeRGB(self, i, bar_r*bri,bar_g*bri,bar_b*bri);
     leds_brighten(self, i-1, ((fill*self->num)-leds_lit)*bri);
 }
