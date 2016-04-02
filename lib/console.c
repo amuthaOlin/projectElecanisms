@@ -28,13 +28,12 @@ void console_tx(_CONSOLE *self, WORD32 cmd) {
     pin_clear(self->Sint);
 }
 
-WORD32 last_state;
 void console_poll_changes(_CONSOLE *self){
-    last_state = self->state;
+    self->last_state = self->state;
     self->poll(self);
-    // printf("last:%x\n\r",last_state.l);
-    // printf("state:%x\n\r",self->state.l);
-    if (last_state.l != self->state.l){
-        console_tx(&console, self->state);
+    // printf("Last state: %x\r\n",self->last_state.l);
+    // printf("Curr state: %x\r\n",self->state.l);
+    if (self->last_state.l != self->state.l){
+        console_tx(self, self->state);
     }
 }

@@ -59,9 +59,9 @@ typedef union {
     uint16_t w[2];
     uint8_t b[4];
     SLAVE_STATE s;
+    SLAVE0_STATE s0;
     SLAVE1_STATE s1;
     SLAVE2_STATE s2;
-    SLAVE_STATE s3;
     SPACK_DIR d;
 } WORD32;
 

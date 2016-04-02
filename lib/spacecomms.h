@@ -17,19 +17,19 @@ typedef struct SLAVE_STATE {
   unsigned long :28;
 } SLAVE_STATE;
 
-typedef struct SLAVE1_STATE {
+typedef struct SLAVE0_STATE {
   unsigned red_button:1;
   unsigned long :31;
+} SLAVE0_STATE;
+
+typedef struct SLAVE1_STATE {
+  unsigned slider:2;
+  unsigned long :30;
 } SLAVE1_STATE;
 
 typedef struct SLAVE2_STATE {
-  unsigned slider:2;
-  unsigned long :30;
-} SLAVE2_STATE;
-
-typedef struct SLAVE3_STATE {
   unsigned green_button:1;
   unsigned long :31;
-} SLAVE3_STATE;
+} SLAVE2_STATE;
 
 #endif

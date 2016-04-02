@@ -17,6 +17,7 @@ void init_console(void);
 typedef struct _CONSOLE {
     WORD32 res;
     WORD32 state;
+    WORD32 last_state;
     _SPI *spi;
     _PIN *Sint;
     void (*poll)(struct _CONSOLE *self);
