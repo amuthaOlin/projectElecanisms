@@ -55,18 +55,18 @@ void handle_sint2(_INT *intx) {
     res[2] = master_tx(SSn2, (WORD32)0x00000000);
 }
 
-void send_command(uint8_t slave, SPACK_DIR cmd) {
+void send_command(uint8_t slave, WORD32 cmd) {
     switch (slave) {
-        case 1:
-            res[0] = master_tx(SSn0, (WORD32)cmd);
+        case 0:
+            res[0] = master_tx(SSn0, cmd);
             cd_start(&cd1, 1, game_clock);
             break;
-        case 2:
-            res[1] = master_tx(SSn1, (WORD32)cmd);
+        case 1:
+            res[1] = master_tx(SSn1, cmd);
             cd_start(&cd2, 4, game_clock);
             break;
-        case 3:
-            res[2] = master_tx(SSn2, (WORD32)cmd);
+        case 2:
+            res[2] = master_tx(SSn2, cmd);
             cd_start(&cd3, 9, game_clock);
             break;
     }
@@ -99,31 +99,30 @@ void game_loop() {
 
     cd_update_all(game_clock);
 
-    if (res[0] == desired_state[0]) {
-       send_command(1, cmd[0]);
+    if (res[0].l == desired_state[0].l) {
+       send_command(0, cmd[0]);
     }
-    if (res[1] == desired_state[1]) {
-       send_command(2, cmd[1]);
+    if (res[1].l == desired_state[1].l) {
+       send_command(1, cmd[1]);
     }
-    if (res[2] == desired_state[2]) {
-       send_command(3, cmd[2]);
+    if (res[2].l == desired_state[2].l) {
+       send_command(2, cmd[2]);
     }
 
     if (cd1.flag) {
         // advance game countdown
-        secs_left -= 1;
+        led_toggle(&led1);
     }
     if (cd2.flag) {
         // advance game countdown
-        secs_left -= 1;
+        led_toggle(&led2);
     }
     if (cd3.flag) {
         // advance game countdown
-        secs_left -= 1;
+        led_toggle(&led3);
     }
     if (cdcenter.flag) {
         // game over
-        led_on(&led1);
     }
 }
 
@@ -136,11 +135,22 @@ void game_init() {
     cmdtest.actaddr = 0;
     cmdtest.actact = 1;
     // put actuator 0 in state 1 ("press a button")
-    cmd[0] = cmdtest;
-    cmd[1] = cmdtest;
-    cmd[2] = cmdtest;
+    cmd[0] = (WORD32)cmdtest;
+    cmd[1] = (WORD32)cmdtest;
+    cmd[2] = (WORD32)cmdtest;
 
-    cd_start(&cdcenter, 30, game_clock);
+    SLAVE0_STATE s0state;
+    s0state.red_button = 1;
+    SLAVE1_STATE s1state;
+    s1state.slider = 2;
+    SLAVE2_STATE s2state;
+    s2state.green_button = 1;
+
+    desired_state[0] = (WORD32)s0state;
+    desired_state[1] = (WORD32)s1state;
+    desired_state[2] = (WORD32)s2state;
+
+    cd_start(&cdcenter, 3, game_clock);
 }
 
 int16_t main(void) {
