@@ -11,13 +11,19 @@
 #include "spacecomms.h"
 #include "console.h"
 
-void poll_state(){
-    console.state.s1.red_button = pin_read(&D[5]);
+void poll_state() {
+    led_toggle(&led3);
+    console.state.s0.red_button = pin_read(&D[5]);
+    led_write(&led2, console.state.s0.red_button);
 }
 
 void handle_CSn(_INT *intx) {
     console.res = spi_read_slave(console.spi);
     //printf("res:%x%x\n\r",res.l[1],res.l[0]);
+}
+
+void console1_poll(_TIMER *timer) {
+    console_poll_changes(&console);
 }
 
 int16_t main(void) {
@@ -33,14 +39,9 @@ int16_t main(void) {
     console_attach_poll(&console, poll_state);
     int_attach(&int1, console.spi->SSn, 1, handle_CSn);
 
-    timer_setPeriod(&timer4, 0.01);
-    timer_start(&timer4);
+    timer_every(&timer4, 1e-2, console1_poll);
 
     while(1) {
-        if (timer_flag(&timer4)) {
-            timer_lower(&timer4);
-            console_poll_changes(&console);
-        }
         // printf("Slave sent: 0x%x\r\n", 0x5A);
         // printf("Slave received: 0x%x\r\n", res);
     }

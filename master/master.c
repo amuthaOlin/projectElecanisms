@@ -95,7 +95,6 @@ void init_master_comms() {
 
 void game_loop() {
     game_clock++;
-    led_toggle(&led3);
 
     cd_update_all(game_clock);
 
@@ -111,15 +110,15 @@ void game_loop() {
 
     if (cd1.flag) {
         // advance game countdown
-        led_toggle(&led1);
+        led_off(&led1);
     }
     if (cd2.flag) {
         // advance game countdown
-        led_toggle(&led2);
+        led_off(&led2);
     }
     if (cd3.flag) {
         // advance game countdown
-        led_toggle(&led3);
+        led_off(&led3);
     }
     if (cdcenter.flag) {
         // game over
@@ -153,6 +152,9 @@ void game_init() {
     cd_start(&cdcenter, 3, game_clock);
 }
 
+volatile uint8_t sw1_last = 0;
+volatile uint8_t sw2_last = 0;
+volatile uint8_t sw3_last = 0;
 int16_t main(void) {
     init_clock();
     init_uart();
@@ -171,7 +173,23 @@ int16_t main(void) {
     
     game_init();
 
-    while (1) {}
+    while (1) {
+        if (!sw_read(&sw1) && sw1_last == 1) {
+            send_command(0, cmd[0]);
+            led_on(&led1);
+        }
+        if (!sw_read(&sw2) && sw2_last == 1) {
+            send_command(1, cmd[1]);
+            led_on(&led2);
+        }
+        if (!sw_read(&sw3) && sw3_last == 1) {
+            send_command(2, cmd[2]);
+            led_on(&led3);
+        }
+        sw1_last = sw_read(&sw1);
+        sw2_last = sw_read(&sw2);
+        sw3_last = sw_read(&sw3);
+    }
 }
 
 // SPACK_DIR dirpacket = workspackunion.whateveryoucallthepackdir;
