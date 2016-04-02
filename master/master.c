@@ -23,12 +23,12 @@ WORD32 desired_state[3];
 _PIN *MISO  = &D[1];
 _PIN *MOSI  = &D[0];
 _PIN *SCK   = &D[2];
-_PIN *SSn0  = &D[3];
-_PIN *Sint0 = &D[4];
-_PIN *SSn1  = &D[5];
-_PIN *Sint1 = &D[6];
-_PIN *SSn2  = &D[7];
-_PIN *Sint2 = &D[8];
+_PIN *SSn1  = &D[3];
+_PIN *Sint1 = &D[4];
+_PIN *SSn2  = &D[5];
+_PIN *Sint2 = &D[6];
+_PIN *SSn3  = &D[7];
+_PIN *Sint3 = &D[8];
 
 WORD32 master_tx(_PIN *SSn, WORD32 cmd){
     WORD32 tmp;
@@ -38,47 +38,42 @@ WORD32 master_tx(_PIN *SSn, WORD32 cmd){
     return tmp;
 }
 
-void handle_sint0(_INT *intx) {
-    res[0] = master_tx(SSn0, (WORD32)0xFEEDF00D);
-    printf("===\r\n");
-    printf("%x\r\n", res[0]);
-    printf("%x\r\n", desired_state[0]);
+void handle_sint1(_INT *intx) {
+    res[0] = master_tx(SSn1, (WORD32)0xFEEDF00D);
     if (res[0].l == desired_state[0].l) {
-        // send_command(0, cmd[0]);
+        send_command(0, cmd[0]);
         led_off(&led1);
     }
 }
 
-void handle_sint1(_INT *intx) {
-    res[1] = master_tx(SSn1, (WORD32)0xFEEDF00D);
+void handle_sint2(_INT *intx) {
+    res[1] = master_tx(SSn2, (WORD32)0xFEEDF00D);
     if (res[1].l == desired_state[1].l) {
-        // send_command(1, cmd[1]);
+        send_command(1, cmd[1]);
         led_off(&led2);
     }
 }
 
-void handle_sint2(_INT *intx) {
-    res[2] = master_tx(SSn2, (WORD32)0xFEEDF00D);
+void handle_sint3(_INT *intx) {
+    res[2] = master_tx(SSn3, (WORD32)0xFEEDF00D);
     if (res[2].l == desired_state[2].l) {
-        // send_command(2, cmd[2]);
+        send_command(2, cmd[2]);
         led_off(&led3);
     }
 }
 
 void send_command(uint8_t slave, WORD32 cmd) {
-    printf("============\r\n");
-    printf("Send command!\r\n");
     switch (slave) {
         case 0:
-            res[0] = master_tx(SSn0, cmd);
+            res[0] = master_tx(SSn1, cmd);
             cd_start(&cd1, 1, game_clock);
             break;
         case 1:
-            res[1] = master_tx(SSn1, cmd);
+            res[1] = master_tx(SSn2, cmd);
             cd_start(&cd2, 4, game_clock);
             break;
         case 2:
-            res[2] = master_tx(SSn2, cmd);
+            res[2] = master_tx(SSn3, cmd);
             cd_start(&cd3, 9, game_clock);
             break;
     }
@@ -86,23 +81,23 @@ void send_command(uint8_t slave, WORD32 cmd) {
 
 void init_master_comms() {
     spi_open(&spi1, &D[0], &D[1], &D[2], 1e6, 1, 1);
-    pin_digitalIn(Sint0);
     pin_digitalIn(Sint1);
     pin_digitalIn(Sint2);
+    pin_digitalIn(Sint3);
 
-    pin_digitalOut(SSn0);
     pin_digitalOut(SSn1);
     pin_digitalOut(SSn2);
-    pin_set(SSn0);
+    pin_digitalOut(SSn3);
     pin_set(SSn1);
     pin_set(SSn2);
+    pin_set(SSn3);
     led_off(&led1);
     led_off(&led2);
     led_off(&led3);
 
-    int_attach(&int1, Sint0, 1, handle_sint0);
-    int_attach(&int2, Sint1, 1, handle_sint1);
-    int_attach(&int3, Sint2, 1, handle_sint2);
+    int_attach(&int1, Sint1, 1, handle_sint1);
+    int_attach(&int2, Sint2, 1, handle_sint2);
+    int_attach(&int3, Sint3, 1, handle_sint3);
 }
 
 void game_loop() {
@@ -111,16 +106,16 @@ void game_loop() {
     cd_update_all(game_clock);
 
     if (cd1.flag) {
-        // advance game countdown
+        leds_writeRGBs(&ledbar1, 255,0,0);
     }
     if (cd2.flag) {
-        // advance game countdown
+        leds_writeRGBs(&ledbar2, 255,0,0);
     }
     if (cd3.flag) {
-        // advance game countdown
+        leds_writeRGBs(&ledbar3, 255,0,0);
     }
     if (cdcenter.flag) {
-        // game over
+        leds_writeRGB(&ledcenter, 0, 255,0,0);
     }
 }
 
@@ -137,16 +132,16 @@ void game_init() {
     cmd[1] = (WORD32)cmdtest;
     cmd[2] = (WORD32)cmdtest;
 
-    WORD32 s0state = (WORD32)0;
-    s0state.s0.red_button = 1;
     WORD32 s1state = (WORD32)0;
-    s1state.s1.slider = 2;
+    s1state.s1.red_button = 1;
     WORD32 s2state = (WORD32)0;
-    s2state.s2.green_button = 1;
+    s2state.s2.slider = 2;
+    WORD32 s3state = (WORD32)0;
+    s3state.s3.green_button = 1;
 
-    desired_state[0] = s0state;
-    desired_state[1] = s1state;
-    desired_state[2] = s2state;
+    desired_state[0] = s1state;
+    desired_state[1] = s2state;
+    desired_state[2] = s3state;
 
     cd_start(&cdcenter, 3, game_clock);
 }
