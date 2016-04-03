@@ -12,9 +12,17 @@
 #include "console.h"
 
 void poll_state(_CONSOLE *self) {
-    led_toggle(&led3);
-    self->state.s0.red_button = (uint8_t)pin_read(&D[5]);
-    led_write(&led2, self->state.s0.red_button);
+    //led_toggle(&led3);
+    self->state.s1.red_button = (uint8_t)pin_read(&D[5]);
+    self->state.s1.hotsystem1 = (uint8_t)pin_read(&D[6]);
+    self->state.s1.hotsystem2 = (uint8_t)pin_read(&D[7]);
+    self->state.s1.toggle_sw1 = (uint8_t)pin_read(&D[8]);
+    self->state.s1.toggle_sw2 = (uint8_t)pin_read(&D[9]);
+    self->state.s1.toggle_sw3 = (uint8_t)pin_read(&D[10]);
+    self->state.s1.toggle_sw4 = (uint8_t)pin_read(&D[11]);
+    self->state.s1.wormhole1 = (uint8_t)pin_read(&D[12]);
+    self->state.s1.wormhole2 = (uint8_t)pin_read(&D[13]);   
+    //led_write(&led2, self->state.s0.red_button);
 }
 
 void handle_CSn(_INT *intx) {
