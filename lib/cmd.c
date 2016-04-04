@@ -25,57 +25,30 @@
 */
 #include <p24FJ128GB206.h>
 #include "common.h"
-#include "cd.h"
+#include "cmd.h"
 #include "ui.h"
 
-_CD cd1, cd2, cd3, cdcenter;
+_CMD cmds[32];
 
-void init_cd(void) {
-    cd_init(&cd1, 1e-3, &ledbar1);
-    cd_init(&cd2, 1e-3, &ledbar2);
-    cd_init(&cd3, 1e-3, &ledbar3);
-    cd_init(&cdcenter, 1e-3, &ledcenter);
+char *cmd_strs = {
+    "Dog",
+    "Cat",
+    "Human"
 }
 
-void cd_init(_CD *self, float tick_sec, _LEDS *ledbar) {
-    self->tick_sec = tick_sec;
-    self->flag = 0;
-    self->ledbar = ledbar;
-    self->active = 0;
-    self->ticks_offset = 0;
+void init_cmd(void) {
 }
 
-void cd_start(_CD *self, float dur_sec, int32_t ticks_start) {
-    self->flag = 0;
-    self->dur_sec = dur_sec;
+uint32_t cmds_ptr = 0;
+void cmd_init(uint32_t cmd_str, uint16_t actuator, uint16_t action) {
+    _CMD temp;
+    temp.cmd_str = cmd_str;
+    temp.actuator = actuator;
+    temp.action = action;
 
-    self->ticks_dur = (int32_t)(dur_sec/self->tick_sec);
-    self->ticks_start = ticks_start;
+    cmds[cmds_ptr] = temp;
 
-    self->active = 1;
-}
+    cmds_ptr++;
+};
 
-void cd_update(_CD *self, int32_t ticks_cur) {
-    if (!self->active) return;
-
-    int32_t ticks_consumed = ticks_cur + self->ticks_offset - self->ticks_start;
-    
-    if (ticks_consumed > self->ticks_dur) {
-        self->flag = 1;
-        self->active = 0;
-        return;
-    }
-
-    leds_bar(self->ledbar, (float)(self->ticks_dur-ticks_consumed)/self->ticks_dur, 1);
-}
-
-void cd_advance(_CD *self, float off_sec) {
-    self->ticks_offset += (int32_t)(off_sec/self->tick_sec);
-}
-
-void cd_update_all(int32_t ticks_cur) {
-    cd_update(&cd1, ticks_cur);
-    cd_update(&cd2, ticks_cur);
-    cd_update(&cd3, ticks_cur);
-    cd_update(&cdcenter, ticks_cur);
-}
+void cmd_send(uint32_t cmd, float cd_time, _CD *cd);
