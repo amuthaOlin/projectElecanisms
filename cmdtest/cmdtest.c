@@ -25,5 +25,7 @@ int16_t main(void) {
     init_cd();
     init_cmd();
 
+    cmd_print(7);
+
     while (1) {}
 }

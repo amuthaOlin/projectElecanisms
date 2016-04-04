@@ -36,8 +36,9 @@ char *cmd_strs = {
     "Dog"
 };
 
-uint8_t __log2(uint16_t n) {
-    uint8_t r = 0;
+uint16_t __log2(uint16_t nin) {
+    uint16_t n = nin;
+    uint16_t r = 0;
 
     while (n >>= 1)
         r++;
@@ -46,24 +47,24 @@ uint8_t __log2(uint16_t n) {
 }
 
 void init_cmd(void) {
-    uint32_t i;
+    uint16_t i;
     uint8_t j;
 
     for (i = 0; i < CONS1_NUMACTS; i++) {
         for (j = 0; j < CONS1_STATES[i]; j++) {
-            cmd_init(i, CONS1_STATES[i] == 1?1:j, 1);
+            cmd_init(i, (CONS1_STATES[i] == 1)?1:j, 1);
         }
     }
 
     for (i = 0; i < CONS2_NUMACTS; i++) {
         for (j = 0; j < CONS2_STATES[i]; j++) {
-            cmd_init(CONS1_NUMACTS+i, CONS2_STATES[i] == 1?1:j, 2);
+            cmd_init(CONS1_NUMACTS+i, (CONS2_STATES[i] == 1)?1:j, 2);
         }
     }
 
     for (i = 0; i < CONS3_NUMACTS; i++) {
         for (j = 0; j < CONS3_STATES[i]; j++) {
-            cmd_init(CONS1_NUMACTS+CONS2_NUMACTS+i, CONS3_STATES[i] == 1?1:j, 3);
+            cmd_init(CONS1_NUMACTS+CONS2_NUMACTS+i, (CONS3_STATES[i] == 1)?1:j, 3);
         }
     }
 }
@@ -76,37 +77,50 @@ void cmd_init(uint16_t actuator, uint16_t action, uint8_t console) {
 
     WORD32 desired = (WORD32)0;
 
-    uint8_t i;
-    uint8_t bitpos = 0;
+    uint16_t i;
+    uint16_t bitpos = 0;
     switch (console) {
         case 1:
             for (i = 0; i < CONS1_NUMACTS; i++) {
-                if (i == actuator)
-                    desired.l |= action << bitpos;
+                if (i == actuator) {
+                    desired.ul |= (uint32_t)(action << bitpos);
+                }
                 bitpos += __log2(CONS1_STATES[i]);
             }
             break;
         case 2:
             for (i = 0; i < CONS2_NUMACTS; i++) {
-                if (i == actuator)
-                    desired.l |= action << bitpos;
+                if (i == actuator) {
+                    printf("Dis code run 2?\r\n");
+                    desired.ul |= (uint32_t)(action << bitpos);
+                }
                 bitpos += __log2(CONS2_STATES[i]);
             }
             break;
         case 3:
             for (i = 0; i < CONS3_NUMACTS; i++) {
-                if (i == actuator)
-                    desired.l |= action << bitpos;
+                if (i == actuator) {
+                    printf("Dis code run 3?\r\n");
+                    desired.ul |= (uint32_t)(action << bitpos);
+                }
                 bitpos += __log2(CONS3_STATES[i]);
             }
             break;
     }
-
     cmd_tmp.desired = desired;
     cmds[cmds_ptr] = cmd_tmp;
 
     cmds_ptr++;
-    printf("Cmd pointer: %d\r\n", cmds_ptr);
-};
+}
+
+void cmd_print(uint16_t index) {
+    printf("=======\r\n");
+    printf("Command\r\n");
+    printf("-------\r\n");
+    printf("Actuator: %d\r\n", cmds[index].actuator);
+    printf("Action: %d\r\n", cmds[index].action);
+    printf("Desired bits: %x%x%x%x\r\n", cmds[index].desired.b[3], cmds[index].desired.b[2], cmds[index].desired.b[1], cmds[index].desired.b[0]);
+    printf("=======\r\n");
+}
 
 void cmd_send(uint16_t cmd, float cd_time, _CD *cd);
