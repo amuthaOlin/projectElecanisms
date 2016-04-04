@@ -23,7 +23,6 @@ uint8_t read_slider(){
 void poll_state(_CONSOLE *self) {
     //led_toggle(&led3);
     self->state.s2.red_button = (uint8_t)pin_read(&D[5]);
-    self->state.s2.hotsystem = (uint8_t)pin_read(&D[6]);
     self->state.s2.green_button1 = (uint8_t)pin_read(&D[7]);
     self->state.s2.green_button2 = (uint8_t)pin_read(&D[8]);
     self->state.s2.green_button3 = (uint8_t)pin_read(&D[9]);
@@ -32,7 +31,11 @@ void poll_state(_CONSOLE *self) {
     self->state.s2.wormhole1 = (uint8_t)pin_read(&D[12]);
     self->state.s2.wormhole2 = (uint8_t)pin_read(&D[13]);
     self->state.s2.tri_state = read_tri_state();
-    self->state.s2.slider = read_slider();    
+    self->state.s2.slider = read_slider();
+    self->state.s2.hotsystem1 = (uint8_t)pin_read(&A[2]);
+    self->state.s2.hotsystem2 = (uint8_t)pin_read(&A[3]);
+    self->state.s2.hotsystem3 = (uint8_t)pin_read(&A[4]);
+    self->state.s2.hotsystem4 = (uint8_t)pin_read(&A[5]);  
     //led_write(&led2, self->state.s0.red_button);
 }
 
@@ -45,6 +48,13 @@ void console1_poll(_TIMER *timer) {
     console_poll_changes(&console);
 }
 
+void console2_init(){
+    pin_digitalIn(&A[2]);
+    pin_digitalIn(&A[3]);
+    pin_digitalIn(&A[4]);
+    pin_digitalIn(&A[5]);
+}
+
 int16_t main(void) {
     init_clock();
     init_ui();
@@ -54,6 +64,8 @@ int16_t main(void) {
     init_timer();
     init_uart();
     init_console();
+
+    console2_init();
 
     console_attach_poll(&console, poll_state);
     int_attach(&int1, console.spi->SSn, 1, handle_CSn);

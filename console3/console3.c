@@ -14,12 +14,11 @@
 void poll_state(_CONSOLE *self) {
     //led_toggle(&led3);
     self->state.s3.red_button = (uint8_t)pin_read(&D[5]);
-    self->state.s3.hotsystem1 = (uint8_t)pin_read(&D[6]);
-    self->state.s3.hotsystem2 = (uint8_t)pin_read(&D[7]);
-    self->state.s3.triangle1 = (uint8_t)pin_read(&D[8]);
-    self->state.s3.triangle2 = (uint8_t)pin_read(&D[9]);
-    self->state.s3.triangle3 = (uint8_t)pin_read(&D[10]);
-    self->state.s3.pin_11 = (uint8_t)pin_read(&D[11]);
+    self->state.s3.triangle1 = (uint8_t)pin_read(&D[6]);
+    self->state.s3.triangle2 = (uint8_t)pin_read(&D[7]);
+    self->state.s3.triangle3 = (uint8_t)pin_read(&D[8]);
+    self->state.s3.toggle1 = (uint8_t)pin_read(&D[9]);
+    self->state.s3.toggle2 = (uint8_t)pin_read(&D[10]);
     self->state.s3.wormhole1 = (uint8_t)pin_read(&D[12]);
     self->state.s3.wormhole2 = (uint8_t)pin_read(&D[13]);
     //led_write(&led2, self->state.s0.red_button);

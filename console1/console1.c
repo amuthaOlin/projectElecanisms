@@ -11,17 +11,24 @@
 #include "spacecomms.h"
 #include "console.h"
 
+uint8_t read_joystick(){
+    uint8_t pin8 = (uint8_t)pin_read(&D[8]);
+    uint8_t pin9 = (uint8_t)pin_read(&D[8]);
+    uint8_t pin10 = (uint8_t)pin_read(&D[8]);
+    uint8_t pin11 = (uint8_t)pin_read(&D[8]);
+    return 
+}
+
+
 void poll_state(_CONSOLE *self) {
     //led_toggle(&led3);
     self->state.s1.red_button = (uint8_t)pin_read(&D[5]);
-    self->state.s1.hotsystem1 = (uint8_t)pin_read(&D[6]);
-    self->state.s1.hotsystem2 = (uint8_t)pin_read(&D[7]);
-    self->state.s1.toggle_sw1 = (uint8_t)pin_read(&D[8]);
-    self->state.s1.toggle_sw2 = (uint8_t)pin_read(&D[9]);
-    self->state.s1.toggle_sw3 = (uint8_t)pin_read(&D[10]);
-    self->state.s1.toggle_sw4 = (uint8_t)pin_read(&D[11]);
+    self->state.s1.toggle1 = (uint8_t)pin_read(&D[6]);
+    self->state.s1.toggle2 = (uint8_t)pin_read(&D[7]);
+    self->state.s1.joystick = read_joystick();
     self->state.s1.wormhole1 = (uint8_t)pin_read(&D[12]);
     self->state.s1.wormhole2 = (uint8_t)pin_read(&D[13]);   
+    self->state.s1.hotsystem = (uint8_t)pin_read(&A[0]);
     //led_write(&led2, self->state.s0.red_button);
 }
 
@@ -34,6 +41,10 @@ void console1_poll(_TIMER *timer) {
     console_poll_changes(&console);
 }
 
+void console1_init(){
+    pin_digitalIn(&A[0]);
+}
+
 int16_t main(void) {
     init_clock();
     init_ui();
@@ -44,6 +55,7 @@ int16_t main(void) {
     init_uart();
     init_console();
 
+    console1_init();
     console_attach_poll(&console, poll_state);
     int_attach(&int1, console.spi->SSn, 1, handle_CSn);
 

@@ -12,43 +12,42 @@ typedef struct SPACK_DIR {
 
 typedef struct CONS1_STATE {
   unsigned red_button:1;
-  unsigned hotsystem1:1;
-  unsigned hotsystem2:1;
-  unsigned toggle_sw1:1;
-  unsigned toggle_sw2:1;
-  unsigned toggle_sw3:1;
-  unsigned toggle_sw4:1;
+  unsigned toggle1:1;
+  unsigned toggle2:1;
+  unsigned joystick:4;
   unsigned wormhole1:1;
-  unsigned wormhole2:1; 
-  unsigned long :24;
+  unsigned wormhole2:1;
+  unsigned hotsystem:1; 
+  unsigned long :22;
 } CONS1_STATE;
 
 typedef struct CONS2_STATE {
   unsigned red_button:1;
-  unsigned hotsystem:1;
   unsigned green_button1:1;
   unsigned green_button2:1;
   unsigned green_button3:1;
   unsigned green_button4:1;
-  unsigned pin_11:1;
   unsigned wormhole1:1;
   unsigned wormhole2:1;
   unsigned tri_state:2;
   unsigned slider:2;
-  unsigned long :23;
+  unsigned hotsystem1:1;
+  unsigned hotsystem2:1;
+  unsigned hotsystem3:1;
+  unsigned hotsystem4:1;
+  unsigned long :17;
 } CONS2_STATE;
 
 typedef struct CONS3_STATE {
   unsigned red_button:1;
-  unsigned hotsystem1:1;
-  unsigned hotsystem2:1;
   unsigned triangle1:1;
   unsigned triangle2:1;
   unsigned triangle3:1;
-  unsigned pin_11:1;
+  unsigned toggle1:1;
+  unsigned toggle2:1;
   unsigned wormhole1:1;
   unsigned wormhole2:1;
-  unsigned long :23;
+  unsigned long :24;
 } CONS3_STATE;
 
 #endif
