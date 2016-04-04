@@ -21,6 +21,19 @@ typedef struct CONS1_STATE {
   unsigned long :22;
 } CONS1_STATE;
 
+uint8_t CONS1_NUMACTS = 9;
+uint8_t CONS1_STATES[] = {
+    1,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    1,
+    1
+}
+
 typedef struct CONS2_STATE {
   unsigned red_button:1;
   unsigned green_button1:1;
@@ -38,6 +51,21 @@ typedef struct CONS2_STATE {
   unsigned long :17;
 } CONS2_STATE;
 
+uint8_t CONS2_NUMACTS = 11;
+uint8_t CONS2_STATES[] = {
+    1,
+    2,
+    2,
+    2,
+    2,
+    2,
+    0,
+    1,
+    1,
+    3,
+    4
+}
+
 typedef struct CONS3_STATE {
   unsigned red_button:1;
   unsigned triangle1:1;
@@ -49,5 +77,18 @@ typedef struct CONS3_STATE {
   unsigned wormhole2:1;
   unsigned long :24;
 } CONS3_STATE;
+
+uint8_t CONS3_NUMACTS = 9;
+uint8_t CONS3_STATES[] = {
+    1,
+    2,
+    2,
+    1,
+    1,
+    1,
+    0,
+    1,
+    1
+}
 
 #endif

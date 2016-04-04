@@ -26,27 +26,87 @@
 #include <p24FJ128GB206.h>
 #include "common.h"
 #include "cmd.h"
+#include "spacecomms.h"
 #include "ui.h"
 
 _CMD cmds[32];
+WORD32 desired_states [32];
 
 char *cmd_strs = {
-    "Dog",
     "Cat",
-    "Human"
+    "Dog"
+}
+
+
+uint8_t __log2(uint16_t n) {
+    uint8_t r = 0;
+
+    while (n >>= 1)
+        r++;
+
+    return r;
 }
 
 void init_cmd(void) {
+    uint32_t i;
+    uint8_t j;
+
+    for (i = 0; i < CONS1_NUMACTS; i++) {
+        for (j = 0; j < CONS1_STATES[i]; j++) {
+            cmd_init(i, CONS1_STATES[i] == 1?1:j, 1);
+        }
+    }
+
+    for (i = 0; i < CONS2_NUMACTS; i++) {
+        for (j = 0; j < CONS2_STATES[i]; j++) {
+            cmd_init(CONS1_NUMACTS+i, CONS2_STATES[i] == 1?1:j, 2);
+        }
+    }
+
+    for (i = 0; i < CONS3_NUMACTS; i++) {
+        for (j = 0; j < CONS3_STATES[i]; j++) {
+            cmd_init(CONS1_NUMACTS+CONS2_NUMACTS+i, CONS3_STATES[i] == 1?1:j, 3);
+        }
+    }
 }
 
 uint32_t cmds_ptr = 0;
-void cmd_init(uint32_t cmd_str, uint16_t actuator, uint16_t action) {
-    _CMD temp;
-    temp.cmd_str = cmd_str;
-    temp.actuator = actuator;
-    temp.action = action;
+void cmd_init(uint16_t actuator, uint16_t action, uint8_t console) {
+    _CMD cmd_tmp;
+    cmd_tmp.actuator = actuator;
+    cmd_tmp.action = action;
 
-    cmds[cmds_ptr] = temp;
+    cmds[cmds_ptr] = cmd_tmp;
+
+    WORD32 desired = (WORD32)0;
+
+    uint8_t i;
+    uint8_t bitpos = 0;
+    switch (console) {
+        case 1:
+            for (i = 0; i < CONS1_NUMACTS) {
+                if (i == actuator)
+                    desired.l |= action << bitpos;
+                bitpos += __log2(CONS1_STATES[i]);
+            }
+            break;
+        case 2:
+            for (i = 0; i < CONS2_NUMACTS) {
+                if (i == actuator)
+                    desired.l |= action << bitpos;
+                bitpos += __log2(CONS2_STATES[i]);
+            }
+            break;
+        case 3:
+            for (i = 0; i < CONS3_NUMACTS) {
+                if (i == actuator)
+                    desired.l |= action << bitpos;
+                bitpos += __log2(CONS3_STATES[i]);
+            }
+            break;
+    }
+
+    desired_states[cmds_ptr] = desired;
 
     cmds_ptr++;
 };

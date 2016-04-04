@@ -34,7 +34,6 @@ void init_cmd(void);
 typedef struct _CMD {
     // constant
     uint32_t index;
-    uint32_t cmd_str;
     uint16_t actuator;
     uint16_t action;
 
@@ -46,7 +45,7 @@ typedef struct _CMD {
     _CD *cd;
 } _CMD;
 
-void cmd_init(uint32_t cmd_str, uint16_t actuator, uint16_t action);
+void cmd_init(uint16_t actuator, uint16_t action, uint8_t console);
 void cmd_send(uint32_t cmd, float cd_time, _CD *cd);
 
 #endif
