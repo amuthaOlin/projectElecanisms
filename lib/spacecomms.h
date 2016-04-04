@@ -3,6 +3,15 @@
 
 #include <stdint.h>
 
+extern uint8_t CONS1_NUMACTS;
+extern uint8_t CONS1_STATES[7];
+
+extern uint8_t CONS2_NUMACTS;
+extern uint8_t CONS2_STATES[13];
+
+extern uint8_t CONS3_NUMACTS;
+extern uint8_t CONS3_STATES[8];
+
 typedef struct SPACK_DIR {
   unsigned packet:2;
   unsigned actaddr:5;

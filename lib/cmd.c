@@ -26,29 +26,98 @@
 #include <p24FJ128GB206.h>
 #include "common.h"
 #include "cmd.h"
+#include "spacecomms.h"
 #include "ui.h"
 
-_CMD cmds[32];
+_CMD cmds[48];
 
 char *cmd_strs = {
-    "Dog",
     "Cat",
-    "Human"
+    "Dog"
+};
+
+uint16_t __log2(uint16_t nin) {
+    uint16_t n = nin;
+    uint16_t r = 0;
+
+    while (n >>= 1)
+        r++;
+
+    return r<1? 1:r;
 }
 
 void init_cmd(void) {
+    uint16_t i;
+    uint8_t j;
+
+    for (i = 0; i < CONS1_NUMACTS; i++) {
+        for (j = 0; j < CONS1_STATES[i]; j++) {
+            cmd_init(i, (CONS1_STATES[i] == 1)?1:j, 1);
+        }
+    }
+
+    for (i = 0; i < CONS2_NUMACTS; i++) {
+        for (j = 0; j < CONS2_STATES[i]; j++) {
+            cmd_init(CONS1_NUMACTS+i, (CONS2_STATES[i] == 1)?1:j, 2);
+        }
+    }
+
+    for (i = 0; i < CONS3_NUMACTS; i++) {
+        for (j = 0; j < CONS3_STATES[i]; j++) {
+            cmd_init(CONS1_NUMACTS+CONS2_NUMACTS+i, (CONS3_STATES[i] == 1)?1:j, 3);
+        }
+    }
 }
 
-uint32_t cmds_ptr = 0;
-void cmd_init(uint32_t cmd_str, uint16_t actuator, uint16_t action) {
-    _CMD temp;
-    temp.cmd_str = cmd_str;
-    temp.actuator = actuator;
-    temp.action = action;
+uint16_t cmds_ptr = 0;
+void cmd_init(uint16_t actuator, uint16_t action, uint8_t console) {
+    _CMD cmd_tmp;
+    cmd_tmp.actuator = actuator;
+    cmd_tmp.action = action;
 
-    cmds[cmds_ptr] = temp;
+    WORD32 desired = (WORD32)0;
+
+    uint16_t i;
+    uint16_t bitpos = 0;
+    switch (console) {
+        case 1:
+            for (i = 0; i < CONS1_NUMACTS; i++) {
+                if (i == actuator) {
+                    desired.ul |= (uint32_t)(action << bitpos);
+                }
+                bitpos += __log2(CONS1_STATES[i]);
+            }
+            break;
+        case 2:
+            for (i = 0; i < CONS2_NUMACTS; i++) {
+                if (i == actuator-CONS1_NUMACTS) {
+                    desired.ul |= (uint32_t)(action << bitpos);
+                }
+                bitpos += __log2(CONS2_STATES[i]);
+            }
+            break;
+        case 3:
+            for (i = 0; i < CONS3_NUMACTS; i++) {
+                if (i == actuator-CONS1_NUMACTS-CONS2_NUMACTS) {
+                    desired.ul |= (uint32_t)(action << bitpos);
+                }
+                bitpos += __log2(CONS3_STATES[i]);
+            }
+            break;
+    }
+    cmd_tmp.desired = desired;
+    cmds[cmds_ptr] = cmd_tmp;
 
     cmds_ptr++;
-};
+}
 
-void cmd_send(uint32_t cmd, float cd_time, _CD *cd);
+void cmd_print(uint16_t index) {
+    printf("=======\r\n");
+    printf("Command\r\n");
+    printf("-------\r\n");
+    printf("Actuator: %d\r\n", cmds[index].actuator);
+    printf("Action: %d\r\n", cmds[index].action);
+    printf("Desired bits: %x%x%x%x\r\n", cmds[index].desired.b[3], cmds[index].desired.b[2], cmds[index].desired.b[1], cmds[index].desired.b[0]);
+}
+
+void cmd_send(uint16_t cmd, float cd_time, _CD *cd);

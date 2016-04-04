@@ -33,20 +33,22 @@ void init_cmd(void);
 
 typedef struct _CMD {
     // constant
-    uint32_t index;
-    uint32_t cmd_str;
+    uint16_t index;
     uint16_t actuator;
     uint16_t action;
 
-    uint32_t cmd_mask;
-    uint32_t cmd_desired;
+    uint32_t mask;
+    WORD32 desired;
 
     // dynamic
     float cd_time;
     _CD *cd;
 } _CMD;
 
-void cmd_init(uint32_t cmd_str, uint16_t actuator, uint16_t action);
-void cmd_send(uint32_t cmd, float cd_time, _CD *cd);
+extern _CMD cmds[48];
+
+void cmd_init(uint16_t actuator, uint16_t action, uint8_t console);
+void cmd_send(uint16_t cmd, float cd_time, _CD *cd);
+void cmd_print(uint16_t index);
 
 #endif
