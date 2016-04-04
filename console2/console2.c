@@ -27,7 +27,6 @@ void poll_state(_CONSOLE *self) {
     self->state.s2.green_button2 = (uint8_t)pin_read(&D[8]);
     self->state.s2.green_button3 = (uint8_t)pin_read(&D[9]);
     self->state.s2.green_button4 = (uint8_t)pin_read(&D[10]);
-    self->state.s2.pin_11 = (uint8_t)pin_read(&D[11]);
     self->state.s2.wormhole1 = (uint8_t)pin_read(&D[12]);
     self->state.s2.wormhole2 = (uint8_t)pin_read(&D[13]);
     self->state.s2.tri_state = read_tri_state();

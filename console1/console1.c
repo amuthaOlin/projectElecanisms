@@ -12,11 +12,47 @@
 #include "console.h"
 
 uint8_t read_joystick(){
-    uint8_t pin8 = (uint8_t)pin_read(&D[8]);
-    uint8_t pin9 = (uint8_t)pin_read(&D[8]);
-    uint8_t pin10 = (uint8_t)pin_read(&D[8]);
-    uint8_t pin11 = (uint8_t)pin_read(&D[8]);
-    return 
+    uint8_t joystick
+    uint8_t j1 = (uint8_t)pin_read(&D[8]);
+    uint8_t j3 = (uint8_t)pin_read(&D[9]);
+    uint8_t j5 = (uint8_t)pin_read(&D[10]);
+    uint8_t j7 = (uint8_t)pin_read(&D[11]);
+
+    if (j1 == 1){
+        if (j3 == 1){
+            joystick = 2;
+        }
+        else if(j7 == 1){
+            joystick = 8;
+        }
+        else{
+            joystick = 1;
+        }
+    }
+    else if(j3 == 1){
+        if(j5 == 1){
+            joystick = 4;
+        }
+        else{
+            joystick = 3;
+        }
+    }
+    else if(j5 == 1){
+        if (j7 == 1){
+            joystick = 6;
+        }
+        else{
+            joystick = 5;
+        }
+    }
+    else if (j7 = 7){
+        joystick = 7;
+    }
+    else{
+        joystick = 0;
+    }
+    return joystick;
+
 }
 
 
@@ -25,7 +61,7 @@ void poll_state(_CONSOLE *self) {
     self->state.s1.red_button = (uint8_t)pin_read(&D[5]);
     self->state.s1.toggle1 = (uint8_t)pin_read(&D[6]);
     self->state.s1.toggle2 = (uint8_t)pin_read(&D[7]);
-    self->state.s1.joystick = read_joystick();
+    self->state.s1.joystick1 = read_joystick();
     self->state.s1.wormhole1 = (uint8_t)pin_read(&D[12]);
     self->state.s1.wormhole2 = (uint8_t)pin_read(&D[13]);   
     self->state.s1.hotsystem = (uint8_t)pin_read(&A[0]);
