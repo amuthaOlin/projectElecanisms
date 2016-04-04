@@ -25,7 +25,12 @@ int16_t main(void) {
     init_cd();
     init_cmd();
 
-    cmd_print(7);
+    printf("PRINTING COMMANDS\r\n");
+    cmd_print(0);
+    cmd_print(1);
+    cmd_print(2);
+    cmd_print(3);
+    cmd_print(4);
 
     while (1) {}
 }

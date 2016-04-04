@@ -43,7 +43,7 @@ uint16_t __log2(uint16_t nin) {
     while (n >>= 1)
         r++;
 
-    return r;
+    return r<1? 1:r;
 }
 
 void init_cmd(void) {
@@ -90,8 +90,7 @@ void cmd_init(uint16_t actuator, uint16_t action, uint8_t console) {
             break;
         case 2:
             for (i = 0; i < CONS2_NUMACTS; i++) {
-                if (i == actuator) {
-                    printf("Dis code run 2?\r\n");
+                if (i == actuator-CONS1_NUMACTS) {
                     desired.ul |= (uint32_t)(action << bitpos);
                 }
                 bitpos += __log2(CONS2_STATES[i]);
@@ -99,8 +98,7 @@ void cmd_init(uint16_t actuator, uint16_t action, uint8_t console) {
             break;
         case 3:
             for (i = 0; i < CONS3_NUMACTS; i++) {
-                if (i == actuator) {
-                    printf("Dis code run 3?\r\n");
+                if (i == actuator-CONS1_NUMACTS-CONS2_NUMACTS) {
                     desired.ul |= (uint32_t)(action << bitpos);
                 }
                 bitpos += __log2(CONS3_STATES[i]);
@@ -120,7 +118,6 @@ void cmd_print(uint16_t index) {
     printf("Actuator: %d\r\n", cmds[index].actuator);
     printf("Action: %d\r\n", cmds[index].action);
     printf("Desired bits: %x%x%x%x\r\n", cmds[index].desired.b[3], cmds[index].desired.b[2], cmds[index].desired.b[1], cmds[index].desired.b[0]);
-    printf("=======\r\n");
 }
 
 void cmd_send(uint16_t cmd, float cd_time, _CD *cd);
