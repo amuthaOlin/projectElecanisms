@@ -26,7 +26,6 @@
 #include <p24FJ128GB206.h>
 #include "common.h"
 #include "cmd.h"
-#include "spacecomms.h"
 #include "ui.h"
 
 _CMD cmds[32];
@@ -35,8 +34,7 @@ WORD32 desired_states [32];
 char *cmd_strs = {
     "Cat",
     "Dog"
-}
-
+};
 
 uint8_t __log2(uint16_t n) {
     uint8_t r = 0;
@@ -76,29 +74,27 @@ void cmd_init(uint16_t actuator, uint16_t action, uint8_t console) {
     cmd_tmp.actuator = actuator;
     cmd_tmp.action = action;
 
-    cmds[cmds_ptr] = cmd_tmp;
-
     WORD32 desired = (WORD32)0;
 
     uint8_t i;
     uint8_t bitpos = 0;
     switch (console) {
         case 1:
-            for (i = 0; i < CONS1_NUMACTS) {
+            for (i = 0; i < CONS1_NUMACTS; i++) {
                 if (i == actuator)
                     desired.l |= action << bitpos;
                 bitpos += __log2(CONS1_STATES[i]);
             }
             break;
         case 2:
-            for (i = 0; i < CONS2_NUMACTS) {
+            for (i = 0; i < CONS2_NUMACTS; i++) {
                 if (i == actuator)
                     desired.l |= action << bitpos;
                 bitpos += __log2(CONS2_STATES[i]);
             }
             break;
         case 3:
-            for (i = 0; i < CONS3_NUMACTS) {
+            for (i = 0; i < CONS3_NUMACTS; i++) {
                 if (i == actuator)
                     desired.l |= action << bitpos;
                 bitpos += __log2(CONS3_STATES[i]);
@@ -106,6 +102,7 @@ void cmd_init(uint16_t actuator, uint16_t action, uint8_t console) {
             break;
     }
 
+    cmds[cmds_ptr] = cmd_tmp;
     desired_states[cmds_ptr] = desired;
 
     cmds_ptr++;
