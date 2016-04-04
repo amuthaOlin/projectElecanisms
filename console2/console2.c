@@ -11,6 +11,15 @@
 #include "spacecomms.h"
 #include "console.h"
 
+uint8_t read_tri_state(){
+    return (uint8_t)pin_read(&A[0]);
+}
+
+uint8_t read_slider(){
+    return (uint8_t)pin_read(&A[1]);
+}
+
+
 void poll_state(_CONSOLE *self) {
     //led_toggle(&led3);
     self->state.s2.red_button = (uint8_t)pin_read(&D[5]);
@@ -22,8 +31,8 @@ void poll_state(_CONSOLE *self) {
     self->state.s2.pin_11 = (uint8_t)pin_read(&D[11]);
     self->state.s2.wormhole1 = (uint8_t)pin_read(&D[12]);
     self->state.s2.wormhole2 = (uint8_t)pin_read(&D[13]);
-    self->state.s2.tri_state = (uint8_t)pin_read(&A[0]); 
-    self->state.s2.slider = (uint8_t)pin_read(&A[1]);    
+    self->state.s2.tri_state = read_tri_state();
+    self->state.s2.slider = read_slider();    
     //led_write(&led2, self->state.s0.red_button);
 }
 
