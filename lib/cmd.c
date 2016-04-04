@@ -26,10 +26,10 @@
 #include <p24FJ128GB206.h>
 #include "common.h"
 #include "cmd.h"
+#include "spacecomms.h"
 #include "ui.h"
 
-_CMD cmds[32];
-WORD32 desired_states [32];
+_CMD cmds[48];
 
 char *cmd_strs = {
     "Cat",
@@ -68,7 +68,7 @@ void init_cmd(void) {
     }
 }
 
-uint32_t cmds_ptr = 0;
+uint16_t cmds_ptr = 0;
 void cmd_init(uint16_t actuator, uint16_t action, uint8_t console) {
     _CMD cmd_tmp;
     cmd_tmp.actuator = actuator;
@@ -102,10 +102,11 @@ void cmd_init(uint16_t actuator, uint16_t action, uint8_t console) {
             break;
     }
 
+    cmd_tmp.desired = desired;
     cmds[cmds_ptr] = cmd_tmp;
-    desired_states[cmds_ptr] = desired;
 
     cmds_ptr++;
+    printf("Cmd pointer: %d\r\n", cmds_ptr);
 };
 
-void cmd_send(uint32_t cmd, float cd_time, _CD *cd);
+void cmd_send(uint16_t cmd, float cd_time, _CD *cd);
