@@ -22,12 +22,17 @@ int16_t main(void) {
 
     init_lcd();
 
-    char string[17]="space team";
-    char* strptr=string;
-    CamelCase(strptr);
-    Caesar(strptr,1,2);
-    lcd_print(&lcd1, strptr);
-    lcd_stop(&lcd1);
+
+    char string1[17]="Go";
+    char* strptr1=string1;
+    char string2[17]="Space";
+    char* strptr2=string2;
+    char string3[17]="Team";
+    char* strptr3=string3;
+    lcd_print(&lcd1, strptr1);
+    lcd_print(&lcd2, strptr2);
+    lcd_print(&lcd3, strptr3);
+    lcd_stop(&lcd3);
 
     while(1) {
         //

@@ -90,7 +90,10 @@ void __lcd_send8(_LCD *self, uint8_t value, uint8_t command) {
 
 
 void init_lcd(void) {
-    lcd_init(&lcd1, &i2c3, 1e3, 0x07,'T');
+    i2c_open(&i2c3, 1e3);
+    lcd_init(&lcd1, &i2c3, 1e3, 0x07,'A');
+    lcd_init(&lcd2, &i2c3, 1e3, 0x06,'A');
+    lcd_init(&lcd3, &i2c3, 1e3, 0x05,'A');
 }
 
 void lcd_init(_LCD *self, _I2C *i2c, float freq, uint8_t addr, char vendor) {
@@ -113,7 +116,7 @@ void lcd_init(_LCD *self, _I2C *i2c, float freq, uint8_t addr, char vendor) {
 
     self->io_write_val = 0x00;
 
-    i2c_open(self->i2c, freq);
+    // i2c_open(self->i2c, freq);
 
     __lcd_i2c_write(self, 0x00);
 
