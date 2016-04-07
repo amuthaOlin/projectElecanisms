@@ -26,6 +26,7 @@ void console_attach_poll(_CONSOLE *self, void (*poll)(_CONSOLE *self)) {
 }
 
 void console_tx(_CONSOLE *self, WORD32 cmd) {
+	printf("cmd:%lu\n\r",cmd.l );
     spi_queue_slave(self->spi, cmd);
     pin_set(self->Sint);
     pin_clear(self->Sint);

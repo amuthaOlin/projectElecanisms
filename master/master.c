@@ -61,6 +61,7 @@ void handle_sint1(_INT *intx) {
         send_command(0, cmd[0]);
         led_off(&led1);
     }
+    printf("console1:%lu\n\r",res[0]);
 }
 
 void handle_sint2(_INT *intx) {
@@ -69,6 +70,7 @@ void handle_sint2(_INT *intx) {
         send_command(1, cmd[1]);
         led_off(&led2);
     }
+    printf("console2 slider:%u\n\r",res[1].s2.slider);
 }
 
 void handle_sint3(_INT *intx) {
@@ -77,6 +79,7 @@ void handle_sint3(_INT *intx) {
         send_command(2, cmd[2]);
         led_off(&led3);
     }
+    printf("console3:%lu\n\r",res[2]);
 }
 
 void init_master_comms() {
@@ -141,7 +144,7 @@ void game_init() {
     WORD32 s2state = (WORD32)0;
     s2state.s2.slider = 2;
     WORD32 s3state = (WORD32)0;
-    s3state.s3.green_button = 1;
+    s3state.s3.triangle1 = 1;
 
     desired_state[0] = s1state;
     desired_state[1] = s2state;

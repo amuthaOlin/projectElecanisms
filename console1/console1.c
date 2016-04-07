@@ -12,12 +12,15 @@
 #include "console.h"
 
 uint8_t read_joystick(){
-    uint8_t joystick
+    uint8_t joystick;
     uint8_t j1 = (uint8_t)pin_read(&D[8]);
     uint8_t j3 = (uint8_t)pin_read(&D[9]);
     uint8_t j5 = (uint8_t)pin_read(&D[10]);
     uint8_t j7 = (uint8_t)pin_read(&D[11]);
-
+    printf("j1:%u\n",j1);
+    printf("j3:%u\n",j3);
+    printf("j5:%u\n",j5);
+    printf("j7:%u\n",j7);
     if (j1 == 1){
         if (j3 == 1){
             joystick = 2;
@@ -61,7 +64,7 @@ void poll_state(_CONSOLE *self) {
     self->state.s1.red_button = (uint8_t)pin_read(&D[5]);
     self->state.s1.toggle1 = (uint8_t)pin_read(&D[6]);
     self->state.s1.toggle2 = (uint8_t)pin_read(&D[7]);
-    self->state.s1.joystick1 = read_joystick();
+    self->state.s1.joystick = read_joystick();
     self->state.s1.wormhole1 = (uint8_t)pin_read(&D[12]);
     self->state.s1.wormhole2 = (uint8_t)pin_read(&D[13]);   
     self->state.s1.hotsystem = (uint8_t)pin_read(&A[0]);

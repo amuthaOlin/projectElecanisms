@@ -15,8 +15,22 @@ uint8_t read_tri_state(){
     return (uint8_t)pin_read(&A[0]);
 }
 
-uint8_t read_slider(){
-    return (uint8_t)pin_read(&A[1]);
+uint8_t read_slider(uint8_t slider_out){
+
+    uint16_t slider_in = (uint16_t)pin_read(&A[1]);
+    if (slider_in < 1000){
+        slider_out = 0;
+    }
+    else if(slider_in < 51000 && slider_in > 41000){
+        slider_out = 1;
+    }
+    else if(slider_in < 61000 && slider_in > 54000 ){
+        slider_out = 2;
+    }
+    else if(slider_in > 64000){
+        slider_out = 3;
+    }
+    return slider_out;
 }
 
 
@@ -30,7 +44,7 @@ void poll_state(_CONSOLE *self) {
     self->state.s2.wormhole1 = (uint8_t)pin_read(&D[12]);
     self->state.s2.wormhole2 = (uint8_t)pin_read(&D[13]);
     self->state.s2.tri_state = read_tri_state();
-    self->state.s2.slider = read_slider();
+    self->state.s2.slider = read_slider(self->state.s2.slider);
     self->state.s2.hotsystem1 = (uint8_t)pin_read(&A[2]);
     self->state.s2.hotsystem2 = (uint8_t)pin_read(&A[3]);
     self->state.s2.hotsystem3 = (uint8_t)pin_read(&A[4]);
