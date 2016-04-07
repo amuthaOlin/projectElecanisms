@@ -56,7 +56,8 @@ typedef struct CONS3_STATE {
   unsigned toggle2:1;
   unsigned wormhole1:1;
   unsigned wormhole2:1;
-  unsigned long :24;
+  unsigned clutch:2;
+  unsigned long :22;
 } CONS3_STATE;
 
 

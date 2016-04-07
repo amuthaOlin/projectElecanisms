@@ -70,7 +70,7 @@ void handle_sint2(_INT *intx) {
         send_command(1, cmd[1]);
         led_off(&led2);
     }
-    printf("console2 slider:%u\n\r",res[1].s2.slider);
+    printf("console2:%lu\n\r",res[1]);
 }
 
 void handle_sint3(_INT *intx) {
@@ -79,7 +79,7 @@ void handle_sint3(_INT *intx) {
         send_command(2, cmd[2]);
         led_off(&led3);
     }
-    printf("console3:%lu\n\r",res[2]);
+    printf("console3:%u\n\r",res[2].s3.clutch);
 }
 
 void init_master_comms() {

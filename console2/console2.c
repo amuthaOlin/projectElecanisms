@@ -12,7 +12,19 @@
 #include "console.h"
 
 uint8_t read_tri_state(){
-    return (uint8_t)pin_read(&A[0]);
+    uint16_t tri_state_in = (uint16_t)pin_read(&A[0]);
+    uint8_t tri_state_out;
+    printf("%u\n\r",tri_state_in);
+    if (tri_state_in<1000){
+        tri_state_out = 1;
+    }
+    else if(tri_state_in>60000){
+        tri_state_out = 2;
+    }
+    else if (tri_state_in>30000 && tri_state_in<35000){
+        tri_state_out = 0;
+    }
+    return tri_state_out;
 }
 
 uint8_t read_slider(uint8_t slider_out){
@@ -21,13 +33,13 @@ uint8_t read_slider(uint8_t slider_out){
     if (slider_in < 1000){
         slider_out = 0;
     }
-    else if(slider_in < 51000 && slider_in > 41000){
+    else if(slider_in < 42000 && slider_in > 37000){
         slider_out = 1;
     }
-    else if(slider_in < 61000 && slider_in > 54000 ){
+    else if(slider_in < 52000 && slider_in > 49000 ){
         slider_out = 2;
     }
-    else if(slider_in > 64000){
+    else if(slider_in > 60000){
         slider_out = 3;
     }
     return slider_out;
