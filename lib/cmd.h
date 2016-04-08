@@ -52,4 +52,6 @@ void cmd_init(uint16_t actuator, uint16_t action, uint8_t console);
 void cmd_send(uint16_t cmd, float cd_time, _CD *cd);
 void cmd_print(uint16_t index);
 
+uint8_t cmd_test(uint16_t cmdidx, WORD32 state);
+
 #endif

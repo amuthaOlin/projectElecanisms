@@ -90,8 +90,8 @@ void cmd_print(uint16_t index) {
     printf("Command for console %d\r\n", cmd->console+1);
     printf("-------\r\n");
     printf("Actuator %d, action %d\r\n", cmd->actuator, cmd->action);
-    printf("Desired bits: %04lx\r\n", (unsigned long)cmd->desired.ul);
-    printf("Mask bits   : %04lx\r\n", (unsigned long)cmd->mask.ul);
+    printf("Desired bits: %08lx\r\n", (unsigned long)cmd->desired.ul);
+    printf("Mask bits   : %08lx\r\n", (unsigned long)cmd->mask.ul);
 }
 
 void cmd_send(uint16_t cmd, float cd_time, _CD *cd) {
@@ -100,4 +100,11 @@ void cmd_send(uint16_t cmd, float cd_time, _CD *cd) {
             - start the countdown
         - whenever a state packet from console X comes in, check it against the current command for that console!
    */
+}
+
+// returns 1 if command passes
+uint8_t cmd_test(uint16_t cmdidx, WORD32 state) {
+    _CMD *cmd = &cmds[cmdidx];
+
+    return (state.ul & cmd->mask.ul) == cmd->desired.ul;
 }
