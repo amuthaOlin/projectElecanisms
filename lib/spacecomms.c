@@ -68,7 +68,7 @@ uint8_t CONS2_HASREST[] = { // has a "rest state" that cannot be commanded
 };
 
 
-uint8_t CONS1_HASREST[] = { // has a "rest state" that cannot be commanded
+uint8_t CONS3_HASREST[] = { // has a "rest state" that cannot be commanded
     1,
     1,
     1,
@@ -77,4 +77,4 @@ uint8_t CONS1_HASREST[] = { // has a "rest state" that cannot be commanded
     0,
     1,
     1
-}
+};
