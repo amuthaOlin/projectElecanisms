@@ -37,7 +37,7 @@ typedef struct _CMD {
     uint16_t actuator;
     uint16_t action;
 
-    uint32_t mask;
+    WORD32 mask;
     WORD32 desired;
 
     // dynamic

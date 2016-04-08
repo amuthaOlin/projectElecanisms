@@ -25,12 +25,16 @@ int16_t main(void) {
     init_cd();
     init_cmd();
 
+    led_on(&led3);
+
     printf("PRINTING COMMANDS\r\n");
     cmd_print(0);
     cmd_print(1);
     cmd_print(2);
     cmd_print(3);
     cmd_print(4);
+    cmd_print(5);
+    cmd_print(6);
 
     while (1) {}
 }

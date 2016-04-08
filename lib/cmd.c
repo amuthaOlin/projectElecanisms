@@ -25,25 +25,20 @@
 */
 #include <p24FJ128GB206.h>
 #include "common.h"
+#include "math.h"
 #include "cmd.h"
 #include "spacecomms.h"
 #include "ui.h"
 
-_CMD cmds[48];
+_CMD cmds[65]; // cumsum of members of state arrays
 
 char *cmd_strs = {
     "Cat",
     "Dog"
 };
 
-uint16_t __log2(uint16_t nin) {
-    uint16_t n = nin;
-    uint16_t r = 0;
-
-    while (n >>= 1)
-        r++;
-
-    return r<1? 1:r;
+uint16_t __log2(uint16_t n) {
+    return n<2? 1:ceil(log((double)n)/log(2.));
 }
 
 void init_cmd(void) {
@@ -75,37 +70,46 @@ void cmd_init(uint16_t actuator, uint16_t action, uint8_t console) {
     cmd_tmp.actuator = actuator;
     cmd_tmp.action = action;
 
+    WORD32 mask = (WORD32)0;
     WORD32 desired = (WORD32)0;
 
     uint16_t i;
     uint16_t bitpos = 0;
+    uint16_t logres = 0;
     switch (console) {
         case 1:
             for (i = 0; i < CONS1_NUMACTS; i++) {
+                logres = __log2(CONS1_STATES[i]);
                 if (i == actuator) {
-                    desired.ul |= (uint32_t)(action << bitpos);
+                    desired.ul |= (uint32_t)action << bitpos;
+                    mask.ul |= ((uint32_t)pow(2, logres)-1) << bitpos;
                 }
-                bitpos += __log2(CONS1_STATES[i]);
+                bitpos += logres;
             }
             break;
         case 2:
             for (i = 0; i < CONS2_NUMACTS; i++) {
+                logres = __log2(CONS2_STATES[i]);
                 if (i == actuator-CONS1_NUMACTS) {
-                    desired.ul |= (uint32_t)(action << bitpos);
+                    desired.ul |= (uint32_t)action << bitpos;
+                    mask.ul |= ((uint32_t)pow(2, logres)-1) << bitpos;
                 }
-                bitpos += __log2(CONS2_STATES[i]);
+                bitpos += logres;
             }
             break;
         case 3:
             for (i = 0; i < CONS3_NUMACTS; i++) {
+                logres = __log2(CONS3_STATES[i]);
                 if (i == actuator-CONS1_NUMACTS-CONS2_NUMACTS) {
-                    desired.ul |= (uint32_t)(action << bitpos);
+                    desired.ul |= (uint32_t)action << bitpos;
+                    mask.ul |= ((uint32_t)pow(2, logres)-1) << bitpos;
                 }
-                bitpos += __log2(CONS3_STATES[i]);
+                bitpos += logres;
             }
             break;
     }
     cmd_tmp.desired = desired;
+    cmd_tmp.mask = mask;
     cmds[cmds_ptr] = cmd_tmp;
 
     cmds_ptr++;
@@ -118,6 +122,7 @@ void cmd_print(uint16_t index) {
     printf("Actuator: %d\r\n", cmds[index].actuator);
     printf("Action: %d\r\n", cmds[index].action);
     printf("Desired bits: %x%x%x%x\r\n", cmds[index].desired.b[3], cmds[index].desired.b[2], cmds[index].desired.b[1], cmds[index].desired.b[0]);
+    printf("Mask bits   : %x|%x|%x|%x\r\n", cmds[index].mask.b[3], cmds[index].mask.b[2], cmds[index].mask.b[1], cmds[index].mask.b[0]);
 }
 
 void cmd_send(uint16_t cmd, float cd_time, _CD *cd);
