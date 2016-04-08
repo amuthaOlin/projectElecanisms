@@ -30,7 +30,7 @@
 #include "spacecomms.h"
 #include "ui.h"
 
-_CMD cmds[65]; // cumsum of members of state arrays
+_CMD cmds[48]; // cumsum of members of state arrays minus cumsum of members of hasrest arrays
 
 char *cmd_strs = {
     "Cat",
