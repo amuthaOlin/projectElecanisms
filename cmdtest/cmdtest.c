@@ -35,6 +35,14 @@ int16_t main(void) {
     cmd_print(4);
     cmd_print(5);
     cmd_print(6);
+    cmd_print(7);
+    cmd_print(8);
+    cmd_print(9);
+    cmd_print(10);
+    cmd_print(11);
+    cmd_print(12);
+    cmd_print(13);
+    cmd_print(14);
 
     while (1) {}
 }

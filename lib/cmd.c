@@ -46,20 +46,26 @@ void init_cmd(void) {
     uint8_t j;
 
     for (i = 0; i < CONS1_NUMACTS; i++) {
-        for (j = 0; j < CONS1_STATES[i]; j++) {
-            cmd_init(i, (CONS1_STATES[i] == 1)?1:j, 1);
+        if (!CONS1_HASREST[i])
+            cmd_init(i, 0, 1);
+        for (j = 1; j < CONS1_STATES[i]; j++) {
+            cmd_init(i, j, 1);
         }
     }
 
     for (i = 0; i < CONS2_NUMACTS; i++) {
-        for (j = 0; j < CONS2_STATES[i]; j++) {
-            cmd_init(CONS1_NUMACTS+i, (CONS2_STATES[i] == 1)?1:j, 2);
+        if (!CONS2_HASREST[i])
+            cmd_init(i, 0, 1);
+        for (j = 1; j < CONS2_STATES[i]; j++) {
+            cmd_init(CONS1_NUMACTS+i, j, 2);
         }
     }
 
     for (i = 0; i < CONS3_NUMACTS; i++) {
-        for (j = 0; j < CONS3_STATES[i]; j++) {
-            cmd_init(CONS1_NUMACTS+CONS2_NUMACTS+i, (CONS3_STATES[i] == 1)?1:j, 3);
+        if (!CONS3_HASREST[i])
+            cmd_init(i, 0, 1);
+        for (j = 1; j < CONS3_STATES[i]; j++) {
+            cmd_init(CONS1_NUMACTS+CONS2_NUMACTS+i, j, 3);
         }
     }
 }
@@ -121,8 +127,8 @@ void cmd_print(uint16_t index) {
     printf("-------\r\n");
     printf("Actuator: %d\r\n", cmds[index].actuator);
     printf("Action: %d\r\n", cmds[index].action);
-    printf("Desired bits: %x%x%x%x\r\n", cmds[index].desired.b[3], cmds[index].desired.b[2], cmds[index].desired.b[1], cmds[index].desired.b[0]);
-    printf("Mask bits   : %x|%x|%x|%x\r\n", cmds[index].mask.b[3], cmds[index].mask.b[2], cmds[index].mask.b[1], cmds[index].mask.b[0]);
+    printf("Desired bits: %04lx\r\n", (unsigned long)cmds[index].desired.ul);
+    printf("Mask bits   : %04lx\r\n", (unsigned long)cmds[index].mask.ul);
 }
 
 void cmd_send(uint16_t cmd, float cd_time, _CD *cd);
