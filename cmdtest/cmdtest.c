@@ -28,21 +28,9 @@ int16_t main(void) {
     led_on(&led3);
 
     printf("PRINTING COMMANDS\r\n");
-    cmd_print(0);
-    cmd_print(1);
-    cmd_print(2);
-    cmd_print(3);
-    cmd_print(4);
-    cmd_print(5);
-    cmd_print(6);
-    cmd_print(7);
-    cmd_print(8);
-    cmd_print(9);
-    cmd_print(10);
-    cmd_print(11);
-    cmd_print(12);
-    cmd_print(13);
-    cmd_print(14);
+    cmd_print(28);
+    cmd_print(29);
+    cmd_print(30);
 
     while (1) {}
 }

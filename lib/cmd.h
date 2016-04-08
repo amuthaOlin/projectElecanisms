@@ -34,6 +34,7 @@ void init_cmd(void);
 typedef struct _CMD {
     // constant
     uint16_t index;
+    uint8_t console;
     uint16_t actuator;
     uint16_t action;
 

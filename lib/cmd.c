@@ -37,83 +37,46 @@ char *cmd_strs = {
     "Dog"
 };
 
-uint16_t __log2(uint16_t n) {
+uint16_t __cmd_log2(uint16_t n) {
     return n<2? 1:ceil(log((double)n)/log(2.));
 }
 
 void init_cmd(void) {
-    uint16_t i;
-    uint8_t j;
+    uint16_t i, j, k;
 
-    for (i = 0; i < CONS1_NUMACTS; i++) {
-        if (!CONS1_HASREST[i])
-            cmd_init(i, 0, 1);
-        for (j = 1; j < CONS1_STATES[i]; j++) {
-            cmd_init(i, j, 1);
-        }
-    }
-
-    for (i = 0; i < CONS2_NUMACTS; i++) {
-        if (!CONS2_HASREST[i])
-            cmd_init(i, 0, 1);
-        for (j = 1; j < CONS2_STATES[i]; j++) {
-            cmd_init(CONS1_NUMACTS+i, j, 2);
-        }
-    }
-
-    for (i = 0; i < CONS3_NUMACTS; i++) {
-        if (!CONS3_HASREST[i])
-            cmd_init(i, 0, 1);
-        for (j = 1; j < CONS3_STATES[i]; j++) {
-            cmd_init(CONS1_NUMACTS+CONS2_NUMACTS+i, j, 3);
+    for (k = 0; k < 3; k++) { // k for konsole
+        for (i = 0; i < CONS_NUMACTS[k]; i++) {
+            if (!CONS_HASREST[k][i])
+                cmd_init(i, 0, k);
+            for (j = 1; j < CONS_STATES[k][i]; j++) {
+                cmd_init(i, j, k);
+            }
         }
     }
 }
 
 uint16_t cmds_ptr = 0;
 void cmd_init(uint16_t actuator, uint16_t action, uint8_t console) {
-    _CMD cmd_tmp;
-    cmd_tmp.actuator = actuator;
-    cmd_tmp.action = action;
-
     WORD32 mask = (WORD32)0;
     WORD32 desired = (WORD32)0;
 
     uint16_t i;
     uint16_t bitpos = 0;
     uint16_t logres = 0;
-    switch (console) {
-        case 1:
-            for (i = 0; i < CONS1_NUMACTS; i++) {
-                logres = __log2(CONS1_STATES[i]);
-                if (i == actuator) {
-                    desired.ul |= (uint32_t)action << bitpos;
-                    mask.ul |= ((uint32_t)pow(2, logres)-1) << bitpos;
-                }
-                bitpos += logres;
-            }
-            break;
-        case 2:
-            for (i = 0; i < CONS2_NUMACTS; i++) {
-                logres = __log2(CONS2_STATES[i]);
-                if (i == actuator-CONS1_NUMACTS) {
-                    desired.ul |= (uint32_t)action << bitpos;
-                    mask.ul |= ((uint32_t)pow(2, logres)-1) << bitpos;
-                }
-                bitpos += logres;
-            }
-            break;
-        case 3:
-            for (i = 0; i < CONS3_NUMACTS; i++) {
-                logres = __log2(CONS3_STATES[i]);
-                if (i == actuator-CONS1_NUMACTS-CONS2_NUMACTS) {
-                    desired.ul |= (uint32_t)action << bitpos;
-                    mask.ul |= ((uint32_t)pow(2, logres)-1) << bitpos;
-                }
-                bitpos += logres;
-            }
-            break;
+
+    for (i = 0; i < CONS_NUMACTS[console]; i++) {
+        logres = __cmd_log2(CONS_STATES[console][i]);
+        if (i == actuator) {
+            desired.ul |= (uint32_t)action << bitpos;
+            mask.ul |= ((uint32_t)pow(2, logres)-1) << bitpos;
+        }
+        bitpos += logres;
     }
+
+    _CMD cmd_tmp;
+    cmd_tmp.actuator = actuator;
+    cmd_tmp.action = action;
+    cmd_tmp.console = console;
     cmd_tmp.desired = desired;
     cmd_tmp.mask = mask;
     cmds[cmds_ptr] = cmd_tmp;
@@ -122,13 +85,19 @@ void cmd_init(uint16_t actuator, uint16_t action, uint8_t console) {
 }
 
 void cmd_print(uint16_t index) {
+    _CMD *cmd = &cmds[index];
     printf("=======\r\n");
-    printf("Command\r\n");
+    printf("Command for console %d\r\n", cmd->console+1);
     printf("-------\r\n");
-    printf("Actuator: %d\r\n", cmds[index].actuator);
-    printf("Action: %d\r\n", cmds[index].action);
-    printf("Desired bits: %04lx\r\n", (unsigned long)cmds[index].desired.ul);
-    printf("Mask bits   : %04lx\r\n", (unsigned long)cmds[index].mask.ul);
+    printf("Actuator %d, action %d\r\n", cmd->actuator, cmd->action);
+    printf("Desired bits: %04lx\r\n", (unsigned long)cmd->desired.ul);
+    printf("Mask bits   : %04lx\r\n", (unsigned long)cmd->mask.ul);
 }
 
-void cmd_send(uint16_t cmd, float cd_time, _CD *cd);
+void cmd_send(uint16_t cmd, float cd_time, _CD *cd) {
+    /*
+        - send a command
+            - start the countdown
+        - whenever a state packet from console X comes in, check it against the current command for that console!
+   */
+}
