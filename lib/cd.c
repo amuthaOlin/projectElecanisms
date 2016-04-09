@@ -28,12 +28,12 @@
 #include "cd.h"
 #include "ui.h"
 
-_CD cd1, cd2, cd3, cdcenter;
+_CD cd[3], cdcenter;
 
 void init_cd(void) {
-    cd_init(&cd1, 1e-3, &ledbar1);
-    cd_init(&cd2, 1e-3, &ledbar2);
-    cd_init(&cd3, 1e-3, &ledbar3);
+    cd_init(&cd[0], 1e-3, &ledbar1);
+    cd_init(&cd[1], 1e-3, &ledbar2);
+    cd_init(&cd[2], 1e-3, &ledbar3);
     cd_init(&cdcenter, 1e-3, &ledcenter);
 }
 
@@ -74,8 +74,8 @@ void cd_advance(_CD *self, float off_sec) {
 }
 
 void cd_update_all(int32_t ticks_cur) {
-    cd_update(&cd1, ticks_cur);
-    cd_update(&cd2, ticks_cur);
-    cd_update(&cd3, ticks_cur);
+    cd_update(&cd[0], ticks_cur);
+    cd_update(&cd[1], ticks_cur);
+    cd_update(&cd[2], ticks_cur);
     cd_update(&cdcenter, ticks_cur);
 }

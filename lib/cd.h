@@ -45,7 +45,7 @@ typedef struct _CD {
     uint8_t active;
 } _CD;
 
-extern _CD cd1, cd2, cd3, cdcenter;
+extern _CD cd[], cdcenter;
 
 void cd_init(_CD *self, float tick_sec, _LEDS *ledbar);
 void cd_start(_CD *self, float dur_sec, int32_t ticks_start);
