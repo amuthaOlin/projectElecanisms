@@ -125,6 +125,8 @@ void game_loop() {
         cd_advance(&cdcenter, 2.0);
     }
     if (cdcenter.flag) {
+        cdcenter.flag = 0;
+        leds_clear(&ledcenter);
         leds_writeRGB(&ledcenter, 0, 255,0,0);
         // game over
     }
@@ -154,7 +156,7 @@ void game_init() {
     desired_state[1] = s2state;
     desired_state[2] = s3state;
 
-    cd_start(&cdcenter, 3, game_clock);
+    cd_start(&cdcenter, 10, game_clock);
 }
 
 volatile uint8_t sw1_last = 0;
@@ -177,22 +179,6 @@ int16_t main(void) {
     cd[1].tick_sec = GAME_TICK;
     cd[2].tick_sec = GAME_TICK;
 
-    uint8_t success;
-    printf("=================\r\n");
-    printf("PRINTING COMMANDS\r\n");
-    cmd_print(27);
-    cmd_print(28);
-    cmd_print(29);
-    cmd_print(30);
-    success = cmd_test(27, (WORD32)(uint32_t)0x00000200); // should pass
-    printf("Command test: %s\r\n", success? "Success" : "Failure");
-    success = cmd_test(28, (WORD32)(uint32_t)0x00000300); // should pass
-    printf("Command test: %s\r\n", success? "Success" : "Failure");
-    success = cmd_test(29, (WORD32)(uint32_t)0x0000ff00); // should fail
-    printf("Command test: %s\r\n", success? "Success" : "Failure");
-    success = cmd_test(30, (WORD32)(uint32_t)0x00000400); // should pass
-    printf("Command test: %s\r\n", success? "Success" : "Failure");
-    
     game_init();
 
     while (1) {
