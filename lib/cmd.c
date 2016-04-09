@@ -102,8 +102,14 @@ uint16_t cmd_get(uint8_t console, uint16_t actuator, uint16_t action) {
 
 void cmd_print(uint16_t index) {
     _CMD *cmd = &cmds[index];
+
+    char cmdstr[16];
+    cmd_str(index, &cmdstr);
+
     printf("=======\r\n");
     printf("Command for console %d\r\n", cmd->console+1);
+    printf("-------\r\n");
+    printf("%s\r\n", cmdstr);
     printf("-------\r\n");
     printf("Actuator %d, action %d\r\n", cmd->actuator, cmd->action);
     printf("Desired bits: %08lx\r\n", (unsigned long)cmd->desired.ul);
@@ -122,20 +128,10 @@ void cmd_send(uint16_t cmdidx, uint8_t console, float cd_time, int32_t game_cloc
 void cmd_str(uint16_t cmdidx, char* str) { // assume str is 16 char long
     _CMD *cmd = &cmds[cmdidx];
 
-    char *tmp;
     if (CONS_HASREST[cmd->console][cmd->actuator] && CONS_STATES[cmd->console][cmd->actuator] == 2) {
-        str = "Push Button ";
-        sprintf(tmp, "%d", cmd->actuator);
-        strcat(str, tmp);
-        strcat(str, "!");
+        sprintf(str_to_cpy, "Push button %d!", cmd->actuator);
     } else {
-        str = "Set Actuator ";
-        sprintf(tmp, "%d", cmd->actuator);
-        strcat(str, tmp);
-        strcat(str, " to ");
-        sprintf(tmp, "%d", cmd->action);
-        strcat(str, tmp);
-        strcat(str, "!");
+        sprintf(str_to_cpy, "Set act %d to %d!", cmd->actuator, cmd->action);
     }
 }
 

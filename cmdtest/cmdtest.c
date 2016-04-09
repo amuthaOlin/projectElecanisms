@@ -30,6 +30,7 @@ int16_t main(void) {
     uint8_t success;
     printf("=================\r\n");
     printf("PRINTING COMMANDS\r\n");
+    cmd_print(0);
     cmd_print(27);
     cmd_print(28);
     cmd_print(29);
