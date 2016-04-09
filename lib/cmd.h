@@ -49,7 +49,6 @@ typedef struct _CMD {
 extern _CMD cmds[];
 
 void cmd_init(uint16_t actuator, uint16_t action, uint8_t console);
-void cmd_send(uint16_t cmdidx, uint8_t console, float cd_time, int32_t game_clock);
 void cmd_str(uint16_t cmdidx, char* str);
 WORD32 cmd_packet(uint16_t cmdidx);
 void cmd_print(uint16_t index);

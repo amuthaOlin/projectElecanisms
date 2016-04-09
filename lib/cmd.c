@@ -116,15 +116,6 @@ void cmd_print(uint16_t index) {
     printf("Mask bits   : %08lx\r\n", (unsigned long)cmd->mask.ul);
 }
 
-void cmd_send(uint16_t cmdidx, uint8_t console, float cd_time, int32_t game_clock) {
-    cd_start(&cd[console], cd_time, game_clock);
-    /*
-        - send a command
-            - start the countdown
-        - whenever a state packet from console X comes in, check it against the current command for that console!
-    */
-}
-
 void cmd_str(uint16_t cmdidx, char* str) { // assume str is 16 char long
     _CMD *cmd = &cmds[cmdidx];
 

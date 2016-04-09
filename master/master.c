@@ -20,18 +20,16 @@
 volatile int32_t game_clock = 0; // time unit of "ticks"
 
 volatile WORD32 res[3];
-volatile WORD32 cmd[3];
-WORD32 desired_state[3];
+volatile _CMD *cmd[3];
 
 _PIN *MISO  = &D[1];
 _PIN *MOSI  = &D[0];
 _PIN *SCK   = &D[2];
-_PIN *SSn1  = &D[3];
 _PIN *Sint1 = &D[4];
-_PIN *SSn2  = &D[5];
 _PIN *Sint2 = &D[6];
-_PIN *SSn3  = &D[7];
 _PIN *Sint3 = &D[8];
+
+_PIN *SSn[] = { &D[3], &D[5], &D[7] };
 
 WORD32 master_tx(_PIN *SSn, WORD32 cmd){
     WORD32 tmp;
@@ -41,47 +39,38 @@ WORD32 master_tx(_PIN *SSn, WORD32 cmd){
     return tmp;
 }
 
-void send_command(uint8_t slave, WORD32 cmd) {
-    switch (slave) {
-        case 0:
-            res[0] = master_tx(SSn1, cmd);
-            cd_start(&cd[0], 1, game_clock);
-            break;
-        case 1:
-            res[1] = master_tx(SSn2, cmd);
-            cd_start(&cd[1], 1, game_clock);
-            break;
-        case 2:
-            res[2] = master_tx(SSn3, cmd);
-            cd_start(&cd[2], 1, game_clock);
-            break;
-    }
+void send_command(uint8_t console, _CMD *cmd, float cd_time) {
+    res[console] = master_tx(SSn[console], cmd_packet(cmd->index));
+    cd_start(&cd[console], cd_time, game_clock);
 }
 
 void handle_sint1(_INT *intx) {
-    res[0] = master_tx(SSn1, (WORD32)0xFEEDF00D);
-    if (res[0].l == desired_state[0].l) {
-        send_command(0, cmd[0]);
+    res[0] = master_tx(SSn[0], (WORD32)0xFEEDF00D);
+    uint8_t success = cmd_test(cmd[0]->index, res[0]);
+
+    if (success)
         led_off(&led1);
-    }
+
     printf("Console 1: %08lx\r\n", (unsigned long)res[0].ul);
 }
 
 void handle_sint2(_INT *intx) {
-    res[1] = master_tx(SSn2, (WORD32)0xFEEDF00D);
-    if (res[1].l == desired_state[1].l) {
-        send_command(1, cmd[1]);
-        led_off(&led2);
-    }
+    res[1] = master_tx(SSn[1], (WORD32)0xFEEDF00D);
+    uint8_t success = cmd_test(cmd[1]->index, res[1]);
+
+    if (success)
+        led_off(&led1);
+
     printf("Console 2: %08lx\r\n", (unsigned long)res[1].ul);
 }
 
 void handle_sint3(_INT *intx) {
-    res[2] = master_tx(SSn3, (WORD32)0xFEEDF00D);
-    if (res[2].l == desired_state[2].l) {
-        send_command(2, cmd[2]);
-        led_off(&led3);
-    }
+    res[2] = master_tx(SSn[2], (WORD32)0xFEEDF00D);
+    uint8_t success = cmd_test(cmd[2]->index, res[2]);
+
+    if (success)
+        led_off(&led1);
+
     printf("Console 3: %08lx\r\n", (unsigned long)res[2].ul);
 }
 
@@ -91,12 +80,12 @@ void init_master_comms() {
     pin_digitalIn(Sint2);
     pin_digitalIn(Sint3);
 
-    pin_digitalOut(SSn1);
-    pin_digitalOut(SSn2);
-    pin_digitalOut(SSn3);
-    pin_set(SSn1);
-    pin_set(SSn2);
-    pin_set(SSn3);
+    pin_digitalOut(SSn[0]);
+    pin_digitalOut(SSn[1]);
+    pin_digitalOut(SSn[2]);
+    pin_set(SSn[0]);
+    pin_set(SSn[1]);
+    pin_set(SSn[2]);
     led_off(&led1);
     led_off(&led2);
     led_off(&led3);
@@ -138,25 +127,9 @@ void game_init() {
     init_master_comms();
     timer_every(&timer1, GAME_TICK, game_loop);
 
-    SPACK_DIR cmdtest;
-    cmdtest.packet = 0;
-    cmdtest.actaddr = 0;
-    cmdtest.actact = 1;
-    // put actuator 0 in state 1 ("press a button")
-    cmd[0] = (WORD32)cmdtest;
-    cmd[1] = (WORD32)cmdtest;
-    cmd[2] = (WORD32)cmdtest;
-
-    WORD32 s1state = (WORD32)0;
-    s1state.s1.red_button = 1;
-    WORD32 s2state = (WORD32)0;
-    s2state.s2.slider = 2;
-    WORD32 s3state = (WORD32)0;
-    s3state.s3.triangle1 = 1;
-
-    desired_state[0] = s1state;
-    desired_state[1] = s2state;
-    desired_state[2] = s3state;
+    cmd[0] = &cmds[cmd_get(0, 0, 1)];
+    cmd[1] = &cmds[cmd_get(1, 0, 1)];
+    cmd[2] = &cmds[cmd_get(2, 0, 1)];
 
     cd_start(&cdcenter, 10, game_clock);
 }
@@ -193,15 +166,15 @@ int16_t main(void) {
 
     while (1) {
         if (!sw_read(&sw1) && sw1_last == 1) {
-            send_command(0, cmd[0]);
+            send_command(0, cmd[0], 2);
             led_on(&led1);
         }
         if (!sw_read(&sw2) && sw2_last == 1) {
-            send_command(1, cmd[1]);
+            send_command(1, cmd[1], 2);
             led_on(&led2);
         }
         if (!sw_read(&sw3) && sw3_last == 1) {
-            send_command(2, cmd[2]);
+            send_command(2, cmd[2], 2);
             led_on(&led3);
         }
         sw1_last = sw_read(&sw1);
