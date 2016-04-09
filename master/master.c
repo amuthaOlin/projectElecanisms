@@ -47,11 +47,11 @@ void send_command(uint8_t slave, WORD32 cmd) {
             break;
         case 1:
             res[1] = master_tx(SSn2, cmd);
-            cd_start(&cd[1], 4, game_clock);
+            cd_start(&cd[1], 1, game_clock);
             break;
         case 2:
             res[2] = master_tx(SSn3, cmd);
-            cd_start(&cd[2], 9, game_clock);
+            cd_start(&cd[2], 1, game_clock);
             break;
     }
 }
@@ -110,14 +110,17 @@ void game_loop() {
     cd_update_all(game_clock);
 
     if (cd[0].flag) {
+        cd[0].flag = 0;
         leds_writeRGBs(&ledbar1, 255,0,0);
         cd_advance(&cdcenter, 2.0);
     }
     if (cd[1].flag) {
+        cd[1].flag = 0;
         leds_writeRGBs(&ledbar2, 255,0,0);
         cd_advance(&cdcenter, 2.0);
     }
     if (cd[2].flag) {
+        cd[2].flag = 0;
         leds_writeRGBs(&ledbar3, 255,0,0);
         cd_advance(&cdcenter, 2.0);
     }

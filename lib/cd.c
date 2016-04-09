@@ -31,10 +31,10 @@
 _CD cd[3], cdcenter;
 
 void init_cd(void) {
-    cd_init(&cd[0], 1e-3, &ledbar1);
-    cd_init(&cd[1], 1e-3, &ledbar2);
-    cd_init(&cd[2], 1e-3, &ledbar3);
-    cd_init(&cdcenter, 1e-3, &ledcenter);
+    cd_init(&cd[0], 1e-2, &ledbar1);
+    cd_init(&cd[1], 1e-2, &ledbar2);
+    cd_init(&cd[2], 1e-2, &ledbar3);
+    cd_init(&cdcenter, 1e-2, &ledcenter);
 }
 
 void cd_init(_CD *self, float tick_sec, _LEDS *ledbar) {
@@ -70,6 +70,8 @@ void cd_update(_CD *self, int32_t ticks_cur) {
 }
 
 void cd_advance(_CD *self, float off_sec) {
+    printf("Advance %f seconds\r\n", off_sec);
+    printf("Advance %ld ticks\r\n", (long)(off_sec/self->tick_sec));
     self->ticks_offset += (int32_t)(off_sec/self->tick_sec);
 }
 
