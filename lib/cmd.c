@@ -129,9 +129,9 @@ void cmd_str(uint16_t cmdidx, char* str) { // assume str is 16 char long
     _CMD *cmd = &cmds[cmdidx];
 
     if (CONS_HASREST[cmd->console][cmd->actuator] && CONS_STATES[cmd->console][cmd->actuator] == 2) {
-        sprintf(str_to_cpy, "Push button %d!", cmd->actuator);
+        sprintf(str, "Push button %d!", cmd->actuator);
     } else {
-        sprintf(str_to_cpy, "Set act %d to %d!", cmd->actuator, cmd->action);
+        sprintf(str, "Set act %d to %d!", cmd->actuator, cmd->action);
     }
 }
 
