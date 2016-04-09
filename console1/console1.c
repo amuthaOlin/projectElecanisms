@@ -15,7 +15,7 @@ uint8_t read_joystick(){
     uint8_t j1 = pin_read(&D[8]);
     uint8_t j3 = pin_read(&D[9]);
     uint8_t j5 = pin_read(&D[10]);
-    uint8_t j7 = pin_read(&D[11]);
+    uint8_t j7 = pin_read(&A[5]); // pin 11 isn't working
 
     return j1 + (j3<<1) + (j5<<2) + (j7<<3);
 }
@@ -44,6 +44,7 @@ void console1_poll(_TIMER *timer) {
 
 void console1_init(){
     pin_digitalIn(&A[0]);
+    pin_digitalIn(&A[5]);
 }
 
 int16_t main(void) {
