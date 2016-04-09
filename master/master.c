@@ -30,6 +30,7 @@ _PIN *Sint2 = &D[6];
 _PIN *Sint3 = &D[8];
 
 _PIN *SSn[] = { &D[3], &D[5], &D[7] };
+_LCD *lcds[] = { &lcdcmd1, &lcdcmd2, &lcdcmd3 };
 
 WORD32 master_tx(_PIN *SSn, WORD32 cmd){
     WORD32 tmp;
@@ -41,10 +42,15 @@ WORD32 master_tx(_PIN *SSn, WORD32 cmd){
 
 void send_command(uint8_t console, _CMD *cmd, float cd_time) {
     res[console] = master_tx(SSn[console], cmd_packet(cmd->index));
+
+    char cmdstr[16];
+    cmd_str(cmd->index, &cmdstr);
+    lcd_print(lcds[console], &cmdstr);
+
     cd_start(&cd[console], cd_time, game_clock);
 }
 
-void handle_sint1(_INT *intx) {
+void cons1_state_change(_INT *intx) {
     res[0] = master_tx(SSn[0], (WORD32)0xFEEDF00D);
     uint8_t success = cmd_test(cmd[0]->index, res[0]);
 
@@ -54,7 +60,7 @@ void handle_sint1(_INT *intx) {
     printf("Console 1: %08lx\r\n", (unsigned long)res[0].ul);
 }
 
-void handle_sint2(_INT *intx) {
+void cons2_state_change(_INT *intx) {
     res[1] = master_tx(SSn[1], (WORD32)0xFEEDF00D);
     uint8_t success = cmd_test(cmd[1]->index, res[1]);
 
@@ -64,7 +70,7 @@ void handle_sint2(_INT *intx) {
     printf("Console 2: %08lx\r\n", (unsigned long)res[1].ul);
 }
 
-void handle_sint3(_INT *intx) {
+void cons3_state_change(_INT *intx) {
     res[2] = master_tx(SSn[2], (WORD32)0xFEEDF00D);
     uint8_t success = cmd_test(cmd[2]->index, res[2]);
 
@@ -72,27 +78,6 @@ void handle_sint3(_INT *intx) {
         led_off(&led1);
 
     printf("Console 3: %08lx\r\n", (unsigned long)res[2].ul);
-}
-
-void init_master_comms() {
-    spi_open(&spi1, &D[0], &D[1], &D[2], 1e6, 1, 1);
-    pin_digitalIn(Sint1);
-    pin_digitalIn(Sint2);
-    pin_digitalIn(Sint3);
-
-    pin_digitalOut(SSn[0]);
-    pin_digitalOut(SSn[1]);
-    pin_digitalOut(SSn[2]);
-    pin_set(SSn[0]);
-    pin_set(SSn[1]);
-    pin_set(SSn[2]);
-    led_off(&led1);
-    led_off(&led2);
-    led_off(&led3);
-
-    int_attach(&int1, Sint1, 1, handle_sint1);
-    int_attach(&int2, Sint2, 1, handle_sint2);
-    int_attach(&int3, Sint3, 1, handle_sint3);
 }
 
 void game_loop() {
@@ -123,8 +108,7 @@ void game_loop() {
     }
 }
 
-void game_init() {
-    init_master_comms();
+void init_game() {
     timer_every(&timer1, GAME_TICK, game_loop);
 
     cmd[0] = &cmds[cmd_get(0, 0, 1)];
@@ -134,10 +118,7 @@ void game_init() {
     cd_start(&cdcenter, 10, game_clock);
 }
 
-volatile uint8_t sw1_last = 0;
-volatile uint8_t sw2_last = 0;
-volatile uint8_t sw3_last = 0;
-int16_t main(void) {
+void init_master() {
     init_clock();
     init_uart();
     init_spi();
@@ -148,21 +129,43 @@ int16_t main(void) {
     init_pin();
     init_oc();
     init_int();
-    init_leds();
+    // init_leds();
     init_cd();
-    init_cmd();
-    init_i2c();
-    init_lcd();
-
-    lcd_print(&lcdcmd1, "hey1");
-    lcd_print(&lcdcmd2, "hey2");
-    lcd_print(&lcdcmd3, "hey3");
-
     cd[0].tick_sec = GAME_TICK;
     cd[1].tick_sec = GAME_TICK;
     cd[2].tick_sec = GAME_TICK;
 
-    game_init();
+    init_cmd();
+    init_i2c();
+    init_lcd();
+
+    spi_open(&spi1, &D[0], &D[1], &D[2], 1e6, 1, 1);
+    pin_digitalIn(Sint1);
+    pin_digitalIn(Sint2);
+    pin_digitalIn(Sint3);
+
+    pin_digitalOut(SSn[0]);
+    pin_digitalOut(SSn[1]);
+    pin_digitalOut(SSn[2]);
+    pin_set(SSn[0]);
+    pin_set(SSn[1]);
+    pin_set(SSn[2]);
+    led_off(&led1);
+    led_off(&led2);
+    led_off(&led3);
+
+    int_attach(&int1, Sint1, 1, cons1_state_change);
+    int_attach(&int2, Sint2, 1, cons2_state_change);
+    int_attach(&int3, Sint3, 1, cons3_state_change);
+
+    init_game();
+}
+
+volatile uint8_t sw1_last = 0;
+volatile uint8_t sw2_last = 0;
+volatile uint8_t sw3_last = 0;
+int16_t main(void) {
+    init_master();
 
     while (1) {
         if (!sw_read(&sw1) && sw1_last == 1) {
@@ -182,13 +185,3 @@ int16_t main(void) {
         sw3_last = sw_read(&sw3);
     }
 }
-
-// SPACK_DIR dirpacket = workspackunion.whateveryoucallthepackdir;
-
-// dirpacket.actaddr
-// uint8_t some_val = dirpacket.actact
-
-// union {
-//     WORD32
-//     SPACK_DIR
-// }
