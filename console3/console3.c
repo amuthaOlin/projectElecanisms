@@ -66,7 +66,7 @@ void handle_CSn(_INT *intx) {
     //printf("res:%x%x\n\r",res.l[1],res.l[0]);
 }
 
-void console1_poll(_TIMER *timer) {
+void console3_poll(_TIMER *timer) {
     console_poll_changes(&console);
 }
 
@@ -83,7 +83,7 @@ int16_t main(void) {
     console_attach_poll(&console, poll_state);
     int_attach(&int1, console.spi->SSn, 1, handle_CSn);
 
-    timer_every(&timer4, 1e-2, console1_poll);
+    timer_every(&timer4, 1e-2, console3_poll);
 
     while(1) {
         // printf("Slave sent: 0x%x\r\n", 0x5A);
