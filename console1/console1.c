@@ -12,50 +12,12 @@
 #include "console.h"
 
 uint8_t read_joystick(){
-    uint8_t joystick;
-    uint8_t j1 = (uint8_t)pin_read(&D[8]);
-    uint8_t j3 = (uint8_t)pin_read(&D[9]);
-    uint8_t j5 = (uint8_t)pin_read(&D[10]);
-    uint8_t j7 = (uint8_t)pin_read(&D[11]);
-    printf("j1:%u\n",j1);
-    printf("j3:%u\n",j3);
-    printf("j5:%u\n",j5);
-    printf("j7:%u\n",j7);
-    if (j1 == 1){
-        if (j3 == 1){
-            joystick = 2;
-        }
-        else if(j7 == 1){
-            joystick = 8;
-        }
-        else{
-            joystick = 1;
-        }
-    }
-    else if(j3 == 1){
-        if(j5 == 1){
-            joystick = 4;
-        }
-        else{
-            joystick = 3;
-        }
-    }
-    else if(j5 == 1){
-        if (j7 == 1){
-            joystick = 6;
-        }
-        else{
-            joystick = 5;
-        }
-    }
-    else if (j7 = 7){
-        joystick = 7;
-    }
-    else{
-        joystick = 0;
-    }
-    return joystick;
+    uint8_t j1 = pin_read(&D[8]);
+    uint8_t j3 = pin_read(&D[9]);
+    uint8_t j5 = pin_read(&D[10]);
+    uint8_t j7 = pin_read(&D[11]);
 
+    return j1 + (j3<<1) + (j5<<2) + (j7<<3);
 }
 
 
