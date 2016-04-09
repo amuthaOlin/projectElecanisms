@@ -43,15 +43,15 @@ void send_command(uint8_t slave, WORD32 cmd) {
     switch (slave) {
         case 0:
             res[0] = master_tx(SSn1, cmd);
-            cd_start(&cd1, 1, game_clock);
+            cd_start(&cd[0], 1, game_clock);
             break;
         case 1:
             res[1] = master_tx(SSn2, cmd);
-            cd_start(&cd2, 4, game_clock);
+            cd_start(&cd[1], 4, game_clock);
             break;
         case 2:
             res[2] = master_tx(SSn3, cmd);
-            cd_start(&cd3, 9, game_clock);
+            cd_start(&cd[2], 9, game_clock);
             break;
     }
 }
@@ -109,15 +109,15 @@ void game_loop() {
 
     cd_update_all(game_clock);
 
-    if (cd1.flag) {
+    if (cd[0].flag) {
         leds_writeRGBs(&ledbar1, 255,0,0);
         cd_advance(&cdcenter, 2.0);
     }
-    if (cd2.flag) {
+    if (cd[1].flag) {
         leds_writeRGBs(&ledbar2, 255,0,0);
         cd_advance(&cdcenter, 2.0);
     }
-    if (cd3.flag) {
+    if (cd[2].flag) {
         leds_writeRGBs(&ledbar3, 255,0,0);
         cd_advance(&cdcenter, 2.0);
     }
@@ -170,9 +170,9 @@ int16_t main(void) {
     init_cd();
     init_cmd();
 
-    cd1.tick_sec = GAME_TICK;
-    cd2.tick_sec = GAME_TICK;
-    cd3.tick_sec = GAME_TICK;
+    cd[0].tick_sec = GAME_TICK;
+    cd[1].tick_sec = GAME_TICK;
+    cd[2].tick_sec = GAME_TICK;
 
     uint8_t success;
     printf("=================\r\n");
