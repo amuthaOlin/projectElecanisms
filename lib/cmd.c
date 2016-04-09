@@ -30,13 +30,10 @@
 #include "spacecomms.h"
 #include "ui.h"
 
+// CMD_COUNT is cumsum of members of state arrays minus cumsum of members of hasrest arrays
 #define CMD_COUNT 50 // 50 to be safe
-_CMD cmds[CMD_COUNT]; // cumsum of members of state arrays minus cumsum of members of hasrest arrays
-
-char *cmd_strs = {
-    "Cat",
-    "Dog"
-};
+_CMD cmds[CMD_COUNT];
+char cmd_strs[CMD_COUNT][17];
 
 uint16_t __cmd_log2(uint16_t n) {
     return n<2? 1:ceil(log((double)n)/log(2.));
@@ -75,12 +72,15 @@ void cmd_init(uint16_t actuator, uint16_t action, uint8_t console) {
     }
 
     _CMD cmd_tmp;
+    cmd_tmp.index = cmds_ptr;
     cmd_tmp.actuator = actuator;
     cmd_tmp.action = action;
     cmd_tmp.console = console;
     cmd_tmp.desired = desired;
     cmd_tmp.mask = mask;
     cmds[cmds_ptr] = cmd_tmp;
+
+    cmd_str(cmds_ptr, cmd_strs[cmds_ptr]);
 
     cmds_ptr++;
 }
@@ -103,13 +103,10 @@ uint16_t cmd_get(uint8_t console, uint16_t actuator, uint16_t action) {
 void cmd_print(uint16_t index) {
     _CMD *cmd = &cmds[index];
 
-    char cmdstr[16];
-    cmd_str(index, &cmdstr);
-
     printf("=======\r\n");
     printf("Command for console %d\r\n", cmd->console+1);
     printf("-------\r\n");
-    printf("%s\r\n", cmdstr);
+    printf("%s\r\n", cmd_strs[cmd->index]);
     printf("-------\r\n");
     printf("Actuator %d, action %d\r\n", cmd->actuator, cmd->action);
     printf("Desired bits: %08lx\r\n", (unsigned long)cmd->desired.ul);

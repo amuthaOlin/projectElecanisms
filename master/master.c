@@ -43,9 +43,7 @@ WORD32 master_tx(_PIN *SSn, WORD32 cmd){
 void send_command(uint8_t console, _CMD *cmd, float cd_time) {
     res[console] = master_tx(SSn[console], cmd_packet(cmd->index));
 
-    char cmdstr[16];
-    cmd_str(cmd->index, &cmdstr);
-    lcd_print(lcds[console], &cmdstr);
+    lcd_print(lcds[console], cmd_strs[cmd->index]);
 
     cd_start(&cd[console], cd_time, game_clock);
 }
@@ -57,7 +55,7 @@ void cons1_state_change(_INT *intx) {
     if (success)
         led_off(&led1);
 
-    printf("Console 1: %08lx\r\n", (unsigned long)res[0].ul);
+    // printf("Console 1: %08lx\r\n", (unsigned long)res[0].ul);
 }
 
 void cons2_state_change(_INT *intx) {
@@ -67,7 +65,7 @@ void cons2_state_change(_INT *intx) {
     if (success)
         led_off(&led1);
 
-    printf("Console 2: %08lx\r\n", (unsigned long)res[1].ul);
+    // printf("Console 2: %08lx\r\n", (unsigned long)res[1].ul);
 }
 
 void cons3_state_change(_INT *intx) {
@@ -77,7 +75,7 @@ void cons3_state_change(_INT *intx) {
     if (success)
         led_off(&led1);
 
-    printf("Console 3: %08lx\r\n", (unsigned long)res[2].ul);
+    // printf("Console 3: %08lx\r\n", (unsigned long)res[2].ul);
 }
 
 void game_loop() {
@@ -129,7 +127,7 @@ void init_master() {
     init_pin();
     init_oc();
     init_int();
-    // init_leds();
+    init_leds();
     init_cd();
     cd[0].tick_sec = GAME_TICK;
     cd[1].tick_sec = GAME_TICK;

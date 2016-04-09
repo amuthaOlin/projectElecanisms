@@ -47,6 +47,7 @@ typedef struct _CMD {
 } _CMD;
 
 extern _CMD cmds[];
+extern char cmd_strs[][17];
 
 void cmd_init(uint16_t actuator, uint16_t action, uint8_t console);
 void cmd_str(uint16_t cmdidx, char* str);
