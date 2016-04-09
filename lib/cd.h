@@ -1,5 +1,5 @@
 /*
-** Copyright (c) 2013, Bradley A. Minch
+** Copyright (c) 2016, Evan Dorsky
 ** All rights reserved.
 **
 ** Redistribution and use in source and binary forms, with or without
@@ -23,36 +23,34 @@
 ** ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
 ** POSSIBILITY OF SUCH DAMAGE.
 */
-#ifndef _OC_H_
-#define _OC_H_
+#ifndef _CD_H_
+#define _CD_H_
 
 #include <stdint.h>
 #include "pin.h"
-#include "timer.h"
+#include "leds.h"
 
-void init_oc(void);
+void init_cd(void);
 
-typedef struct {
-    uint16_t *OCxCON1;
-    uint16_t *OCxCON2;
-    uint16_t *OCxRS;
-    uint16_t *OCxR;
-    uint16_t *OCxTMR;
-    uint16_t rpnum;
-    uint16_t servooffset;
-    uint16_t servomultiplier;
-    _PIN *pin;
-} _OC;
+typedef struct _CD {
+    float dur_sec;
+    float tick_sec;
 
-extern _OC oc1, oc2, oc3, oc4, oc5, oc6, oc7, oc8, oc9;
+    _LEDS *ledbar;
 
-void oc_init(_OC *self, uint16_t *OCxCON1, uint16_t *OCxCON2, 
-             uint16_t *OCxRS, uint16_t *OCxR, uint16_t *OCxTMR, 
-             uint16_t rpnum);
-void oc_free(_OC *self);
-void oc_pwm(_OC *self, _PIN *out, _TIMER *timer, float freq, uint16_t duty);
-void oc_freq(_OC *self, float freq);
-void oc_servo(_OC *self, _PIN *out, _TIMER *timer, float interval, 
-              float min_width, float max_width, uint16_t pos);
+    int32_t ticks_start;
+    int32_t ticks_dur;
+    int32_t ticks_offset;
+    uint8_t flag;
+    uint8_t active;
+} _CD;
+
+extern _CD cd[], cdcenter;
+
+void cd_init(_CD *self, float tick_sec, _LEDS *ledbar);
+void cd_start(_CD *self, float dur_sec, int32_t ticks_start);
+void cd_update(_CD *self, int32_t ticks_cur);
+void cd_advance(_CD *self, float off_sec);
+void cd_update_all(int32_t ticks_cur);
 
 #endif

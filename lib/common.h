@@ -25,6 +25,7 @@
 */
 #ifndef _COMMON_H_
 #define _COMMON_H_
+#include "spacecomms.h"
 
 #include <stdint.h>
 
@@ -45,6 +46,9 @@
 #define bitclear(addr, bit)     *(addr) &= ~(1<<bit)
 #define bitflip(addr, bit)      *(addr) ^= 1<<bit
 
+#define disable_interrupts()    __asm__ volatile("disi #0x3FFF")
+#define enable_interrupts()     DISICNT = 0
+
 typedef union {
     int16_t i;
     uint16_t w;
@@ -52,10 +56,15 @@ typedef union {
 } WORD;
 
 typedef union {
+    int i;
     int32_t l;
     uint32_t ul;
     uint16_t w[2];
     uint8_t b[4];
+    CONS1_STATE s1;
+    CONS2_STATE s2;
+    CONS3_STATE s3;
+    SPACK_DIR d;
 } WORD32;
 
 uint8_t parity(uint16_t v);

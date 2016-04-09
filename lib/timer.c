@@ -26,6 +26,7 @@
 #include <p24FJ128GB206.h>
 #include "common.h"
 #include "timer.h"
+#include "ui.h"
 
 _TIMER timer1, timer2, timer3, timer4, timer5;
 _TIMER *timerDelay;
@@ -47,6 +48,19 @@ void timer_serviceInterrupt(_TIMER *self) {
     } else {
         timer_disableInterrupt(self);
     }
+}
+
+void timer_delayMicro(uint16_t uS) {
+    timer_setPeriod(&timer5, 1e-6);
+    timer_start(&timer5);
+    uint16_t count = 0;
+    while (count < uS) {
+        if (timer_flag(&timer5)) {
+            timer_lower(&timer5);
+            count++;
+        }
+    }
+    timer_stop(&timer5);
 }
 
 void __attribute__((interrupt, auto_psv)) _T1Interrupt(void) {

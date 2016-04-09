@@ -32,33 +32,37 @@ _SPI spi1, spi2, spi3;
 void init_spi(void) {
     spi_init(&spi1, (uint16_t *)&SPI1STAT, (uint16_t *)&SPI1CON1, 
              (uint16_t *)&SPI1CON2, (uint16_t *)&SPI1BUF, 
-             (uint16_t *)&RPINR20, 0, 7, 8);
+             (uint16_t *)&RPINR20, (uint16_t *)&RPINR21, 0, 0, 7, 8);
     spi_init(&spi2, (uint16_t *)&SPI2STAT, (uint16_t *)&SPI2CON1, 
              (uint16_t *)&SPI2CON2, (uint16_t *)&SPI2BUF, 
-             (uint16_t *)&RPINR22, 0, 10, 11);
+             (uint16_t *)&RPINR22, (uint16_t *)&RPINR23, 0, 0, 10, 11);
     spi_init(&spi3, (uint16_t *)&SPI3STAT, (uint16_t *)&SPI3CON1, 
              (uint16_t *)&SPI3CON2, (uint16_t *)&SPI3BUF, 
-             (uint16_t *)&RPINR28, 0, 32, 33);
+             (uint16_t *)&RPINR28, (uint16_t *)&RPINR29, 0, 0, 32, 33);
+    // literally guessing on the SSn stuff for spi3
 }
 
 void spi_init(_SPI *self, uint16_t *SPIxSTAT, uint16_t *SPIxCON1, 
               uint16_t *SPIxCON2, uint16_t *SPIxBUF, 
-              uint16_t *MISOrpinr, uint8_t MISOrpshift, 
-              int16_t MOSIrpnum, int16_t SCKrpnum) {
+              uint16_t *DINrpinr, uint16_t *SSnrpinr, uint8_t SSnrpshift, uint8_t DINrpshift, 
+              int16_t DOrpnum, int16_t SCKrpnum) {
     self->SPIxSTAT = SPIxSTAT;
     self->SPIxCON1 = SPIxCON1;
     self->SPIxCON2 = SPIxCON2;
     self->SPIxBUF = SPIxBUF;
-    self->MISOrpinr = MISOrpinr;
-    self->MISOrpshift = MISOrpshift;
-    self->MOSIrpnum = MOSIrpnum;
+    self->DINrpinr = DINrpinr;
+    self->DINrpshift = DINrpshift;
+    self->SSnrpinr = SSnrpinr;
+    self->SSnrpshift = SSnrpshift;
+    self->DOrpnum = DOrpnum;
     self->SCKrpnum = SCKrpnum;
     self->MISO = NULL;
     self->MOSI = NULL;
     self->SCK = NULL;
+    self->SSn = NULL;
 }
 
-void spi_open(_SPI *self, _PIN *MISO, _PIN *MOSI, _PIN *SCK, float freq, uint8_t mode) {
+void spi_open(_SPI *self, _PIN *MISO, _PIN *MOSI, _PIN *SCK, float freq, uint8_t mode, uint8_t enhanced) {
     uint16_t primary, secondary;
     uint16_t modebits[4] = { 0x0100, 0x0000, 0x0140, 0x0040 };
 
@@ -85,12 +89,9 @@ void spi_open(_SPI *self, _PIN *MISO, _PIN *MOSI, _PIN *SCK, float freq, uint8_t
         SCK->write = NULL;
         SCK->read = NULL;
         __builtin_write_OSCCONL(OSCCON&0xBF);
-        *(self->MISOrpinr) &= ~(0x3F<<(self->MISOrpshift));
-        *(self->MISOrpinr) |= (MISO->rpnum)<<(self->MISOrpshift);
-        *(MOSI->rpor) &= ~(0x3F<<(MOSI->rpshift));
-        *(MOSI->rpor) |= (self->MOSIrpnum)<<(MOSI->rpshift);
-        *(SCK->rpor) &= ~(0x3F<<(SCK->rpshift));
-        *(SCK->rpor) |= (self->SCKrpnum)<<(SCK->rpshift);
+        ((WORD*)self->DINrpinr)->b[self->DINrpshift] = MISO->rpnum;
+        ((WORD*)MOSI->rpor)->b[MOSI->rpshift/8] = self->DOrpnum;
+        ((WORD*)SCK->rpor)->b[SCK->rpshift/8] = self->SCKrpnum;
         __builtin_write_OSCCONL(OSCCON|0x40);
     } else if ((self->MISO!=MISO) || (self->MOSI!=MOSI) || (self->SCK!=SCK)) {
         return; // At least one of the specified pins does not match the 
@@ -125,8 +126,72 @@ void spi_open(_SPI *self, _PIN *MISO, _PIN *MOSI, _PIN *SCK, float freq, uint8_t
     //   specified
     *(self->SPIxCON1) = 0x0020 | modebits[mode & 0x03] | primary | secondary;
     *(self->SPIxCON2) = 0;
+    if (enhanced) {
+        *(self->SPIxCON2) |= 0x0001;
+    }
     // Enable the SPI module and clear status flags
     *(self->SPIxSTAT) = 0x8000;
+}
+
+void spi_open_slave(_SPI *self, _PIN *MISO, _PIN *MOSI, _PIN *SCK, _PIN *SSn, uint8_t mode, uint8_t enhanced) {
+    uint16_t primary, secondary;
+    uint16_t modebits[4] = { 0x0100, 0x0000, 0x0140, 0x0040 };
+
+    if ((MISO->rpnum==-1) || (MOSI->rpnum==-1) || (SCK->rpnum==-1) || (SSn->rpnum==-1))
+        return; // At least one of the specified pins is not an RP pin
+    if ((MISO->owner==NULL) && (MOSI->owner==NULL) && (SCK->owner==NULL) && (SSn->owner==NULL)) {
+        // All of the specified pins are available and RP pins, so configure 
+        // as specified
+        pin_digitalOut(MISO);
+        pin_digitalIn(MOSI);
+        pin_digitalIn(SCK);
+        pin_digitalIn(SSn);
+        self->MISO = MISO;
+        MISO->owner = (void *)self;
+        MISO->write = NULL;
+        MISO->read = NULL;
+        self->MOSI = MOSI;
+        MOSI->owner = (void *)self;
+        MOSI->write = NULL;
+        MOSI->read = NULL;
+        self->SCK = SCK;
+        SCK->owner = (void *)self;
+        SCK->write = NULL;
+        SCK->read = NULL;
+        self->SSn = SSn;
+        SSn->owner = (void *)self;
+        SSn->write = NULL;
+        SSn->read = NULL;
+        __builtin_write_OSCCONL(OSCCON&0xBF);
+        ((WORD*)self->DINrpinr)->b[self->DINrpshift] = MOSI->rpnum;
+        ((WORD*)MISO->rpor)->b[MISO->rpshift/8] = self->DOrpnum;
+        ((WORD*)self->DINrpinr)->b[1] = SCK->rpnum;
+        ((WORD*)self->SSnrpinr)->b[self->SSnrpshift] = SSn->rpnum;
+        __builtin_write_OSCCONL(OSCCON|0x40);
+    } else if ((self->MISO!=MISO) || (self->MOSI!=MOSI) || (self->SCK!=SCK)) {
+        return; // At least one of the specified pins does not match the 
+                // previous assignment
+    }
+    // Configure the SPI module
+    *(self->SPIxBUF) = 0x0000;
+    //   set SPI module to 8-bit slave mode, SMP = 0, MSTEN = 0
+    //   set CKE and CKP bits according to the SPI mode specified
+    //                 SMP
+    // SPIxCON1: 0000_0010_0000_0000
+    *(self->SPIxCON1) = 0x0200 | modebits[mode & 0x03];
+    *(self->SPIxCON2) = 0x0000;
+    bitclear(self->SPIxCON1, 9);
+
+    *(self->SPIxSTAT) = 0x0040;
+    bitset(self->SPIxCON1, 7); // enable SSn so they'll play nicely
+
+    bitclear(self->SPIxSTAT, 6);
+    if (enhanced) {
+        *(self->SPIxCON2) |= 0x0001;
+    }
+    // Enable the SPI module and clear status flags
+    // clear SPIROV for slave mode
+    bitset(self->SPIxSTAT, 15);
 }
 
 void spi_close(_SPI *self) {
@@ -135,7 +200,7 @@ void spi_close(_SPI *self) {
     *(self->SPIxCON2) = 0;
     if (self->MISO) {
         __builtin_write_OSCCONL(OSCCON&0xBF);
-        *(self->MISOrpinr) |= 0x3F<<(self->MISOrpshift);
+        ((WORD*)self->DINrpinr)->b[self->DINrpshift] = 0x00;
         __builtin_write_OSCCONL(OSCCON|0x40);
         self->MISO->owner = NULL;
         pin_digitalIn(self->MISO);
@@ -143,7 +208,7 @@ void spi_close(_SPI *self) {
     }
     if (self->MOSI) {
         __builtin_write_OSCCONL(OSCCON&0xBF);
-        *(self->MOSI->rpor) &= ~(0x3F<<(self->MOSI->rpshift));
+        ((WORD*)self->MOSI->rpor)->b[self->MOSI->rpshift/8] = 0x00;
         __builtin_write_OSCCONL(OSCCON|0x40);
         self->MOSI->owner = NULL;
         pin_digitalOut(self->MOSI);
@@ -152,7 +217,7 @@ void spi_close(_SPI *self) {
     }
     if (self->SCK) {
         __builtin_write_OSCCONL(OSCCON&0xBF);
-        *(self->SCK->rpor) &= ~(0x3F<<(self->SCK->rpshift));
+        ((WORD*)self->SCK->rpor)->b[self->SCK->rpshift] = 0x00;
         __builtin_write_OSCCONL(OSCCON|0x40);
         self->SCK->owner = NULL;
         pin_digitalOut(self->SCK);
@@ -162,6 +227,64 @@ void spi_close(_SPI *self) {
 }
 
 uint8_t spi_transfer(_SPI *self, uint8_t val) {
+    *(self->SPIxBUF) = (uint16_t)val;
+    while (bitread(self->SPIxSTAT, 0)==0) {}
+    return (uint8_t)(*(self->SPIxBUF));
+}
+
+WORD32 spi_queue(_SPI *self, WORD32 payload) {
+    WORD32 temp;
+    uint8_t trash;
+    *(self->SPIxBUF) = payload.b[3];
+    *(self->SPIxBUF) = payload.b[2];    
+    *(self->SPIxBUF) = payload.b[1];
+    *(self->SPIxBUF) = payload.b[0];
+    *(self->SPIxBUF) = 0;
+    *(self->SPIxBUF) = 0;
+    *(self->SPIxBUF) = 0;
+    *(self->SPIxBUF) = 0;
+    // wait for 4 pending transactions
+    // while (((WORD*)self->SPIxSTAT)->b[1]&0x07 < 4) {}
+    while (bitread(self->SPIxSTAT, 0)==0) {}
+    temp.b[3] = (uint8_t)*(self->SPIxBUF);
+    temp.b[2] = (uint8_t)*(self->SPIxBUF);
+    temp.b[1] = (uint8_t)*(self->SPIxBUF);
+    temp.b[0] = (uint8_t)*(self->SPIxBUF);
+    trash = (uint8_t)*(self->SPIxBUF);
+    trash = (uint8_t)*(self->SPIxBUF);
+    trash = (uint8_t)*(self->SPIxBUF);
+    trash = (uint8_t)*(self->SPIxBUF);
+    return temp;
+}
+
+void spi_queue_slave(_SPI *self, WORD32 payload) {
+    WORD32 temp;
+    *(self->SPIxBUF) = payload.b[3];
+    *(self->SPIxBUF) = payload.b[2];
+    *(self->SPIxBUF) = payload.b[1];
+    *(self->SPIxBUF) = payload.b[0];
+    *(self->SPIxBUF) = 0;
+    *(self->SPIxBUF) = 0;
+    *(self->SPIxBUF) = 0;
+    *(self->SPIxBUF) = 0;
+}
+
+WORD32 spi_read_slave(_SPI *self) {
+    WORD32 temp;
+    uint8_t trash;
+    temp.b[3] = (uint8_t)*(self->SPIxBUF);
+    temp.b[2] = (uint8_t)*(self->SPIxBUF);
+    temp.b[1] = (uint8_t)*(self->SPIxBUF);
+    temp.b[0] = (uint8_t)*(self->SPIxBUF);
+    trash = (uint8_t)*(self->SPIxBUF);
+    trash = (uint8_t)*(self->SPIxBUF);
+    trash = (uint8_t)*(self->SPIxBUF);
+    trash = (uint8_t)*(self->SPIxBUF);
+
+    return temp;
+}
+
+uint8_t spi_transfer_slave(_SPI *self, uint8_t val) {
     *(self->SPIxBUF) = (uint16_t)val;
     while (bitread(self->SPIxSTAT, 0)==0) {}
     return (uint8_t)(*(self->SPIxBUF));

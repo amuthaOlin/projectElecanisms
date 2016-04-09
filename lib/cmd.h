@@ -1,5 +1,5 @@
 /*
-** Copyright (c) 2013, Bradley A. Minch
+** Copyright (c) 2016, Evan Dorsky
 ** All rights reserved.
 **
 ** Redistribution and use in source and binary forms, with or without
@@ -23,36 +23,38 @@
 ** ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
 ** POSSIBILITY OF SUCH DAMAGE.
 */
-#ifndef _OC_H_
-#define _OC_H_
+#ifndef _CMD_H_
+#define _CMD_H_
 
 #include <stdint.h>
-#include "pin.h"
-#include "timer.h"
+#include "cd.h"
 
-void init_oc(void);
+void init_cmd(void);
 
-typedef struct {
-    uint16_t *OCxCON1;
-    uint16_t *OCxCON2;
-    uint16_t *OCxRS;
-    uint16_t *OCxR;
-    uint16_t *OCxTMR;
-    uint16_t rpnum;
-    uint16_t servooffset;
-    uint16_t servomultiplier;
-    _PIN *pin;
-} _OC;
+typedef struct _CMD {
+    // constant
+    uint16_t index;
+    uint8_t console;
+    uint16_t actuator;
+    uint16_t action;
 
-extern _OC oc1, oc2, oc3, oc4, oc5, oc6, oc7, oc8, oc9;
+    WORD32 mask;
+    WORD32 desired;
 
-void oc_init(_OC *self, uint16_t *OCxCON1, uint16_t *OCxCON2, 
-             uint16_t *OCxRS, uint16_t *OCxR, uint16_t *OCxTMR, 
-             uint16_t rpnum);
-void oc_free(_OC *self);
-void oc_pwm(_OC *self, _PIN *out, _TIMER *timer, float freq, uint16_t duty);
-void oc_freq(_OC *self, float freq);
-void oc_servo(_OC *self, _PIN *out, _TIMER *timer, float interval, 
-              float min_width, float max_width, uint16_t pos);
+    // dynamic
+    float cd_time;
+    _CD *cd;
+} _CMD;
+
+extern _CMD cmds[];
+
+void cmd_init(uint16_t actuator, uint16_t action, uint8_t console);
+void cmd_send(uint16_t cmdidx, uint8_t console, float cd_time, int32_t game_clock);
+void cmd_str(uint16_t cmdidx, char* str);
+WORD32 cmd_packet(uint16_t cmdidx);
+void cmd_print(uint16_t index);
+
+uint16_t cmd_get(uint8_t console, uint16_t actuator, uint16_t action);
+uint8_t cmd_test(uint16_t cmdidx, WORD32 state);
 
 #endif
