@@ -8,6 +8,8 @@
 #include "leds.h"
 #include "ui.h"
 #include "cd.h"
+#include "i2c.h"
+#include "lcd.h"
 #include "cmd.h"
 #include "int.h"
 #include "timer.h"
@@ -167,6 +169,8 @@ int16_t main(void) {
     init_uart();
     init_spi();
     init_timer();
+    timer_initDelayMicro(&timer5);
+
     init_ui();
     init_pin();
     init_oc();
@@ -174,6 +178,12 @@ int16_t main(void) {
     init_leds();
     init_cd();
     init_cmd();
+    init_i2c();
+    init_lcd();
+
+    lcd_print(&lcdcmd1, "hey1");
+    lcd_print(&lcdcmd2, "hey2");
+    lcd_print(&lcdcmd3, "hey3");
 
     cd[0].tick_sec = GAME_TICK;
     cd[1].tick_sec = GAME_TICK;

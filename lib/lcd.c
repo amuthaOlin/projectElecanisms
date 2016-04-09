@@ -50,15 +50,17 @@
 #define DR_WRITE 0x09
 #define DR_READ 0x0B
 
-_LCD lcd1, lcd2, lcd3, lcd4;
+_LCD lcd1, lcd2, lcd3, lcd4, lcdcmd1, lcdcmd2, lcdcmd3;
+
+_I2C *__lcd_i2c;
 
 void __lcd_i2c_write(_LCD *self, uint8_t ch) {
-    i2c_start(self->i2c);
-    i2c_putc(self->i2c, self->addr_write);
-    i2c_idle(self->i2c);
-    i2c_putc(self->i2c, ch); 
-    i2c_idle(self->i2c);
-    i2c_stop(self->i2c);
+    i2c_start(__lcd_i2c);
+    i2c_putc(__lcd_i2c, self->addr_write);
+    i2c_idle(__lcd_i2c);
+    i2c_putc(__lcd_i2c, ch); 
+    i2c_idle(__lcd_i2c);
+    i2c_stop(__lcd_i2c);
 }
 
 void __lcd_enablePulse(_LCD *self) {
@@ -90,16 +92,19 @@ void __lcd_send8(_LCD *self, uint8_t value, uint8_t command) {
 
 
 void init_lcd(void) {
-    i2c_open(&i2c3, 1e3);
-    lcd_init(&lcd1, &i2c3, 1e3, 0x07,'A');
-    lcd_init(&lcd2, &i2c3, 1e3, 0x06,'A');
-    lcd_init(&lcd3, &i2c3, 1e3, 0x05,'A');
+    __lcd_i2c = &i2c3;
+    i2c_open(__lcd_i2c, 1e3);
+
+    // lcd_init(&lcd1, 0x07,'A');
+    // lcd_init(&lcd2, 0x06,'A');
+    // lcd_init(&lcd3, 0x05,'A');
+
+    lcd_init(&lcdcmd1, 0x07,'A');
+    lcd_init(&lcdcmd2, 0x06,'T');
+    lcd_init(&lcdcmd3, 0x05,'A');
 }
 
-void lcd_init(_LCD *self, _I2C *i2c, float freq, uint8_t addr, char vendor) {
-    self->i2c = i2c;
-    self->freq = freq;
-                    
+void lcd_init(_LCD *self, uint8_t addr, char vendor) {
     switch(vendor){
         case 'T':// 0x40 == vendor prefix for PCF8574T
             self->addr_write = 0x40 + (addr << 1);
@@ -115,8 +120,6 @@ void lcd_init(_LCD *self, _I2C *i2c, float freq, uint8_t addr, char vendor) {
     self->display_mode = 0x00;
 
     self->io_write_val = 0x00;
-
-    // i2c_open(self->i2c, freq);
 
     __lcd_i2c_write(self, 0x00);
 
@@ -152,7 +155,7 @@ void lcd_init(_LCD *self, _I2C *i2c, float freq, uint8_t addr, char vendor) {
 }
 
 void lcd_stop(_LCD *self) {
-    i2c_stop(self->i2c);
+    i2c_stop(__lcd_i2c);
 }
 
 void lcd_display(_LCD *self, uint8_t on) {
