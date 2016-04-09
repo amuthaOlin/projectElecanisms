@@ -43,39 +43,46 @@ WORD32 master_tx(_PIN *SSn, WORD32 cmd){
 void send_command(uint8_t console, _CMD *cmd, float cd_time) {
     res[console] = master_tx(SSn[console], cmd_packet(cmd->index));
 
-    lcd_print(lcds[console], cmd_strs[cmd->index]);
+    lcd_clear(lcds[console]);
+    lcd_print1(lcds[console], cmd_strs[cmd->index]);
 
     cd_start(&cd[console], cd_time, game_clock);
 }
 
+void cons_state_change(uint8_t console) {
+    res[console] = master_tx(SSn[console], (WORD32)0xFEEDF00D);
+    uint8_t success = cmd_test(cmd[console]->index, res[console]);
+
+    if (cd[console].active && success) {
+        lcd_clear(lcds[console]);
+        lcd_print1(lcds[console], "Success!");
+
+        switch (console) {
+            case 0:
+                led_off(&led1);
+                break;
+            case 1:
+                led_off(&led2);
+                break;
+            case 2:
+                led_off(&led3);
+                break;
+        }
+    }
+
+    // printf("Console %d: %08lx\r\n", console+1, (unsigned long)res[0].ul);
+}
+
 void cons1_state_change(_INT *intx) {
-    res[0] = master_tx(SSn[0], (WORD32)0xFEEDF00D);
-    uint8_t success = cmd_test(cmd[0]->index, res[0]);
-
-    if (success)
-        led_off(&led1);
-
-    // printf("Console 1: %08lx\r\n", (unsigned long)res[0].ul);
+    cons_state_change(0);
 }
 
 void cons2_state_change(_INT *intx) {
-    res[1] = master_tx(SSn[1], (WORD32)0xFEEDF00D);
-    uint8_t success = cmd_test(cmd[1]->index, res[1]);
-
-    if (success)
-        led_off(&led1);
-
-    // printf("Console 2: %08lx\r\n", (unsigned long)res[1].ul);
+    cons_state_change(1);
 }
 
 void cons3_state_change(_INT *intx) {
-    res[2] = master_tx(SSn[2], (WORD32)0xFEEDF00D);
-    uint8_t success = cmd_test(cmd[2]->index, res[2]);
-
-    if (success)
-        led_off(&led1);
-
-    // printf("Console 3: %08lx\r\n", (unsigned long)res[2].ul);
+    cons_state_change(2);
 }
 
 void game_loop() {
@@ -113,7 +120,7 @@ void init_game() {
     cmd[1] = &cmds[cmd_get(1, 0, 1)];
     cmd[2] = &cmds[cmd_get(2, 0, 1)];
 
-    cd_start(&cdcenter, 10, game_clock);
+    cd_start(&cdcenter, 30, game_clock);
 }
 
 void init_master() {

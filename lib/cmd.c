@@ -33,7 +33,7 @@
 // CMD_COUNT is cumsum of members of state arrays minus cumsum of members of hasrest arrays
 #define CMD_COUNT 50 // 50 to be safe
 _CMD cmds[CMD_COUNT];
-char cmd_strs[CMD_COUNT][17];
+char cmd_strs[CMD_COUNT][33];
 
 uint16_t __cmd_log2(uint16_t n) {
     return n<2? 1:ceil(log((double)n)/log(2.));

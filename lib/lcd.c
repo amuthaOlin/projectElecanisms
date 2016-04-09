@@ -177,13 +177,6 @@ void lcd_putc(_LCD *self, char c) {
     // timer_delayMicro(1000);
 }
 
-void lcd_print(_LCD *self, char *str) {
-    while (*str) {
-        lcd_putc(self, *str);
-        str++;
-    }
-}
-
 void lcd_goto(_LCD *self, uint8_t line, uint8_t col) { //x=col, y=row
     uint8_t address;
     switch(line) {
@@ -215,6 +208,13 @@ void lcd_cursor(_LCD *self, uint8_t cur) {
     }
 }
 
+void lcd_print1(_LCD *self, char *str) {
+    while (*str) {
+        lcd_putc(self, *str);
+        str++;
+    }
+}
+
 void lcd_print2(_LCD *self, char* line1, char* line2){
     char str[56] ="                                                        ";
     int i =0;
@@ -231,4 +231,8 @@ void lcd_print2(_LCD *self, char* line1, char* line2){
     }
     char* strptr=str;
     lcd_print(self,strptr);
+}
+
+void lcd_print(_LCD *self, char* message) {
+    lcd_print2(self, message, message[16]);
 }
