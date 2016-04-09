@@ -8,6 +8,7 @@
 #include "leds.h"
 #include "ui.h"
 #include "cd.h"
+#include "cmd.h"
 #include "int.h"
 #include "timer.h"
 #include "spacecomms.h"
@@ -61,7 +62,7 @@ void handle_sint1(_INT *intx) {
         send_command(0, cmd[0]);
         led_off(&led1);
     }
-    printf("console1:%lu\n\r",res[0]);
+    printf("Console 1: %08lx\r\n", (unsigned long)res[0].ul);
 }
 
 void handle_sint2(_INT *intx) {
@@ -70,7 +71,7 @@ void handle_sint2(_INT *intx) {
         send_command(1, cmd[1]);
         led_off(&led2);
     }
-    printf("console2:%lu\n\r",res[1]);
+    printf("Console 2: %08lx\r\n", (unsigned long)res[1].ul);
 }
 
 void handle_sint3(_INT *intx) {
@@ -79,7 +80,7 @@ void handle_sint3(_INT *intx) {
         send_command(2, cmd[2]);
         led_off(&led3);
     }
-    printf("console3:%u\n\r",res[2].s3.clutch);
+    printf("Console 3: %08lx\r\n", (unsigned long)res[2].ul);
 }
 
 void init_master_comms() {
@@ -167,10 +168,27 @@ int16_t main(void) {
     init_int();
     init_leds();
     init_cd();
+    init_cmd();
 
     cd1.tick_sec = GAME_TICK;
     cd2.tick_sec = GAME_TICK;
     cd3.tick_sec = GAME_TICK;
+
+    uint8_t success;
+    printf("=================\r\n");
+    printf("PRINTING COMMANDS\r\n");
+    cmd_print(27);
+    cmd_print(28);
+    cmd_print(29);
+    cmd_print(30);
+    success = cmd_test(27, (WORD32)(uint32_t)0x00000200); // should pass
+    printf("Command test: %s\r\n", success? "Success" : "Failure");
+    success = cmd_test(28, (WORD32)(uint32_t)0x00000300); // should pass
+    printf("Command test: %s\r\n", success? "Success" : "Failure");
+    success = cmd_test(29, (WORD32)(uint32_t)0x0000ff00); // should fail
+    printf("Command test: %s\r\n", success? "Success" : "Failure");
+    success = cmd_test(30, (WORD32)(uint32_t)0x00000400); // should pass
+    printf("Command test: %s\r\n", success? "Success" : "Failure");
     
     game_init();
 
