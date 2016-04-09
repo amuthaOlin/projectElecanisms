@@ -116,7 +116,7 @@ void leds_bar(_LEDS *self, float fill, float bri) {
     bar_r = (1-fill)*255;
 
     // clear all non-lit LEDs
-    for (i = leds_lit+2; i < self->num)
+    for (i = leds_lit+2; i < self->num; i++)
         leds_writeRGB(self, i, 0,0,0);
 
     for (i = 0; i < leds_lit+1; i++)
