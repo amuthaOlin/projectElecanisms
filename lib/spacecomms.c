@@ -19,7 +19,7 @@ uint8_t CONS_STATES[][13] = {
         2, // green_button4:1;
         2, // wormhole1:1;
         2, // wormhole2:1;
-        2, // tri_state:2;
+        3, // tri_state:2;
         4, // slider:2;
         2, // hotsystem1:1;
         2, // hotsystem2:1;
@@ -40,8 +40,8 @@ uint8_t CONS_STATES[][13] = {
 
 uint8_t CONS_HASREST[][13] = {// has a "rest state" that cannot be commanded
     {
-        1,
-        0,
+        1, // if it has rest it's just a momentary button, we can use things like "push"
+        0, // if it doesn't then it's a "set"
         0,
         1,
         1,

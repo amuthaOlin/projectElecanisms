@@ -30,7 +30,8 @@
 #include "spacecomms.h"
 #include "ui.h"
 
-_CMD cmds[48]; // cumsum of members of state arrays minus cumsum of members of hasrest arrays
+#define CMD_COUNT 50 // 50 to be safe
+_CMD cmds[CMD_COUNT]; // cumsum of members of state arrays minus cumsum of members of hasrest arrays
 
 char *cmd_strs = {
     "Cat",
@@ -84,6 +85,21 @@ void cmd_init(uint16_t actuator, uint16_t action, uint8_t console) {
     cmds_ptr++;
 }
 
+uint16_t cmd_get(uint8_t console, uint16_t actuator, uint16_t action) {
+    uint16_t i;
+    _CMD *cmd_search;
+    // "O(n) time"
+    for (i = 0; i < CMD_COUNT; i++) {
+        cmd_search = &cmds[i];
+        if (cmd_search->console == console &&
+            cmd_search->actuator == actuator &&
+            cmd_search->action == action) {
+            return i;
+        }
+    }
+    return -1; // invalid command
+}
+
 void cmd_print(uint16_t index) {
     _CMD *cmd = &cmds[index];
     printf("=======\r\n");
@@ -101,6 +117,14 @@ void cmd_send(uint16_t cmdidx, uint8_t console, float cd_time, int32_t game_cloc
             - start the countdown
         - whenever a state packet from console X comes in, check it against the current command for that console!
     */
+}
+
+void cmd_str(uint16_t cmdidx, char* str) { // assume str is 16 char long
+    _CMD *cmd = &cmds[cmdidx];
+
+    if (CONS_HASREST[cmd->console][cmd->actuator]) {
+        str
+    }
 }
 
 WORD32 cmd_packet(uint16_t cmdidx) {
