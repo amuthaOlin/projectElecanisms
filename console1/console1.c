@@ -24,6 +24,10 @@ uint8_t read_joystick(){
 void poll_state(_CONSOLE *self) {
     //led_toggle(&led3);
     self->state.s1.red_button = (uint8_t)pin_read(&D[5]);
+    if (self->state.s1.red_button)
+        led_on(&led3);
+    else
+        led_off(&led3);
     self->state.s1.toggle1 = (uint8_t)pin_read(&D[6]);
     self->state.s1.toggle2 = (uint8_t)pin_read(&D[7]);
     self->state.s1.joystick = read_joystick();

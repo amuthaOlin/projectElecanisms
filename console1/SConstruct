@@ -30,7 +30,6 @@ env.Program('console1', ['console1.c',
                         '../lib/int.c', 
                         '../lib/spi.c',
                         '../lib/common.c',
-                        '../Displays/LCD.h',
                         '../lib/console.c',
                         '../lib/spacecomms.h'])
 
