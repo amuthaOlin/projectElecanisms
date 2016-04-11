@@ -31,7 +31,7 @@
 #include "ui.h"
 
 // CMD_COUNT is cumsum of members of state arrays minus cumsum of members of hasrest arrays
-#define CMD_COUNT 50 // 50 to be safe
+#define CMD_COUNT 60 // 60 to be safe
 _CMD cmds[CMD_COUNT];
 char cmd_strs[CMD_COUNT][33];
 
@@ -117,9 +117,9 @@ void cmd_str(uint16_t cmdidx, char* str) { // assume str is 16 char long
     _CMD *cmd = &cmds[cmdidx];
 
     if (CONS_HASREST[cmd->console][cmd->actuator] && CONS_STATES[cmd->console][cmd->actuator] == 2) {
-        sprintf(str, "Push button %d!", cmd->actuator);
+        sprintf(str, "%d:Push button %d!", cmd->console+1, cmd->actuator);
     } else {
-        sprintf(str, "Set act %d to %d!", cmd->actuator, cmd->action);
+        sprintf(str, "%d:Set act %d to %d!", cmd->console+1, cmd->actuator, cmd->action);
     }
 }
 

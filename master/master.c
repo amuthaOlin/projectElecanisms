@@ -29,7 +29,7 @@ uint8_t randoms[] = {
 _PIN *MISO  = &D[1];
 _PIN *MOSI  = &D[0];
 _PIN *SCK   = &D[2];
-_PIN *Sint1 = &D[4];
+_PIN *Sint1 = &D[10];
 _PIN *Sint2 = &D[6];
 _PIN *Sint3 = &D[8];
 
@@ -63,20 +63,24 @@ void game_advance(uint8_t console, uint8_t success) {
     if (!success)
         cd_advance(&cdcenter, 2.0);
 
-    send_command(console, &cmds[game_next_cmd_idx()], 7);
+    commands[console] = &cmds[game_next_cmd_idx()];
+    send_command(console, commands[console], 15);
 }
 
 void cons_state_change(uint8_t console) {
     res[console] = master_tx(SSn[console], (WORD32)0xFEEDF00D);
     uint8_t success = cmd_test(commands[console]->index, res[console]);
 
-    if (cd[console].active && success)
+    if (cd[console].active && success) {
+        led_toggle(&led3); // success
         game_advance(console, 1);
+    }
 
     // printf("Console %d: %08lx\r\n", console+1, (unsigned long)res[0].ul);
 }
 
 void cons1_state_change(_INT *intx) {
+    led_on(&led1);
     cons_state_change(0);
 }
 
@@ -123,11 +127,11 @@ void init_game() {
     commands[1] = &cmds[cmd_get(1, 0, 1)];
     commands[2] = &cmds[cmd_get(2, 0, 1)];
 
-    cd_start(&cdcenter, 30, game_clock);
+    cd_start(&cdcenter, 90, game_clock);
 
-    send_command(0, commands[0], 7);
-    send_command(1, commands[1], 7);
-    send_command(2, commands[2], 7);
+    send_command(0, commands[0], 15);
+    send_command(1, commands[1], 15);
+    send_command(2, commands[2], 15);
 }
 
 void init_master() {
