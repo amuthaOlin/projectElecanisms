@@ -53,22 +53,8 @@ void cons_state_change(uint8_t console) {
     res[console] = master_tx(SSn[console], (WORD32)0xFEEDF00D);
     uint8_t success = cmd_test(cmd[console]->index, res[console]);
 
-    if (cd[console].active && success) {
-        lcd_clear(lcds[console]);
-        lcd_print1(lcds[console], "Success!");
-
-        switch (console) {
-            case 0:
-                led_off(&led1);
-                break;
-            case 1:
-                led_off(&led2);
-                break;
-            case 2:
-                led_off(&led3);
-                break;
-        }
-    }
+    if (cd[console].active && success)
+        game_advance(console, 1);
 
     // printf("Console %d: %08lx\r\n", console+1, (unsigned long)res[0].ul);
 }
@@ -85,6 +71,17 @@ void cons3_state_change(_INT *intx) {
     cons_state_change(2);
 }
 
+uint16_t game_next_cmd_idx() {
+    return 5;
+}
+
+void game_advance(uint8_t console, uint8_t success) {
+    if (!success)
+        cd_advance(&cdcenter, 2.0);
+
+    send_command(console, cmd[game_next_cmd_idx()], 7);
+}
+
 void game_loop() {
     game_clock++;
 
@@ -92,18 +89,15 @@ void game_loop() {
 
     if (cd[0].flag) {
         cd[0].flag = 0;
-        leds_writeRGBs(&ledbar1, 255,0,0);
-        cd_advance(&cdcenter, 2.0);
+        game_advance(0, 0);
     }
     if (cd[1].flag) {
         cd[1].flag = 0;
-        leds_writeRGBs(&ledbar2, 255,0,0);
-        cd_advance(&cdcenter, 2.0);
+        game_advance(1, 0);
     }
     if (cd[2].flag) {
         cd[2].flag = 0;
-        leds_writeRGBs(&ledbar3, 255,0,0);
-        cd_advance(&cdcenter, 2.0);
+        game_advance(2, 0);
     }
     if (cdcenter.flag) {
         cdcenter.flag = 0;
@@ -166,27 +160,8 @@ void init_master() {
     init_game();
 }
 
-volatile uint8_t sw1_last = 0;
-volatile uint8_t sw2_last = 0;
-volatile uint8_t sw3_last = 0;
 int16_t main(void) {
     init_master();
 
-    while (1) {
-        if (!sw_read(&sw1) && sw1_last == 1) {
-            send_command(0, cmd[0], 2);
-            led_on(&led1);
-        }
-        if (!sw_read(&sw2) && sw2_last == 1) {
-            send_command(1, cmd[1], 2);
-            led_on(&led2);
-        }
-        if (!sw_read(&sw3) && sw3_last == 1) {
-            send_command(2, cmd[2], 2);
-            led_on(&led3);
-        }
-        sw1_last = sw_read(&sw1);
-        sw2_last = sw_read(&sw2);
-        sw3_last = sw_read(&sw3);
-    }
+    while (1) {}
 }

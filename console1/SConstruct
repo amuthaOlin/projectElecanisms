@@ -9,9 +9,9 @@ env = Environment(PIC = '24FJ128GB206',
                   LINKFLAGS = '-omf=elf -mcpu=$PIC -Wl,--script="app_p24FJ128GB206.gld"', 
                   CPPPATH = '../lib')
 #Path for OSX
-env.PrependENVPath('PATH', '/Applications/microchip/xc16/v1.25/bin')
+#env.PrependENVPath('PATH', '/Applications/microchip/xc16/v1.25/bin')
 #Path for Linux
-#env.PrependENVPath('PATH', '/opt/microchip/xc16/v1.25/bin')
+env.PrependENVPath('PATH', '/opt/microchip/xc16/v1.25/bin')
 bin2hex = Builder(action = 'xc16-bin2hex $SOURCE -omf=elf',
                   suffix = 'hex', 
                   src_suffix = 'elf')
@@ -30,7 +30,7 @@ env.Program('console1', ['console1.c',
                         '../lib/int.c', 
                         '../lib/spi.c',
                         '../lib/common.c',
-                        '../Displays/LCD.h',
+                        '../lib/lcd.h',
                         '../lib/console.c',
                         '../lib/spacecomms.h'])
 
