@@ -24,7 +24,8 @@ typedef struct CONS1_STATE {
   unsigned hotsystem:1; 
   unsigned wordwheel_inside:4;
   unsigned wordwheel_outside:4; 
-  unsigned long :14;
+  unsigned asteroid:1;
+  unsigned long :13;
 } CONS1_STATE;
 
 typedef struct CONS2_STATE {
@@ -41,7 +42,9 @@ typedef struct CONS2_STATE {
   unsigned hotsystem2:1;
   unsigned hotsystem3:1;
   unsigned hotsystem4:1;
-  unsigned long :17;
+  unsigned asteroid:1;
+  unsigned dial:3;
+  unsigned long :13;
 } CONS2_STATE;
 
 typedef struct CONS3_STATE {
@@ -54,7 +57,11 @@ typedef struct CONS3_STATE {
   unsigned wormhole1:1;
   unsigned wormhole2:1;
   unsigned clutch:2;
-  unsigned long :22;
+  unsigned asteroid:1;
+  unsigned arming:2;
+  unsigned arming_button:1;
+  unsigned dial:3;
+  unsigned long :15;
 } CONS3_STATE;
 
 
