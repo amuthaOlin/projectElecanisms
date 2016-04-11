@@ -81,6 +81,7 @@ void poll_state(_CONSOLE *self) {
         led_off(&led3);
     self->state.s1.toggle1 = (uint8_t)pin_read(&D[6]);
     self->state.s1.toggle2 = (uint8_t)pin_read(&D[7]);
+    self->state.s1.green_button = (uint8_t)pin_read(&A[4]);
     self->state.s1.joystick = read_joystick();
     self->state.s1.wormhole1 = (uint8_t)pin_read(&D[12]);
     self->state.s1.wormhole2 = (uint8_t)pin_read(&D[13]);   
@@ -102,6 +103,7 @@ void console1_poll(_TIMER *timer) {
 void console1_init(){
     pin_digitalIn(&A[0]);
     pin_digitalIn(&A[5]);
+    pin_digitalIn(&A[4]);
 }
 
 int16_t main(void) {

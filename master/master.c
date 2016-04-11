@@ -55,8 +55,9 @@ void send_command(uint8_t console, _CMD *cmd, float cd_time) {
 
 uint16_t game_cmd_i = 0;
 uint16_t game_next_cmd_idx() {
-    game_cmd_i = (game_cmd_i+1)%48;
-    return randoms[game_cmd_i];
+    game_cmd_i = (game_cmd_i+1)%97;
+    return game_cmd_i;
+    // return randoms[game_cmd_i];
 }
 
 void game_advance(uint8_t console, uint8_t success) {
@@ -64,7 +65,7 @@ void game_advance(uint8_t console, uint8_t success) {
         cd_advance(&cdcenter, 2.0);
 
     commands[console] = &cmds[game_next_cmd_idx()];
-    send_command(console, commands[console], 15);
+    send_command(console, commands[console], 6);
 }
 
 void cons_state_change(uint8_t console) {
@@ -127,11 +128,11 @@ void init_game() {
     commands[1] = &cmds[cmd_get(1, 0, 1)];
     commands[2] = &cmds[cmd_get(2, 0, 1)];
 
-    cd_start(&cdcenter, 90, game_clock);
+    cd_start(&cdcenter, 240, game_clock);
 
-    send_command(0, commands[0], 15);
-    send_command(1, commands[1], 15);
-    send_command(2, commands[2], 15);
+    send_command(0, commands[0], 6);
+    send_command(1, commands[1], 6);
+    send_command(2, commands[2], 6);
 }
 
 void init_master() {

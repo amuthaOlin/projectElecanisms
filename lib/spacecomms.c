@@ -53,6 +53,7 @@ uint8_t CONS_HASREST[][15] = {// has a "rest state" that cannot be commanded
         1, // if it has rest it's just a momentary button, we can use things like "push"
         0, // if it doesn't then it's a "set"
         0,
+        0,
         1,
         1,
         1,
