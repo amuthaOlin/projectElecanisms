@@ -11,6 +11,57 @@
 #include "spacecomms.h"
 #include "console.h"
 
+uint8_t read_wordwheel_inside(){
+    uint16_t wordwheel_in = (uint16_t)pin_read(&A[1]);
+    //printf("wordwheel_inside:%u\n\r",wordwheel_in);
+    uint8_t wordwheel_out;
+    if(wordwheel_in<51000){
+        wordwheel_out = 0;
+    }
+    else if (wordwheel_in<52000 && wordwheel_in>51000){
+        wordwheel_out =1;    
+    }
+    else if (wordwheel_in<54000 && wordwheel_in>52000){
+        wordwheel_out =2;    
+    }
+    else if (wordwheel_in<56000 && wordwheel_in>54000){
+        wordwheel_out =3;    
+    }
+    else if (wordwheel_in<59000 && wordwheel_in>56000){
+        wordwheel_out =4;    
+    }
+    else if (wordwheel_in>59000){
+        wordwheel_out =5;    
+    }
+    printf("outside:%u\n\r",wordwheel_out);
+    return wordwheel_out;
+
+}
+
+uint8_t read_wordwheel_outside(){
+    uint16_t wordwheel_in = (uint16_t)pin_read(&A[2]);
+    uint8_t wordwheel_out;
+    if(wordwheel_in<22000){
+        wordwheel_out = 0;
+    }
+    else if (wordwheel_in<29000 && wordwheel_in>22000){
+        wordwheel_out =1;    
+    }
+    else if (wordwheel_in<35000 && wordwheel_in>29000){
+        wordwheel_out =2;    
+    }
+    else if (wordwheel_in<40000 && wordwheel_in>35000){
+        wordwheel_out =3;    
+    }
+    else if (wordwheel_in<44000 && wordwheel_in>40000){
+        wordwheel_out =4;    
+    }
+    else if (wordwheel_in>44000){
+        wordwheel_out =5;    
+    }
+    return wordwheel_out;
+}
+
 uint8_t read_joystick(){
     uint8_t j1 = pin_read(&D[8]);
     uint8_t j3 = pin_read(&D[9]);
@@ -30,6 +81,8 @@ void poll_state(_CONSOLE *self) {
     self->state.s1.wormhole1 = (uint8_t)pin_read(&D[12]);
     self->state.s1.wormhole2 = (uint8_t)pin_read(&D[13]);   
     self->state.s1.hotsystem = (uint8_t)pin_read(&A[0]);
+    self->state.s1.wordwheel_inside = read_wordwheel_inside();
+    self->state.s1.wordwheel_outside = read_wordwheel_outside();
     //led_write(&led2, self->state.s0.red_button);
 }
 
