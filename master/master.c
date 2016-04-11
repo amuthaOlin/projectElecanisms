@@ -58,7 +58,8 @@ void game_rand_inc() {
 }
 
 uint16_t game_rand_cmd_idx() {
-    return (uint16_t)((float)(game_rand_val)/0xFFFF*(GAME_NUM_CMDS+1))
+    // should break sometimes because 98 is a possible (but unlikely) value
+    return (uint16_t)((float)(game_rand_val)/0xFFFF*(GAME_NUM_CMDS+1));
 }
 
 void game_rand_init() {
