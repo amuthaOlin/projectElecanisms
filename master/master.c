@@ -22,9 +22,7 @@ volatile int32_t game_clock = 0; // time unit of "ticks"
 volatile WORD32 res[3];
 volatile _CMD *commands[3];
 
-uint8_t randoms[] = {
-    20, 11, 10, 21, 28, 24, 27, 19, 32, 25,  2, 23, 37, 40,  4, 22, 46, 14,  5, 43, 26, 41, 38, 35,  6,  8, 29, 33, 30, 48, 34,  1, 31, 16,  3,  9,  7, 47, 13, 17, 12, 15, 45, 18, 36, 44, 39,  0, 42
-}; // 48 elements
+#define GAME_NUM_CMDS 97
 
 _PIN *MISO  = &D[1];
 _PIN *MOSI  = &D[0];
@@ -53,18 +51,25 @@ void send_command(uint8_t console, _CMD *cmd, float cd_time) {
     cd_start(&cd[console], cd_time, game_clock);
 }
 
-uint16_t game_cmd_i = 0;
-uint16_t game_next_cmd_idx() {
-    game_cmd_i = (game_cmd_i+1)%97;
-    return game_cmd_i;
-    // return randoms[game_cmd_i];
+volatile uint16_t game_rand_val;
+void game_rand_inc() {
+    // value = (value & 0b1000000000000000) ? ((value ^ 0b0000000000100101) << 1) | 0b0000000000000001 : value << 1;
+    game_rand_val = (game_rand_val & 0x8000) ? ((game_rand_val ^ 0x0025) << 1) | 0x0001 : game_rand_val << 1;
+}
+
+uint16_t game_rand_cmd_idx() {
+    return (uint16_t)((float)(game_rand_val)/0xFFFF*(GAME_NUM_CMDS+1))
+}
+
+void game_rand_init() {
+    game_rand_val = 0x0080;
 }
 
 void game_advance(uint8_t console, uint8_t success) {
     if (!success)
         cd_advance(&cdcenter, 2.0);
 
-    commands[console] = &cmds[game_next_cmd_idx()];
+    commands[console] = &cmds[game_rand_cmd_idx()];
     send_command(console, commands[console], 6);
 }
 
@@ -94,6 +99,7 @@ void cons3_state_change(_INT *intx) {
 }
 
 void game_loop() {
+    game_rand_inc();
     game_clock++;
     printf("%u\r\n", pin_read(&A[0]));
 
@@ -122,6 +128,7 @@ void game_loop() {
 }
 
 void init_game() {
+    game_rand_init();
     timer_every(&timer1, GAME_TICK, game_loop);
 
     commands[0] = &cmds[cmd_get(0, 0, 1)];
