@@ -4,8 +4,8 @@
 #include <stdint.h>
 
 extern uint8_t CONS_NUMACTS[];
-extern uint8_t CONS_STATES[][13];
-extern uint8_t CONS_HASREST[][13];
+extern uint8_t CONS_STATES[][15];
+extern uint8_t CONS_HASREST[][15];
 
 typedef struct SPACK_DIR {
   unsigned packet:2;

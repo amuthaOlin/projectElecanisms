@@ -31,7 +31,7 @@
 #include "ui.h"
 
 // CMD_COUNT is cumsum of members of state arrays minus cumsum of members of hasrest arrays
-#define CMD_COUNT 60 // 60 to be safe
+#define CMD_COUNT 100 // 97 (100 to be safe)
 _CMD cmds[CMD_COUNT];
 char cmd_strs[CMD_COUNT][33];
 
