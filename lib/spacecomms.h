@@ -22,7 +22,9 @@ typedef struct CONS1_STATE {
   unsigned wormhole1:1;
   unsigned wormhole2:1;
   unsigned hotsystem:1; 
-  unsigned long :22;
+  unsigned wordwheel_inside:4;
+  unsigned wordwheel_outside:4; 
+  unsigned long :14;
 } CONS1_STATE;
 
 typedef struct CONS2_STATE {
