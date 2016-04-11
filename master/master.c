@@ -20,7 +20,11 @@
 volatile int32_t game_clock = 0; // time unit of "ticks"
 
 volatile WORD32 res[3];
-volatile _CMD *cmd[3];
+volatile _CMD *commands[3];
+
+uint8_t randoms[] = {
+    20, 11, 10, 21, 28, 24, 27, 19, 32, 25,  2, 23, 37, 40,  4, 22, 46, 14,  5, 43, 26, 41, 38, 35,  6,  8, 29, 33, 30, 48, 34,  1, 31, 16,  3,  9,  7, 47, 13, 17, 12, 15, 45, 18, 36, 44, 39,  0, 42
+}; // 48 elements
 
 _PIN *MISO  = &D[1];
 _PIN *MOSI  = &D[0];
@@ -49,9 +53,22 @@ void send_command(uint8_t console, _CMD *cmd, float cd_time) {
     cd_start(&cd[console], cd_time, game_clock);
 }
 
+uint16_t game_cmd_i = 0;
+uint16_t game_next_cmd_idx() {
+    game_cmd_i = (game_cmd_i+1)%48;
+    return randoms[game_cmd_i];
+}
+
+void game_advance(uint8_t console, uint8_t success) {
+    if (!success)
+        cd_advance(&cdcenter, 2.0);
+
+    send_command(console, &cmds[game_next_cmd_idx()], 7);
+}
+
 void cons_state_change(uint8_t console) {
     res[console] = master_tx(SSn[console], (WORD32)0xFEEDF00D);
-    uint8_t success = cmd_test(cmd[console]->index, res[console]);
+    uint8_t success = cmd_test(commands[console]->index, res[console]);
 
     if (cd[console].active && success)
         game_advance(console, 1);
@@ -71,19 +88,9 @@ void cons3_state_change(_INT *intx) {
     cons_state_change(2);
 }
 
-uint16_t game_next_cmd_idx() {
-    return 5;
-}
-
-void game_advance(uint8_t console, uint8_t success) {
-    if (!success)
-        cd_advance(&cdcenter, 2.0);
-
-    send_command(console, cmd[game_next_cmd_idx()], 7);
-}
-
 void game_loop() {
     game_clock++;
+    printf("%u\r\n", pin_read(&A[0]));
 
     cd_update_all(game_clock);
 
@@ -102,19 +109,25 @@ void game_loop() {
     if (cdcenter.flag) {
         cdcenter.flag = 0;
         leds_clear(&ledcenter);
-        leds_writeRGB(&ledcenter, 0, 255,0,0);
+        leds_writeRGBs(&ledcenter, 255,0,0);
+
         // game over
+        while(1) {}
     }
 }
 
 void init_game() {
     timer_every(&timer1, GAME_TICK, game_loop);
 
-    cmd[0] = &cmds[cmd_get(0, 0, 1)];
-    cmd[1] = &cmds[cmd_get(1, 0, 1)];
-    cmd[2] = &cmds[cmd_get(2, 0, 1)];
+    commands[0] = &cmds[cmd_get(0, 0, 1)];
+    commands[1] = &cmds[cmd_get(1, 0, 1)];
+    commands[2] = &cmds[cmd_get(2, 0, 1)];
 
     cd_start(&cdcenter, 30, game_clock);
+
+    send_command(0, commands[0], 7);
+    send_command(1, commands[1], 7);
+    send_command(2, commands[2], 7);
 }
 
 void init_master() {
@@ -149,9 +162,6 @@ void init_master() {
     pin_set(SSn[0]);
     pin_set(SSn[1]);
     pin_set(SSn[2]);
-    led_off(&led1);
-    led_off(&led2);
-    led_off(&led3);
 
     int_attach(&int1, Sint1, 1, cons1_state_change);
     int_attach(&int2, Sint2, 1, cons2_state_change);
