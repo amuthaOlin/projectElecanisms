@@ -95,13 +95,13 @@ void init_lcd(void) {
     __lcd_i2c = &i2c3;
     i2c_open(__lcd_i2c, 1e3);
 
-    // lcd_init(&lcd1, 0x07,'A');
-    // lcd_init(&lcd2, 0x06,'A');
-    // lcd_init(&lcd3, 0x05,'A');
+    lcd_init(&lcd1, 0x07,'A');
+    lcd_init(&lcd2, 0x06,'A');
+    lcd_init(&lcd3, 0x05,'A');
 
-    lcd_init(&lcdcmd1, 0x07,'A');
-    lcd_init(&lcdcmd2, 0x06,'T');
-    lcd_init(&lcdcmd3, 0x05,'A');
+    // lcd_init(&lcdcmd1, 0x07,'A');
+    // lcd_init(&lcdcmd2, 0x06,'T');
+    // lcd_init(&lcdcmd3, 0x05,'A');
 }
 
 void lcd_init(_LCD *self, uint8_t addr, char vendor) {
@@ -230,7 +230,7 @@ void lcd_print2(_LCD *self, char* line1, char* line2){
         line2++;
     }
     char* strptr=str;
-    lcd_print(self,strptr);
+    lcd_print1(self,strptr);
 }
 
 void lcd_print(_LCD *self, char* message) {
