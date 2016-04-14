@@ -50,7 +50,7 @@
 #define DR_WRITE 0x09
 #define DR_READ 0x0B
 
-_LCD lcd1, lcd2, lcd3, lcd4, lcdcmd1, lcdcmd2, lcdcmd3;
+_LCD lcd1, lcd2, lcd3, lcd4, lcdcmd[3];
 
 _I2C *__lcd_i2c;
 
@@ -99,9 +99,9 @@ void init_lcd(void) {
     // lcd_init(&lcd2, 0x06,'A');
     // lcd_init(&lcd3, 0x05,'A');
 
-    lcd_init(&lcdcmd1, 0x07,'A');
-    lcd_init(&lcdcmd2, 0x06,'T');
-    lcd_init(&lcdcmd3, 0x05,'A');
+    lcd_init(&lcdcmd[0], 0x07,'A');
+    lcd_init(&lcdcmd[1], 0x06,'T');
+    lcd_init(&lcdcmd[2], 0x05,'A');
 }
 
 void lcd_init(_LCD *self, uint8_t addr, char vendor) {

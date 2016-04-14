@@ -8,6 +8,7 @@
 #include "leds.h"
 #include "ui.h"
 #include "cd.h"
+#include "con.h"
 #include "i2c.h"
 #include "lcd.h"
 #include "cmd.h"
@@ -32,24 +33,6 @@ _PIN *Sint2 = &D[6];
 _PIN *Sint3 = &D[8];
 
 _PIN *SSn[] = { &D[3], &D[5], &D[7] };
-_LCD *lcds[] = { &lcdcmd1, &lcdcmd2, &lcdcmd3 };
-
-WORD32 master_tx(_PIN *SSn, WORD32 cmd){
-    WORD32 tmp;
-    pin_clear(SSn);
-    tmp = spi_queue(&spi1, cmd);
-    pin_set(SSn);
-    return tmp;
-}
-
-void send_command(uint8_t console, _CMD *cmd, float cd_time) {
-    res[console] = master_tx(SSn[console], cmd_packet(cmd->index));
-
-    lcd_clear(lcds[console]);
-    lcd_print1(lcds[console], cmd_strs[cmd->index]);
-
-    cd_start(&cd[console], cd_time, game_clock);
-}
 
 volatile uint16_t game_rand_val;
 void game_rand_inc() {
@@ -66,37 +49,31 @@ void game_rand_init() {
     game_rand_val = 0x0080;
 }
 
-void game_advance(uint8_t console, uint8_t success) {
+void game_advance(uint8_t sole, uint8_t success) {
     if (!success)
         cd_advance(&cdcenter, 2.0);
 
-    commands[console] = &cmds[game_rand_cmd_idx()];
-    send_command(console, commands[console], 6);
+    con_send_cmd(&con[sole], &cmds[game_rand_cmd_idx()], 6);
 }
 
-void cons_state_change(uint8_t console) {
-    res[console] = master_tx(SSn[console], (WORD32)0xFEEDF00D);
-    uint8_t success = cmd_test(commands[console]->index, res[console]);
-
-    if (cd[console].active && success) {
-        led_toggle(&led3); // success
-        game_advance(console, 1);
+void game_state_change(uint8_t sole) {
+    uint8_t success = con_state_change(&con[sole]);
+    if (success) {
+        led_toggle(&led3);
+        game_advance(sole, 1);
     }
-
-    // printf("Console %d: %08lx\r\n", console+1, (unsigned long)res[0].ul);
 }
 
-void cons1_state_change(_INT *intx) {
-    led_on(&led1);
-    cons_state_change(0);
+void con1_state_change(_INT *intx) {
+    game_state_change(0);
 }
 
-void cons2_state_change(_INT *intx) {
-    cons_state_change(1);
+void con2_state_change(_INT *intx) {
+    game_state_change(1);
 }
 
-void cons3_state_change(_INT *intx) {
-    cons_state_change(2);
+void con3_state_change(_INT *intx) {
+    game_state_change(2);
 }
 
 void game_loop() {
@@ -132,15 +109,11 @@ void init_game() {
     game_rand_init();
     timer_every(&timer1, GAME_TICK, game_loop);
 
-    commands[0] = &cmds[cmd_get(0, 0, 1)];
-    commands[1] = &cmds[cmd_get(1, 0, 1)];
-    commands[2] = &cmds[cmd_get(2, 0, 1)];
-
     cd_start(&cdcenter, 240, game_clock);
 
-    send_command(0, commands[0], 6);
-    send_command(1, commands[1], 6);
-    send_command(2, commands[2], 6);
+    con_send_cmd(&con[0], &cmds[cmd_get(0, 0, 1)], 6);
+    con_send_cmd(&con[1], &cmds[cmd_get(1, 0, 1)], 6);
+    con_send_cmd(&con[2], &cmds[cmd_get(2, 0, 1)], 6);
 }
 
 void init_master() {
@@ -169,16 +142,9 @@ void init_master() {
     pin_digitalIn(Sint2);
     pin_digitalIn(Sint3);
 
-    pin_digitalOut(SSn[0]);
-    pin_digitalOut(SSn[1]);
-    pin_digitalOut(SSn[2]);
-    pin_set(SSn[0]);
-    pin_set(SSn[1]);
-    pin_set(SSn[2]);
-
-    int_attach(&int1, Sint1, 1, cons1_state_change);
-    int_attach(&int2, Sint2, 1, cons2_state_change);
-    int_attach(&int3, Sint3, 1, cons3_state_change);
+    int_attach(&int1, Sint1, 1, con1_state_change);
+    int_attach(&int2, Sint2, 1, con2_state_change);
+    int_attach(&int3, Sint3, 1, con3_state_change);
 
     init_game();
 }

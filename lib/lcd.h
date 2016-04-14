@@ -16,7 +16,7 @@ typedef struct {
     uint8_t display_mode;
 } _LCD;
 
-extern _LCD lcd1, lcd2, lcd3, lcd4, lcdcmd1, lcdcmd2, lcdcmd3;
+extern _LCD lcd1, lcd2, lcd3, lcd4, lcdcmd[3];
 
 void lcd_init(_LCD *self, uint8_t addr, char vendor);
 void lcd_stop(_LCD *self);
