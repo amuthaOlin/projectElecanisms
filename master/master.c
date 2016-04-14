@@ -79,7 +79,6 @@ void con3_state_change(_INT *intx) {
 void game_loop() {
     game_rand_inc();
     game_clock++;
-    printf("%u\r\n", pin_read(&A[0]));
 
     cd_update_all(game_clock);
 
@@ -100,7 +99,7 @@ void game_loop() {
         leds_clear(&ledcenter);
         leds_writeRGBs(&ledcenter, 255,0,0);
 
-        // game over
+        // level over
         while(1) {}
     }
 }

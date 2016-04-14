@@ -37,7 +37,9 @@ void con_send_cmd(_CON *self, _CMD *cmd, float cd_time) {
 // returns command success/failure
 uint8_t con_state_change(_CON *self) {
     self->trans_res = con_transfer(self, (WORD32)0xFEEDF00D);
-    uint8_t success = cmd_test(self->last_cmd->index, self->trans_res);
+
+    self->state = self->trans_res;
+    uint8_t success = cmd_test(self->last_cmd->index, self->state);
 
     return self->cd->active && success;
 }
