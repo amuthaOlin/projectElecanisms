@@ -26,6 +26,8 @@ int[4] med_lab={0,1,2,4,5,7,8,9};
 int[6] hard_lab={0,1,2,3,4,5,6};
 char[9][33] messages {" ","Impending Didactic Aberation","They're over there, by their ship","Tr@n$|at0r M@lfun(#ion","Lol good luck (^_^)/* ttyl, bai","Can I Ha Your Numba","Thngs r brkng dwn","Come on grab your friends!","May the force be with you","ARRG, spaceship now be a seaship"};
 
+char**[9] lab_all={lab_general,lab_long,lab_homo,lab_sym,lab_emo,lab_num,lab_cons,lab_adven,lab_wars,lab_pir};
+
 int[3] mod_num_no={3,7,7}
 int[3] mod_num={2,3,3}
 
@@ -37,22 +39,42 @@ void (*mod_arg_e[1]) (char* str, uint8_t freq, uint8_t shift) ={NadaA,Missing};
 void (*mod_arg_m[2]) (char* str, uint8_t freq, uint8_t shift) ={NadaA,Caesar,Missing};
 void (*mod_arg_h[2]) (char* str, uint8_t freq, uint8_t shift) ={NadaA,Caesar,Missing};
 
+void pick_labels(_LEVEL level uint8_t theme, uint8_t num){
+	// console 1
+	uint8_t i=0;
+	while (i<num){
+		level->lables1[i]=randint(0,theme_len[theme]); // populate random labels
+		i++;
+	}
+	// console 2
+	i=0;
+	while (i<num){
+		level->lables2[i]=randint(0,theme_len[theme]); // populate random labels
+		i++;
+	}
+	// console 3
+	i=0;
+	while (i<num){
+		level->lables3[i]=randint(0,theme_len[theme]); // populate random labels
+		i++;
+	}
+}
 typedef struct _LEVEL {
     // constant
-    uint8_t[8] asteroids={0,0,0,0,0,0,0,0};  
-    uint8_t[8] wormholes={0,0,0,0,0,0,0,0};  
-    uint8_t[6] lables1={};
-    uint8_t[6]  lables2={" "," "," "," "," "};
-    uint8_t[6]  lables3={" "," "," "," "," "};
-    uint8_t lab_theme=0;
-    uint8_t[2] noarg={0,0};
-    uint8_t arg=0;
-    uint8_t arg_freq=0;
-    uint8_t arg_shift=0;
-    float level_time=0;
-    float cmd_time=0;
-    uint8_t[6] actuators={0,0,0,0,0,0};
-    char[33] message={"                                "}
+    uint8_t[8] asteroids;  
+    uint8_t[8] wormholes;
+    uint8_t[6] label1;
+    uint8_t[6] label2;
+    uint8_t[6] label3;
+    uint8_t lab_theme;
+    uint8_t[2] noarg;
+    uint8_t arg;
+    uint8_t arg_freq;
+    uint8_t arg_shift;
+    float level_time;
+    float cmd_time;
+    uint8_t[6] actuators;
+    char[33] message;
 
 } _LEVEL;
 
@@ -70,7 +92,7 @@ void level_init(_LEVEL level){
     level->level_time=0;
     level->cmd_time=0;
     level->actuators={0,0,0,0,0,0};
-    level->message={"                                "}
+    level->message={"                                "};
 }
 
 void level_setup(uint8_t lev_num, _LEVEL level){
@@ -79,12 +101,14 @@ void level_setup(uint8_t lev_num, _LEVEL level){
 		level->level_time=325;
 		level->cmd_time=20;
 		level->actuators=[1,1,1,1,0,0]; // Only use 4 buttons
+		pick_labels(level,0,4);
 	}
 	else if (lev_num ==2){ // Second Level
 		level->lab_theme=0;
 		level->level_time=300;
 		level->cmd_time=19;
 		level->actuators=[1,1,1,1,1,1]; // Use all buttons
+		pick_labels(level,0,6);
 	}
 	else if (lev_num ==3){ // Third Level
 		level->lab_theme=0;
@@ -94,6 +118,7 @@ void level_setup(uint8_t lev_num, _LEVEL level){
 		level->asteroids[0]=randint(4,10); // Seed two asteroids
 		level->asteroids[1]=randint(12,20);
 		level->message="Shake ball to avoid asteroids"
+		pick_labels(level,0,6);
 	}
 
 	else if (lev_num ==4 ){ // Level 4 (tier 2)
@@ -106,6 +131,7 @@ void level_setup(uint8_t lev_num, _LEVEL level){
 		level->wormholes[0]=randint(0,5); // Seed two wormholes
 		level->wormholes[1]=randint(20,50);
 		level->message="Press flip to escape wormwhole"
+		pick_labels(level,theme,6);
 	}
 
 	else if (lev_num <7){ // Tier 2 levels
@@ -118,7 +144,8 @@ void level_setup(uint8_t lev_num, _LEVEL level){
 		level->asteroids[1]=randint(30,45);
 		level->wormholes[0]=randint(15,30);// Seed two wormholes
 		level->wormholes[1]=randint(30,45);
-		level->message=messages[theme]
+		level->message=messages[theme];
+		pick_labels(level,theme,6);
 		if (zero_prb(1,70,0)==1){ // 30% Chance of a missing letter modification
 			level->arg[0]=1;
 			level->arg_freq=randint(5,10);// only drop letters rarely 
@@ -140,7 +167,8 @@ void level_setup(uint8_t lev_num, _LEVEL level){
 		level->asteroids[2]=randint(30,50);
 		level->wormholes[0]=randint(15,30);// Seed two wormholes
 		level->wormholes[1]=randint(30,45);
-		level->message=messages[theme]
+		level->message=messages[theme];
+		pick_labels(level,theme,6);
 		if (zero_prb(1,80,0)==1){ // 20% chance of missing letters/caesar
 			level->arg[0]=randint(0,2);// chose which one
 			level->arg_freq=randint(5,8);
@@ -163,7 +191,8 @@ void level_setup(uint8_t lev_num, _LEVEL level){
 		level->wormholes[0]=randint(0,20);// Seed three wormholes
 		level->wormholes[1]=randint(20,30);
 		level->wormholes[2]=randint(30,45);
-		level->message=messages[theme]
+		level->message=messages[theme];
+		pick_labels(level,theme,6);
 		if (zero_prb(1,70,0)==1){
 			level->arg[0]=randint(0,2);
 			level->arg_freq=randint(4,6);
@@ -188,7 +217,8 @@ void level_setup(uint8_t lev_num, _LEVEL level){
 		level->wormholes[1]=randint(20,30);
 		level->wormholes[2]=randint(30,40);
 		level->wormholes[3]=randint(40,50);
-		level->message=messages[theme]
+		level->message=messages[theme];
+		pick_labels(level,theme,6);
 		if (zero_prb(1,70,0)==1){
 			level->arg[0]=randint(0,2);
 			level->arg_freq=randint(3,6);
