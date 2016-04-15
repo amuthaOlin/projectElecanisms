@@ -157,7 +157,7 @@ void level_setup(uint8_t lev_num, _LEVEL level){
 	}
 
 	else if (lev_num <10){ // Tier 3 levels
-		uint8_t theme=zero_prb(random(1,lab_len[1]),50,0)// 50% chance of default
+		uint8_t theme=zero_prb(randint(1,lab_len[1]),50,0)// 50% chance of default
 		level->lab_theme=easy_lab[theme];
 		level->level_time=225;
 		level->cmd_time=16;
@@ -180,7 +180,7 @@ void level_setup(uint8_t lev_num, _LEVEL level){
 	}
 
 	else if (lev_num <14){ // Tier 4 levels
-		uint8_t theme=zero_prb(random(0,lab_len[1]),50,0)
+		uint8_t theme=zero_prb(randint(0,lab_len[1]),50,0)
 		level->lab_theme=easy_lab[theme];
 		level->level_time=200;
 		level->cmd_time=15;
@@ -204,7 +204,7 @@ void level_setup(uint8_t lev_num, _LEVEL level){
 	}
 
 	else if (lev_num <16){ // Tier 5 levels
-		uint8_t theme=zero_prb(random(0,lab_len[2]),30,0)
+		uint8_t theme=zero_prb(randint(0,lab_len[2]),30,0)
 		level->lab_theme=easy_lab[theme];
 		level->level_time=175;
 		level->cmd_time=14;
