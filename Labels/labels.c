@@ -56,6 +56,22 @@ typedef struct _LEVEL {
 
 } _LEVEL;
 
+void level_init(_LEVEL level){
+	level->asteroids={0,0,0,0,0,0,0,0};  
+    level->wormholes={0,0,0,0,0,0,0,0};  
+    level->label1={0,0,0,0,0,0};
+    level->label2={0,0,0,0,0,0};
+    level->label3={0,0,0,0,0,0};
+    level->lab_theme=0;
+    level->noarg={0,0};
+    level->arg=0;
+    level->arg_freq=0;
+    level->arg_shift=0;
+    level->level_time=0;
+    level->cmd_time=0;
+    level->actuators={0,0,0,0,0,0};
+    level->message={"                                "}
+}
 
 void level_setup(uint8_t lev_num, _LEVEL level){
 	if (lev_num == 1){ // First level has no complications
@@ -81,7 +97,7 @@ void level_setup(uint8_t lev_num, _LEVEL level){
 	}
 
 	else if (lev_num ==4 ){ // Level 4 (tier 2)
-		uint8_t theme=zero_prb(randint(0,lab_len[0]),70,0)
+		uint8_t theme=zero_prb(randint(1,lab_len[0]),70,0) // 70% chance of default
 		level->lab_theme=easy_lab[theme];
 		level->level_time=250;
 		level->cmd_time=17;
@@ -93,7 +109,7 @@ void level_setup(uint8_t lev_num, _LEVEL level){
 	}
 
 	else if (lev_num <7){ // Tier 2 levels
-		uint8_t theme=zero_prb(randint(0,lab_len[0]),70,0)
+		uint8_t theme=zero_prb(randint(1,lab_len[0]),70,0) // 70% chance of default
 		level->lab_theme=easy_lab[theme];
 		level->level_time=250;
 		level->cmd_time=17;
@@ -103,18 +119,18 @@ void level_setup(uint8_t lev_num, _LEVEL level){
 		level->wormholes[0]=randint(15,30);// Seed two wormholes
 		level->wormholes[1]=randint(30,45);
 		level->message=messages[theme]
-		if (zero_prb(1,70,0)==1){
+		if (zero_prb(1,70,0)==1){ // 30% Chance of a missing letter modification
 			level->arg[0]=1;
-			level->arg_freq=randint(5,10);
+			level->arg_freq=randint(5,10);// only drop letters rarely 
 		}
-		else{
-			level->noarg[0]=randint(0,mod_num_no[0]);
+		else{// 70% chance of other mods
+			level->noarg[0]=randint(0,mod_num_no[0]);// select a random one
 		}
 
 	}
 
 	else if (lev_num <10){ // Tier 3 levels
-		uint8_t theme=zero_prb(random(0,lab_len[1]),50,0)
+		uint8_t theme=zero_prb(random(1,lab_len[1]),50,0)// 50% chance of default
 		level->lab_theme=easy_lab[theme];
 		level->level_time=225;
 		level->cmd_time=16;
@@ -125,8 +141,8 @@ void level_setup(uint8_t lev_num, _LEVEL level){
 		level->wormholes[0]=randint(15,30);// Seed two wormholes
 		level->wormholes[1]=randint(30,45);
 		level->message=messages[theme]
-		if (zero_prb(1,80,0)==1){
-			level->arg[0]=randint(0,2);
+		if (zero_prb(1,80,0)==1){ // 20% chance of missing letters/caesar
+			level->arg[0]=randint(0,2);// chose which one
 			level->arg_freq=randint(5,8);
 			level->arg_shift=1;
 		}
@@ -180,17 +196,17 @@ void level_setup(uint8_t lev_num, _LEVEL level){
 		}
 		else{
 			level->noarg[0]=randint(0,mod_num_no[2]);
-			level->noarg[1]=zero_prb(randint(0,mod_num_no[2]),50,0);
+			level->noarg[1]=zero_prb(randint(0,mod_num_no[2]),50,0); // Also maybe do a second mod
 		}
 	}
 }
 
 uint8_t randint(uint8_t low, uint8_t high){
-	// generate a random number between low and high
+	// generate a random number between low and high (inclusive)
 }
 
 uint8_t zero_prob(uint16_t num, uint16_t prob, uint8_t replace){
-	// maybe change a number to another one
+	// maybe change a num to replace
 	// based on the probability
 }
 void zero_prob_list(int* start, uint8_t prob, uint8_t replace){
