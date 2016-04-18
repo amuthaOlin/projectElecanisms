@@ -164,7 +164,6 @@ int16_t main(void) {
     init_ui();
     init_pin();
     init_spi();
-    init_imu();
 
     pin_init(&FOO_SCK, (uint16_t *)&PORTB, (uint16_t *)&TRISB, 
              (uint16_t *)&ANSB, 9, 9, 8, 9, (uint16_t *)&RPOR4);
