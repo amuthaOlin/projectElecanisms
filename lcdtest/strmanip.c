@@ -2,12 +2,10 @@
 
 #include "common.h"
 #include "lcd.h"
-#include "timer.h"
-#include "ui.h"
 #include "strmanip.h"
 
 
-void strcpy(char* str1, char* str2){
+void stringcpy(char* str1, char* str2){
     uint8_t i=1;
     for (i < 17; i++;){
         if (*str2){
@@ -24,7 +22,7 @@ void strcpy(char* str1, char* str2){
 
     }
 }
-void CamelCase(char* str){
+void CamelCase(char* str, uint8_t a, uint8_t b){
     while(*str){
         if(*str >= 'a' && *str <= 'z'){
         *str = ('A' + *str - 'a');
@@ -46,7 +44,7 @@ void Caesar(char* str, uint8_t freq, uint8_t shift){
     }
 }
 
-void Brnrd(char* str){
+void Brnrd(char* str, uint8_t a, uint8_t b){
     char newstr[17] = "                ";
     char* newstrptr= newstr;
     char* temp1 = newstrptr;
@@ -62,9 +60,9 @@ void Brnrd(char* str){
             newstrptr++;
         }
     }
-    strcpy(temp2,temp1);    
+    stringcpy(temp2,temp1);    
 }
-void Leet(char* str){
+void Leet(char* str,uint8_t a, uint8_t b){
     while(*str){
         if(*str == 'A' || *str == 'a'){
         *str = '4';
@@ -91,7 +89,7 @@ void Leet(char* str){
     }
 }
 
-void Pig(char* str){
+void Pig(char* str,uint8_t a, uint8_t b){
     char newstr[17] ="                ";
     char* newstrptr=newstr;
     char* newstrbgn=newstr;
@@ -147,10 +145,10 @@ void Pig(char* str){
     *newstrptr=' ';
     if (count<17){newstrptr++;count++;}
 
-    strcpy(strbgn,newstrbgn);
+    stringcpy(strbgn,newstrbgn);
 }
 
-void Missing(char* str, uint8_t freq, uint8_t null){
+void Missing(char* str, uint8_t freq, uint8_t a){
     char newstr[17] = "                ";
     char* newstrptr= newstr;
     char* temp1 = newstrptr;
@@ -168,10 +166,10 @@ void Missing(char* str, uint8_t freq, uint8_t null){
         }
     count++;
     }
-    strcpy(temp2,temp1);    
+    stringcpy(temp2,temp1);    
 }
 
-void Reverse(char* str){
+void Reverse(char* str, uint8_t a, uint8_t b){
     uint8_t len=0;
     char newstr[17] = "                ";
     char* newstrptr= newstr;
@@ -193,15 +191,11 @@ void Reverse(char* str){
 }
 
 
-void Scramble(char* str){
+void Scramble(char* str,uint8_t a, uint8_t b){
     //to do, 
 }
 
-void Nada(char* str){
+void Nada(char* str,uint8_t a, uint8_t b){
     //nothing
-}
-
-void NadaA(char* str, uint8_t freq, uint8_t shift){
-
 }
 

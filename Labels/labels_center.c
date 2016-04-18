@@ -1,3 +1,12 @@
+#include <p24FJ128GB206.h>
+#include <stdint.h>
+#include "config.h"
+#include "common.h"
+#include "ui.h"
+#include "pin.h"
+#include "i2c.h"
+#include "timer.h"
+
 // Theme 0
 char[100][17] lab_general={"Engine", "Gyrator", "Flame Thrower", "Delwelder", "Fibrillator", "Generator", "Dismantler", "Transponder", "Collider", "Transformer", "Controller", "Vaporizer", "Diffuser", "Amplifier", "Combustor", "Extruder", "Silencer", "Detonator", "Compressor", "Contraption", "Deflector", "Simulator", "Isomorph", "Defibulator ", "Accelerator", "Replicator", "Differential", "Sabilizer", "Indicator", "Defacer", "Distiller", "Elevator", "Engtangler", "Airlock", "Stopcock", "De-icer", "Mulcher", "Grindr", "Blinder", "Hoover", "Mincher", "Gedder", "Gamma Ray", "Engorger", "Jumper", "Spaceball", "Barge", "Breaks", "Thrusters", "Shunter", "Flywheel", "Flux Beam", "Extra Nipple", "Gamma Punch", "Pocket Bulb", "Death Slicer", "Lambda Flange", "U-Alert", "Warp Hoop", "Ultra Grill", "Eigen Crank", "Clutch Shifter", "Sub Network", "Lube Hose", "Ambiwing", "Beta-Pulsar", "Pico Plucker", "Psi Kick", "Radio Trellis", "Astro Mulcher", "Multiphaser", "Delta Hole", "Giga Bellows", "Cycloscope", "B-Fold", "Depth Synth", "Vibro Hitch", "Shift Baffle", "F-Whisker", "Extra Flush", "G-Spigot", "Gyro Peg", "Rear Frustrum", "O-Lube", "Vibro Ignition", "Orb Sphere", "Sub Tensor", "Cyclo Cube", "Lunar Canal", "Fibre Scrubber", "Terra Cover", "Theta Bypass", "Stun Rockets", "Grip Horn", "Technobraid", "P-Satellite", "Volt Puncher", "Giga Paddler", "Hypno Core", "Macro Slicer"};
 // Theme 1
@@ -17,7 +26,7 @@ char[46][17] lab_adven={"Nightosphere", "Prismos Pickles", "Hambo", "Shame Priso
 // Theme 8
 char[46][17] lab_wars={"Deathstar", "X-Wing", "TIE Fighter", "Alderaan", "Coruscant", "Dagobah", "Endor", "Hoth", "Empire", "Jakku", "Rebel Alliance", "Naboo", "Starkiller", "Tatooine", "The Force", "Kylo Ren", "Rey", "Finn", "Skywalker", "Falcon", "Han Solo", "Yoda", "Princess Leia", "Jabba the Hut", "Wookies", "Ewoks", "Darth Vader", "Daddy Issues", "Darth Maul", "Palpatine", "Star Destroyer", "Landspeeder", "C-3PO", "BB-8", "R2-D2", "Lightsaber", "The Light Side", "The Dark Side", "Clone", "Chewbacca", "First Order", "It's a Trap!", "Hosian Prime", "POE", "Resistance", "AT-AT"};
 // Theme 9
-char[46][17] lab_pir={"Treasure", "Galleon", "Black Beard", "Carribean", "Tortuga", "Jack Sparrow", "Black Pearl", "Davvy Jones", "Islands", "Spiced Rum", "Rum Gone", "Starboard", "Port", "Mast", "Rigging", "Plank", "Keel Haul", "Anchor", "Bermuda", "Avast", "Shiver Timbers", "Monkey", "Poop Deck", "Cockswain", "Landlubber", "Chips Ahoy", "Batten Hatches", "Booty", "Crows Nest", "Jolly Roger", "Man-O-War", "Scallyway", "Calico Jack", "Captian Kidd", "Barbary Coast", "Cat O Nine", "Cutlass", "Cannon", "Powder Chest", "Kraken", "Parrot", "Wooden Leg", "Captian Hook", "Eye Patch", "Dread Pirate Roberts", "Hydra"};
+const char lab_pir [46][17]={"Treasure", "Galleon", "Black Beard", "Carribean", "Tortuga", "Jack Sparrow", "Black Pearl", "Davvy Jones", "Islands", "Spiced Rum", "Rum Gone", "Starboard", "Port", "Mast", "Rigging", "Plank", "Keel Haul", "Anchor", "Bermuda", "Avast", "Shiver Timbers", "Monkey", "Poop Deck", "Cockswain", "Landlubber", "Chips Ahoy", "Batten Hatches", "Booty", "Crows Nest", "Jolly Roger", "Man-O-War", "Scallyway", "Calico Jack", "Captian Kidd", "Barbary Coast", "Cat O Nine", "Cutlass", "Cannon", "Powder Chest", "Kraken", "Parrot", "Wooden Leg", "Captian Hook", "Eye Patch", "Dread Pirate", "Hydra"};
 
 int[9] theme_len{100,46,46,46,46,46,46,46,46};
 int[3] lab_len={2,8,7};
@@ -50,7 +59,7 @@ typedef struct _LEVEL {
 } _LEVEL;
 
 
-void level_init(_LEVEL level){
+void level_init(_LEVEL *level){
 	level->asteroids={0,0,0,0,0,0,0,0};  
     level->wormholes={0,0,0,0,0,0,0,0};  
     level->label1={0,0,0,0,0,0};
@@ -66,7 +75,7 @@ void level_init(_LEVEL level){
     level->message={"                                "};
 }
 
-void pick_labels(_LEVEL level uint8_t theme, uint8_t num){
+void pick_labels(_LEVEL *level, uint8_t theme, uint8_t num){
 	// console 1
 	uint8_t i=0;
 	while (i<num){
@@ -87,7 +96,7 @@ void pick_labels(_LEVEL level uint8_t theme, uint8_t num){
 	}
 }
 
-void level_setup(uint8_t lev_num, _LEVEL level){
+void level_setup(uint8_t lev_num, _LEVEL *level){
 	if (lev_num == 1){ // First level has no complications
 		level->lab_theme=0;
 		level->level_time=325;
@@ -221,7 +230,7 @@ void random_list(int* start, uint8_t len, uint8_t low, uint8_t high){
 }
 
 
-void send_level(_LEVEL level, uint8_t console){
+void send_level(_LEVEL *level, uint8_t console){
 	//Send to appropriate Console:
 	// - label1
 	// - lab_theme
