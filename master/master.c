@@ -34,21 +34,6 @@ _PIN *Sint3 = &D[8];
 
 _PIN *SSn[] = { &D[3], &D[5], &D[7] };
 
-volatile uint16_t game_rand_val;
-void game_rand_inc() {
-    // value = (value & 0b1000000000000000) ? ((value ^ 0b0000000000100101) << 1) | 0b0000000000000001 : value << 1;
-    game_rand_val = (game_rand_val & 0x8000) ? ((game_rand_val ^ 0x0025) << 1) | 0x0001 : game_rand_val << 1;
-}
-
-uint16_t game_rand_cmd_idx() {
-    // should break sometimes because 98 is a possible (but unlikely) value
-    return (uint16_t)((float)(game_rand_val)/0xFFFF*(GAME_NUM_CMDS+1));
-}
-
-void game_rand_init() {
-    game_rand_val = 0x0080;
-}
-
 void game_advance(uint8_t sole, uint8_t success) {
     if (!success)
         cd_advance(&cdcenter, 2.0);
