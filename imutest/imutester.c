@@ -13,30 +13,6 @@
 #include "timer.h"
 #include "imu.h"
 
-// The MPU-9250's magnetometer is on a separate die within the package that 
-// is made by a different manufacturer, Asahi Kasei Microdevices (AKM), part 
-// number AK8963.  The MPU-9250 communicates with the AK8963 via I2C as a
-// slave device at I2C address 0x0C.
-#define MAG_I2C_ADDR 0x0C
-
-// MPU-9250 Magnetometer Register Map
-#define MAG_WIA 0x00
-#define MAG_INFO 0x01
-#define MAG_ST1 0x02
-#define MAG_HXL 0x03
-#define MAG_HXH 0x04
-#define MAG_HYL 0x05
-#define MAG_HYH 0x06
-#define MAG_HZL 0x07
-#define MAG_HZH 0x08
-#define MAG_ST2 0x09
-#define MAG_CNTL1 0x0A
-#define MAG_CNTL2 0x0B
-#define MAG_ASTC 0x0C
-#define MAG_ASAX 0x10
-#define MAG_ASAY 0x11
-#define MAG_ASAZ 0x12
-
 // MPU-9250 Register Map for Gyroscope and Accelerometer
 #define MPU_SELF_TEST_X_GYRO 0x00
 #define MPU_SELF_TEST_Y_GYRO 0x01
@@ -139,7 +115,7 @@
 #define MPU_ZA_OFFSET_H 0x7D
 #define MPU_ZA_OFFSET_L 0x7E
 
-#define DELAY_MAG 1e3 // us
+#define DELAY_INIT 1e3 // us
 
 _PIN FOO_SCK, FOO_MISO, FOO_MOSI;
 _PIN MPU9250_CSN, MPU9250_INT;
@@ -213,35 +189,16 @@ int16_t main(void) {
 
     // init IMU
     mpu_writeReg(MPU_PWR_MGMT_1, 0x80);
-    mpu_writeReg(MPU_CONFIG, 0x01);
-    mpu_writeReg(MPU_GYRO_CONFIG, 0x18);
     mpu_writeReg(MPU_ACCEL_CONFIG, 0x08);
-    mpu_writeReg(MPU_ACCEL_CONFIG2, 0x09);
-    mpu_writeReg(MPU_INT_PIN_CFG, 0x30);
-    mpu_writeReg(MPU_USER_CTRL, 0x30);
-    mpu_writeReg(MPU_I2C_MST_CTRL, 0x0D);
-    mpu_writeReg(MPU_I2C_SLV0_ADDR, MAG_I2C_ADDR);
 
-    mpu_writeReg(MPU_I2C_SLV0_REG, MAG_CNTL2);
-    mpu_writeReg(MPU_I2C_SLV0_DO, 0x01);
-    mpu_writeReg(MPU_I2C_SLV0_CTRL, 0x81);
-    timer_delayMicro(DELAY_MAG);
-
-    mpu_writeReg(MPU_I2C_SLV0_REG, MAG_CNTL1);
-    mpu_writeReg(MPU_I2C_SLV0_DO, 0x0F);
-    mpu_writeReg(MPU_I2C_SLV0_CTRL, 0x81);
-    timer_delayMicro(DELAY_MAG);
-
-    mpu_writeReg(MPU_I2C_SLV0_ADDR, MAG_I2C_ADDR);
-    mpu_writeReg(MPU_I2C_SLV0_REG, MAG_CNTL1);
-    mpu_writeReg(MPU_I2C_SLV0_DO, 0x00);
-    mpu_writeReg(MPU_I2C_SLV0_CTRL, 0x81);
-    timer_delayMicro(DELAY_MAG);
+    timer_delayMicro(DELAY_INIT);
 
     // read accel
     uint8_t res[6];
     mpu_readRegs(MPU_ACCEL_XOUT_H, &res, 6);
 
+    printf("====================\r\n");
+    // upper lower upper lower upper lower
     uint8_t i;
     for (i = 0; i < 6; i++) {
         printf("Reading: %d\r\n", res[i]);
