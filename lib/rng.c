@@ -27,17 +27,31 @@
 #include "common.h"
 #include "rng.h"
 
-volatile uint16_t game_rand_val;
-void game_rand_inc() {
+volatile uint16_t rng_val;
+
+void init_rng() {
+    rng_val = 0x0080;
+}
+
+uint16_t rng_gen() {
     // value = (value & 0b1000000000000000) ? ((value ^ 0b0000000000100101) << 1) | 0b0000000000000001 : value << 1;
-    game_rand_val = (game_rand_val & 0x8000) ? ((game_rand_val ^ 0x0025) << 1) | 0x0001 : game_rand_val << 1;
+    rng_val = (rng_val & 0x8000) ? ((rng_val ^ 0x0025) << 1) | 0x0001 : rng_val << 1;
+    return rng_val;
 }
 
-uint16_t game_rand_cmd_idx() {
-    // should break sometimes because 98 is a possible (but unlikely) value
-    return (uint16_t)((float)(game_rand_val)/0xFFFF*(GAME_NUM_CMDS+1));
+// from min (inclusive) to max (exclusive)
+uint16_t rng_int(uint16_t min, uint16_t max) {
+    return (rng_gen() % (max - min)) + min;
 }
 
-void rng_int(uint16_t min, uint16_t max) {
-    game_rand_val = 0x0080;
+// perform a weighted coin flip
+// "weight" == 0 => 100% chance of 0
+// "weight" == 100 => 100% chance of 1
+uint16_t rng_coin_flip(uint16_t weight) {
+    return rng_int(0, 100) < weight;
+}
+
+// returns either "replace" or "num" -- "weight" is a percent change (0-100) of returning "replace"
+uint16_t rng_coin_replace(uint16_t num, uint16_t weight, uint16_t replace) {
+    return rng_coin_flip(weight)? replace : num;
 }

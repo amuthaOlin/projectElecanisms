@@ -23,19 +23,18 @@
 ** ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 ** POSSIBILITY OF SUCH DAMAGE.
 */
-#ifndef _RND_H_
-#define _RND_H_
+#ifndef _RNG_H_
+#define _RNG_H_
 
 #include <stdint.h>
 #include "pin.h"
 #include "leds.h"
 
-void init_cd(void);
+void init_rng(void);
 
-void cd_init(_RND *self, float tick_sec, _LEDS *ledbar);
-void cd_start(_RND *self, float dur_sec, int32_t ticks_start);
-void cd_update(_RND *self, int32_t ticks_cur);
-void cd_advance(_RND *self, float off_sec);
-void cd_update_all(int32_t ticks_cur);
+uint16_t rng_gen();
+uint16_t rng_int(uint16_t min, uint16_t max);
+uint16_t rng_coin_flip(uint16_t weight);
+uint16_t rng_coin_replace(uint16_t num, uint16_t weight, uint16_t replace);
 
 #endif
