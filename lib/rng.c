@@ -31,6 +31,8 @@ volatile uint16_t rng_val;
 
 void init_rng() {
     rng_val = 0x0080;
+
+    timer_every(&timer3, 1e-2, rng_gen);
 }
 
 uint16_t rng_gen() {
