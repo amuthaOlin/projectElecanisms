@@ -33,9 +33,8 @@ uint8_t read_wordwheel_inside(){
     else if (wordwheel_in>59000){
         wordwheel_out =5;    
     }
-    printf("outside:%u\n\r",wordwheel_out);
+    // printf("outside:%u\n\r",wordwheel_out);
     return wordwheel_out;
-
 }
 
 uint8_t read_wordwheel_outside(){
@@ -74,7 +73,7 @@ uint8_t read_joystick(){
 
 void poll_state(_CONSOLE *self) {
     //led_toggle(&led3);
-    self->state.s1.red_button = (uint8_t)pin_read(&D[5]);
+    self->state.s1.red_button = (uint8_t)!pin_read(&D[5]);
     if (self->state.s1.red_button)
         led_on(&led3);
     else
@@ -89,6 +88,8 @@ void poll_state(_CONSOLE *self) {
     self->state.s1.wordwheel_inside = read_wordwheel_inside();
     self->state.s1.wordwheel_outside = read_wordwheel_outside();
     //led_write(&led2, self->state.s0.red_button);
+
+    printf("State: %08lx\r\n", (unsigned long)self->state.ul);
 }
 
 void handle_CSn(_INT *intx) {
