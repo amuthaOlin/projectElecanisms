@@ -36,7 +36,7 @@ void imu_init(void) {
     pin_digitalOut(&ACCEL_CS);
     pin_digitalOut(&GYRO_CS);
 
-    spi_open(&spi1, &IMU_MISO, &IMU_MOSI, &IMU_SCK, 2e6);
+    spi_open(&spi1, &IMU_MISO, &IMU_MOSI, &IMU_SCK, 2e6, 0 ,0);
 
     accel_write(I2CADD, 0x80);        //Disable I2C
 }
@@ -86,31 +86,31 @@ void accel_read_xyz(int * data){
 }
 
 void accel_calibrate(int * offsets) {
-    int xcal, ycal, zcal, z;
+    // int xcal, ycal, zcal, z;
     
-    accel_write(XOFFL, 0);
-    accel_write(XOFFH, 0);
-    accel_write(YOFFL, 0);
-    accel_write(YOFFH, 0);
-    accel_write(ZOFFL, 0);
-    accel_write(ZOFFH, 0);
+    // accel_write(XOFFL, 0);
+    // accel_write(XOFFH, 0);
+    // accel_write(YOFFL, 0);
+    // accel_write(YOFFH, 0);
+    // accel_write(ZOFFL, 0);
+    // accel_write(ZOFFH, 0);
 
-    accel_read_xyz((int *)accel_xyz);
-    xcal = -2 * accel_xyz[0];
-    xcal = xcal < 0 ? xcal + 2048 : xcal;
-    ycal = -2 * accel_xyz[1];
-    ycal = ycal < 0 ? ycal + 2048 : ycal;
-    zcal = -2 * (accel_xyz[2] - 64);
-    zcal = zcal < 0 ? zcal + 2048 : zcal;
+    // accel_read_xyz((int *)accel_xyz);
+    // xcal = -2 * accel_xyz[0];
+    // xcal = xcal < 0 ? xcal + 2048 : xcal;
+    // ycal = -2 * accel_xyz[1];
+    // ycal = ycal < 0 ? ycal + 2048 : ycal;
+    // zcal = -2 * (accel_xyz[2] - 64);
+    // zcal = zcal < 0 ? zcal + 2048 : zcal;
 
-    accel_write(XOFFL, xcal&0x00FF);
-    accel_write(XOFFH, xcal>>8);
-    accel_write(YOFFL, ycal&0x00FF);
-    accel_write(YOFFH, ycal>>8);
-    accel_write(ZOFFL, zcal&0x00FF);
-    accel_write(ZOFFH, zcal>>8);
+    // accel_write(XOFFL, xcal&0x00FF);
+    // accel_write(XOFFH, xcal>>8);
+    // accel_write(YOFFL, ycal&0x00FF);
+    // accel_write(YOFFH, ycal>>8);
+    // accel_write(ZOFFL, zcal&0x00FF);
+    // accel_write(ZOFFH, zcal>>8);
 
-    offsets[0] = xcal;
-    offsets[1] = ycal;
-    offsets[2] = zcal;
+    // offsets[0] = xcal;
+    // offsets[1] = ycal;
+    // offsets[2] = zcal;
 }
