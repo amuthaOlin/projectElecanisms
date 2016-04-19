@@ -5,6 +5,7 @@
 #include "ui.h"
 #include "usb.h"
 #include "pin.h"
+#include "imu.h"
 #include "spi.h"
 
 #define TOGGLE_LED1         1
@@ -194,9 +195,10 @@ int16_t main(void) {
     pin_digitalOut(&NRF8001_RESET);
     pin_set(&NRF8001_RESET);
 
-    spi_open(&spi1, &FOO_MISO, &FOO_MOSI, &FOO_SCK, 1e6);
+    spi_open(&spi1, &FOO_MISO, &FOO_MOSI, &FOO_SCK, 1e6, 0, 0);
 
     InitUSB();                              // initialize the USB registers and serial interface engine
+
     while (USB_USWSTAT!=CONFIG_STATE) {     // while the peripheral is not configured...
         ServiceUSB();                       // ...service USB requests
     }
