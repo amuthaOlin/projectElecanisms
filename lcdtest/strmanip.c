@@ -5,23 +5,23 @@
 #include "strmanip.h"
 
 
-void stringcpy(char* str1, char* str2){
-    uint8_t i;
-    for (i=1; i < 17; i++){
-        if (*str2){
-            *str1=*str2;
-            str1++;
-            str2++;
-        }
-        else {
-            if (*str1){
-            *str1=' ';
-            str1++;
-            }
-        }
+// void stringcpy(char* str1, char* str2){
+//     uint8_t i;
+//     for (i=1; i < 17; i++){
+//         if (*str2){
+//             *str1=*str2;
+//             str1++;
+//             str2++;
+//         }
+//         else {
+//             if (*str1){
+//             *str1=' ';
+//             str1++;
+//             }
+//         }
 
-    }
-}
+//     }
+// }
 void CamelCase(char* str, uint8_t a, uint8_t b){
     while(*str){
         if(*str >= 'a' && *str <= 'z'){
@@ -60,7 +60,7 @@ void Brnrd(char* str, uint8_t a, uint8_t b){
             newstrptr++;
         }
     }
-    stringcpy(temp2,temp1);    
+    strcpy(temp2,temp1);    
 }
 void Leet(char* str,uint8_t a, uint8_t b){
     while(*str){
@@ -145,7 +145,7 @@ void Pig(char* str,uint8_t a, uint8_t b){
     *newstrptr=' ';
     if (count<17){newstrptr++;count++;}
 
-    stringcpy(strbgn,newstrbgn);
+    strcpy(strbgn,newstrbgn);
 }
 
 void Missing(char* str, uint8_t freq, uint8_t a){
@@ -166,7 +166,7 @@ void Missing(char* str, uint8_t freq, uint8_t a){
         }
     count++;
     }
-    stringcpy(temp2,temp1);    
+    strcpy(temp2,temp1);    
 }
 
 void Reverse(char* str, uint8_t a, uint8_t b){
@@ -187,7 +187,7 @@ void Reverse(char* str, uint8_t a, uint8_t b){
         newstrptr--;
         str++;
     }
-    stringcpy(temp2,temp1);  
+    strcpy(temp2,temp1);  
 }
 
 

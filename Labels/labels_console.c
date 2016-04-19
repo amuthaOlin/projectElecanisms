@@ -25,7 +25,7 @@ char lab_num [46][17]={"734", "613", "709", "163", "666", "472", "920", "375", "
 // Theme 6
 char lab_cons [46][17]={"mqhc","lyvj","dchy","kdfg","zqht","xzyl","chdn","pgmr","mwdf","mfcj","wjccx","wftnb","tgldt","zdqgt","mftgy","jklbf","rsxlk","lrytm","myfkz","sfwdr","hlwsg","jmfdf","xzxyl","lvfqx","lpkbb","jjxxn","ysdff","nfqfj","gyjys","jmvsw","ndgbtv","lgxfqk","kdhmpr","vjgdqp","dghxqd","xsxdjj","zylzvx","jbzbrs","jmkvqk","hyqwvk","gbzfsgs","tlhwwgj","tgpvgsk","nrvgvvb","gxgvhxl","bxphqdm"};
 // Theme 7
-char lab_adven [46][17]={"Nightosphere", "Prismos Pickles", "Hambo", "Shame Prison", "MeeMow", "Treetrunks", "Bananna Guard", "Peppermint Butler", "Treehouse", "BMO", "Angelface", "Glorb", "Mushroom", "Litch", "Simon", "Gunther No", "Neddy", "Fan Fiction", "Fries", "The Farm", "Canyon", "Grass Sword", "Susan Strong", "Science", "LSP", "The Maid", "James Baxter", "Destiny Gang", "Ranicorn", "Tiffany", "Graybles", "Party Pat", "Enchiridion", "Lemongrab", "Gumball Guardian", "Goliad", "Bacon Pancakes", "Dungeon Train", "Lumpy Space", "Super Porp", "Ax Bass", "Mind Games", "Demonic Eye", "Milk Suit", "Sentient Sandwich", "Neptr"};
+char lab_adven [46][17]={"Nightosphere", "Prismos Pickles", "Hambo", "Prison of Shame", "MeeMow", "Treetrunks", "Bananna Guard", "King of Mars", "Treehouse", "BMO", "Angelface", "Glorb", "Mushroom", "Litch", "Simon", "Gunther No", "Neddy", "Fan Fiction", "Fries", "The Farm", "Canyon", "Grass Sword", "Susan Strong", "Science", "LSP", "The Maid", "Jaaames Baxter", "Destiny Gang", "Rainicorn", "Tiffany", "Graybles", "Party Pat", "Enchiridion", "Lemongrab", "Gumball Guardian", "Goliad", "Bacon Pancakes", "Dungeon Train", "Lumpy Space", "Super Porp", "Ax Bass", "Mind Games", "Demonic Eye", "Milk Suit", "Sentient Samwich", "Neptr"};
 // Theme 8
 char lab_wars [46][17]={"Deathstar", "X-Wing", "TIE Fighter", "Alderaan", "Coruscant", "Dagobah", "Endor", "Hoth", "Empire", "Jakku", "Rebel Alliance", "Naboo", "Starkiller", "Tatooine", "The Force", "Kylo Ren", "Rey", "Finn", "Skywalker", "Falcon", "Han Solo", "Yoda", "Princess Leia", "Jabba the Hut", "Wookies", "Ewoks", "Darth Vader", "Daddy Issues", "Darth Maul", "Palpatine", "Star Destroyer", "Landspeeder", "C-3PO", "BB-8", "R2-D2", "Lightsaber", "The Light Side", "The Dark Side", "Clone", "Chewbacca", "First Order", "It's a Trap!", "Hosian Prime", "POE", "Resistance", "AT-AT"};
 // Theme 9
@@ -47,34 +47,85 @@ void label_setup(_LEVEL *level){
 	switch(level->lab_theme){
 		case 0:
 			while(i<7){
-			stringcpy(level->lab_str[i],lab_general[level->lab_num[i]]);
-		// (*mods[level->mod])(stringp,level->arg_freq, level->arg_shift);
-		 	// stringcpy(level->lab_str[i],stringp);
+			strcpy(stringp,lab_general[level->lab_num[i]]);
+		    (*mods[level->mod])(stringp,level->arg_freq, level->arg_shift);
+		 	strcpy(level->lab_str[i],stringp);
 			i++;
 		}
 			break;
 		case 1:
+			while(i<7){
+				strcpy(stringp,lab_long[level->lab_num[i]]);
+		    	(*mods[level->mod])(stringp,level->arg_freq, level->arg_shift);
+		 		strcpy(level->lab_str[i],stringp);
+				i++;
+			}	
 			break;
 		case 2:
+			while(i<7){
+				strcpy(stringp,lab_homo[level->lab_num[i]]);
+		    	(*mods[level->mod])(stringp,level->arg_freq, level->arg_shift);
+		 		strcpy(level->lab_str[i],stringp);
+				i++;
+			}	
 			break;
 		case 3:
+			while(i<7){
+				strcpy(stringp,lab_sym[level->lab_num[i]]);
+		    	(*mods[level->mod])(stringp,level->arg_freq, level->arg_shift);
+		 		strcpy(level->lab_str[i],stringp);
+				i++;
+			}	
 			break;
 		case 4:
+			while(i<7){
+				strcpy(stringp,lab_emo[level->lab_num[i]]);
+		    	(*mods[level->mod])(stringp,level->arg_freq, level->arg_shift);
+		 		strcpy(level->lab_str[i],stringp);
+				i++;
+			}	
 			break;
 		case 5:
+			while(i<7){
+				strcpy(stringp,lab_num[level->lab_num[i]]);
+		    	(*mods[level->mod])(stringp,level->arg_freq, level->arg_shift);
+		 		strcpy(level->lab_str[i],stringp);
+				i++;
+			}	
 			break;
 		case 6:
+			while(i<7){
+				strcpy(stringp,lab_cons[level->lab_num[i]]);
+		    	(*mods[level->mod])(stringp,level->arg_freq, level->arg_shift);
+		 		strcpy(level->lab_str[i],stringp);
+				i++;
+			}	
 			break;
 		case 7:
+			while(i<7){
+				strcpy(stringp,lab_adven[level->lab_num[i]]);
+		    	(*mods[level->mod])(stringp,level->arg_freq, level->arg_shift);
+		 		strcpy(level->lab_str[i],stringp);
+				i++;
+			}	
 			break;
 		case 8:
+			while(i<7){
+				strcpy(stringp,lab_wars[level->lab_num[i]]);
+		    	(*mods[level->mod])(stringp,level->arg_freq, level->arg_shift);
+		 		strcpy(level->lab_str[i],stringp);
+				i++;
+			}	
 			break;
 		case 9:
+			while(i<7){
+				strcpy(stringp,lab_pir[level->lab_num[i]]);
+		    	(*mods[level->mod])(stringp,level->arg_freq, level->arg_shift);
+		 		strcpy(level->lab_str[i],stringp);
+				i++;
+			}	
 			break;
-		case 10:
-			break;
-
-	}	
+		}	
 }
 
 
@@ -95,8 +146,8 @@ void recieve_level(_LEVEL *level, uint8_t console){
 	level->lab_num[2]=33;
 	level->lab_num[3]=12;
 	level->lab_num[4]=9;
-	level->lab_num[5]=28;
-	level->lab_theme=0;
+	level->lab_num[5]=44;
+	level->lab_theme=7;
 	level->mod=0;
 	level->arg_freq=0;
 	level->arg_shift=0;
