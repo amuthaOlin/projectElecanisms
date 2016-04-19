@@ -1,6 +1,5 @@
 #include <p24FJ128GB206.h>
 #include <stdint.h>
-#include "config.h"
 #include "common.h"
 #include "ui.h"
 #include "pin.h"
@@ -34,22 +33,50 @@ char lab_pir [46][17]={"Treasure", "Galleon", "Black Beard", "Carribean", "Tortu
 
 int theme_len[9]={100,46,46,46,46,46,46,46,46};
 
-char* level_list[10] ={*lab_general,*lab_long,*lab_homo,*lab_sym,*lab_emo,*lab_num,*lab_cons,*lab_adven,*lab_wars,*lab_pir};
+// void* level_list[10] = {lab_general,lab_long,lab_homo,lab_sym,lab_emo,lab_num,lab_cons,lab_adven,lab_wars,lab_pir};
 
 void (*mods[9]) (char* str, uint8_t freq, uint8_t shift) ={Nada,CamelCase,Brnrd,Missing,Leet,Pig,Reverse,Scramble,Caesar};
 
 
 void label_setup(_LEVEL *level){
-	char string[17];
-	char* stringp = string;
-	uint8_t i=0;
-	while(i<7){
-		stringp=&(level_list[level->lab_theme])[level->lab_num[i]];
-		(*mods[level->mod])(stringp,level->arg_freq, level->arg_shift);
-		stringcpy(level->lab_str[i],stringp);
-		i++;
-	}
+
+	stringcpy(level->lab_str[0],lab_general[3]);
+	// char string[17]= "                ";
+	// char* stringp = string;
+	// uint8_t i=0;
+	// switch(level->lab_theme){
+	// 	case 0:
+	// 		while(i<7){
+	// 		stringcpy(level->lab_str[0],lab_general[3]);
+	// 	// (*mods[level->mod])(stringp,level->arg_freq, level->arg_shift);
+	// 	 	// stringcpy(level->lab_str[i],stringp);
+	// 		i++;
+	// 	}
+	// 		break;
+	// 	case 1:
+	// 		break;
+	// 	case 2:
+	// 		break;
+	// 	case 3:
+	// 		break;
+	// 	case 4:
+	// 		break;
+	// 	case 5:
+	// 		break;
+	// 	case 6:
+	// 		break;
+	// 	case 7:
+	// 		break;
+	// 	case 8:
+	// 		break;
+	// 	case 9:
+	// 		break;
+	// 	case 10:
+	// 		break;
+
+	// }	
 }
+
 
 void label_print(_LEVEL *level){
 	// Do printing things

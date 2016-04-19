@@ -7,9 +7,11 @@
 #include "i2c.h"
 #include "timer.h"
 #include "lcd.h"
-#include "../lcdtest/strmanip.h"
+#include "strmanip.h"
 #include "labels_console.h"
 
+// I2C Reg (MSB) P7 P6 P5 P4 P3 P2 P1 P0
+// Driver pin    D7 D6 D5 D4 ?  E  RW RS
 
 int16_t main(void) {
     init_clock();
@@ -20,21 +22,29 @@ int16_t main(void) {
     timer_initDelayMicro(&timer5);
 
     init_lcd();
+    lcd_clear(&lcd1);
+    lcd_clear(&lcd2);
+    lcd_clear(&lcd3);
 
 
+    _LEVEL level;
+
+    recieve_level(&level,0);
+    label_setup(&level);
     char string1[17]="Go";
     char* strptr1=string1;
-    char string2[17]="engage starship";
+    char string2[17]="Space";
     char* strptr2=string2;
     char string3[17]="Team";
     char* strptr3=string3;
     lcd_print1(&lcd1,strptr2);
-    Reverse(strptr2,0,0);
-    lcd_print1(&lcd3,strptr2);
+    Brnrd(strptr2,0,0);
+    lcd_print1(&lcd3,level.lab_str[0]);
+    //lcd_print1(&lcd2,strptr2);
     // lcd_print2(&lcd1, strptr1,strptr2);
     // strcpy(strptr1,strptr2);
     // lcd_print2(&lcd3, strptr1, strptr2);
-    lcd_stop(&lcd3);
+    lcd_stop(&lcd1);
 
     while(1) {
         //
