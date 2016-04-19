@@ -6,8 +6,8 @@
 
 
 void stringcpy(char* str1, char* str2){
-    uint8_t i=1;
-    for (i < 17; i++;){
+    uint8_t i;
+    for (i=1; i < 17; i++){
         if (*str2){
             *str1=*str2;
             str1++;
@@ -187,7 +187,7 @@ void Reverse(char* str, uint8_t a, uint8_t b){
         newstrptr--;
         str++;
     }
-    strcpy(temp2,temp1);  
+    stringcpy(temp2,temp1);  
 }
 
 

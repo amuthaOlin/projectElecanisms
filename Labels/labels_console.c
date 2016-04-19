@@ -40,41 +40,41 @@ void (*mods[9]) (char* str, uint8_t freq, uint8_t shift) ={Nada,CamelCase,Brnrd,
 
 void label_setup(_LEVEL *level){
 
-	stringcpy(level->lab_str[0],lab_general[3]);
-	// char string[17]= "                ";
-	// char* stringp = string;
-	// uint8_t i=0;
-	// switch(level->lab_theme){
-	// 	case 0:
-	// 		while(i<7){
-	// 		stringcpy(level->lab_str[0],lab_general[3]);
-	// 	// (*mods[level->mod])(stringp,level->arg_freq, level->arg_shift);
-	// 	 	// stringcpy(level->lab_str[i],stringp);
-	// 		i++;
-	// 	}
-	// 		break;
-	// 	case 1:
-	// 		break;
-	// 	case 2:
-	// 		break;
-	// 	case 3:
-	// 		break;
-	// 	case 4:
-	// 		break;
-	// 	case 5:
-	// 		break;
-	// 	case 6:
-	// 		break;
-	// 	case 7:
-	// 		break;
-	// 	case 8:
-	// 		break;
-	// 	case 9:
-	// 		break;
-	// 	case 10:
-	// 		break;
+	// stringcpy(level->lab_str[0],lab_general[3]);
+	char string[17]= "                ";
+	char* stringp = string;
+	uint8_t i=0;
+	switch(level->lab_theme){
+		case 0:
+			while(i<7){
+			stringcpy(level->lab_str[i],lab_general[level->lab_num[i]]);
+		// (*mods[level->mod])(stringp,level->arg_freq, level->arg_shift);
+		 	// stringcpy(level->lab_str[i],stringp);
+			i++;
+		}
+			break;
+		case 1:
+			break;
+		case 2:
+			break;
+		case 3:
+			break;
+		case 4:
+			break;
+		case 5:
+			break;
+		case 6:
+			break;
+		case 7:
+			break;
+		case 8:
+			break;
+		case 9:
+			break;
+		case 10:
+			break;
 
-	// }	
+	}	
 }
 
 
