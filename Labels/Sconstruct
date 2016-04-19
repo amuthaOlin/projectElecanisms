@@ -7,7 +7,7 @@ env = Environment(PIC = '24FJ128GB206',
                   PROGSUFFIX = '.elf', 
                   CFLAGS = '-g -omf=elf -x c -mcpu=$PIC', 
                   LINKFLAGS = '-omf=elf -mcpu=$PIC -Wl,--script="app_p24FJ128GB206.gld"', 
-                  CPPPATH = '../lib:../lcdtest')
+                  CPPPATH = '../lib')
 #Path for OSX
 env.PrependENVPath('PATH', '/Applications/microchip/xc16/v1.25/bin')
 #Path for Linux
@@ -22,8 +22,8 @@ list = Builder(action = 'xc16-objdump -S -D $SOURCE > $TARGET',
 env.Append(BUILDERS = {'List' : list})
 
 env.Program('labeltest', ['labeltest.c',
-                        '../lcdtest/strmanip.c',
-                        'labels_console.c',
+                        '../lib/strm.c',
+                        '../lib/labc.c',
                         '../lib/ui.c', 
                         '../lib/lcd.c', 
                         '../lib/pin.c', 

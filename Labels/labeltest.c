@@ -6,9 +6,9 @@
 #include "pin.h"
 #include "i2c.h"
 #include "timer.h"
-#include "lcd.h"
-#include "strmanip.h"
-#include "labels_console.h"
+#include "lcd.h" 
+#include "strm.h"
+#include "labc.h"
 
 // I2C Reg (MSB) P7 P6 P5 P4 P3 P2 P1 P0
 // Driver pin    D7 D6 D5 D4 ?  E  RW RS
@@ -27,10 +27,10 @@ int16_t main(void) {
     lcd_clear(&lcd3);
 
 
-    _LEVEL level;
+    _LABC level;
 
-    recieve_level(&level,0);
-    label_setup(&level);
+    labc_recieve(&level,0);
+    labc_setup(&level);
     char string1[17]="Go";
     char* strptr1=string1;
     char string2[17]="Space";
@@ -39,9 +39,7 @@ int16_t main(void) {
     char* strptr3=string3;
     // lcd_print1(&lcd1,strptr2);
     // Brnrd(strptr2,0,0);
-    lcd_print2(&lcd1,level.lab_str[0],level.lab_str[1]);
-    lcd_print2(&lcd2,level.lab_str[2],level.lab_str[3]);
-    lcd_print2(&lcd3,level.lab_str[4],level.lab_str[5]);
+    labc_print(&level);
     //lcd_print1(&lcd2,strptr2);
     // lcd_print2(&lcd1, strptr1,strptr2);
     // strcpy(strptr1,strptr2);

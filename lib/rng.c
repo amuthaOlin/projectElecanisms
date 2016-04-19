@@ -41,16 +41,16 @@ uint16_t rng_gen() {
     return rng_val;
 }
 
-// from min (inclusive) to max (exclusive)
+// from min (inclusive) to max (inclusive)
 uint16_t rng_int(uint16_t min, uint16_t max) {
-    return (rng_gen() % (max - min)) + min;
+    return (rng_gen() % (max + 1 - min)) + min;
 }
 
 // perform a weighted coin flip
 // "weight" == 0 => 100% chance of 0
 // "weight" == 100 => 100% chance of 1
 uint16_t rng_coin_flip(uint16_t weight) {
-    return rng_int(0, 100) < weight;
+    return rng_int(0, 100) <= weight;
 }
 
 // returns either "replace" or "num" -- "weight" is a percent change (0-100) of returning "replace"
