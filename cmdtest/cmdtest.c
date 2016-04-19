@@ -11,6 +11,8 @@
 #include "cmd.h"
 #include "int.h"
 #include "timer.h"
+#include "lev.h"
+#include "strm.h"
 
 int16_t main(void) {
     init_clock();
@@ -24,6 +26,11 @@ int16_t main(void) {
     init_leds();
     init_cd();
     init_cmd();
+
+    _LEV level;
+    lev_setup(&level,2);
+    lev_genCmd(&level);
+
 
     led_on(&led3);
 

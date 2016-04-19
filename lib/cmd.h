@@ -28,6 +28,8 @@
 
 #include <stdint.h>
 #include "cd.h"
+#include "lev.h"
+#include "strm.h"
 
 void init_cmd(void);
 
@@ -43,6 +45,8 @@ typedef struct _CMD {
 
     // dynamic
     float cd_time;
+    char name[17];
+    char command[33];
     _CD *cd;
 } _CMD;
 
@@ -50,7 +54,7 @@ extern _CMD cmds[];
 extern char cmd_strs[][33];
 
 void cmd_init(uint16_t actuator, uint16_t action, uint8_t console);
-void cmd_str(uint16_t cmdidx, char* str);
+void cmd_str(uint16_t cmdidx,_LEV *level);
 WORD32 cmd_packet(uint16_t cmdidx);
 void cmd_print(uint16_t index);
 

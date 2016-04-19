@@ -9,6 +9,7 @@
 #include "strm.h"
 #include "lev.h"
 #include "rng.h"
+#include "cmd.h"
 
 
 // Theme 0
@@ -30,17 +31,17 @@ char lab_adven [47][17]={" ","Nightosphere", "Prismos Pickles", "Hambo", "Prison
 // Theme 8
 char lab_wars [47][17]={" ","Deathstar", "X-Wing", "TIE Fighter", "Alderaan", "Coruscant", "Dagobah", "Endor", "Hoth", "Empire", "Jakku", "Rebel Alliance", "Naboo", "Starkiller", "Tatooine", "The Force", "Kylo Ren", "Rey", "Finn", "Skywalker", "Falcon", "Han Solo", "Yoda", "Princess Leia", "Jabba the Hut", "Wookies", "Ewoks", "Darth Vader", "Daddy Issues", "Darth Maul", "Palpatine", "Star Destroyer", "Landspeeder", "C-3PO", "BB-8", "R2-D2", "Lightsaber", "The Light Side", "The Dark Side", "Clone", "Chewbacca", "First Order", "It's a Trap!", "Hosian Prime", "POE", "Resistance", "AT-AT"};
 // Theme 9
-char lab_pir [47][17]={" ","Treasure", "Galleon", "Black Beard", "Carribean", "Tortuga", "Jack Sparrow", "Black Pearl", "Davvy Jones", "Islands", "Spiced Rum", "Rum Gone", "Starboard", "Port", "Mast", "Rigging", "Plank", "Keel Haul", "Anchor", "Bermuda", "Avast", "Shiver Timbers", "Monkey", "Poop Deck", "Cockswain", "Landlubber", "Chips Ahoy", "Batten Hatches", "Booty", "Crows Nest", "Jolly Roger", "Man-O-War", "Scallyway", "Calico Jack", "Captian Kidd", "Barbary Coast", "Cat O Nine", "Cutlass", "Cannon", "Powder Chest", "Kraken", "Parrot", "Wooden Leg", "Captian Hook", "Eye Patch", "Dread Pirate", "Hydra"};
+char lab_pir [47][17]={" ","Treasure", "Galleon", "Black Beard", "Carribean", "Tortuga", "Jack Sparrow", "Black Pearl", "Davvy Jones", "Islands", "Spiced Rum", "Rum Gone", "Starboard", "Port", "Mast", "Rigging", "Plank", "Keel Haul", "Anchor", "Bermuda", "Avast", "Shiver Timbers", "Monkey", "Poop Deck", "Cockswain", "Landlubber", "Chips Ahoy", "Batten Hatches", "Booty", "Crows Nest", "Jolly Roger", "Man-O-War", "Scallyway", "Calico Jack", "Captain Kidd", "Barbary Coast", "Cat O Nine", "Cutlass", "Cannon", "Powder Chest", "Kraken", "Parrot", "Wooden Leg", "Captian Hook", "Eye Patch", "Dread Pirate", "Hydra"};
 
 int theme_len[9]={101,47,47,47,47,47,47,47,47};
-int[3] lab_len={2,8,7};
-int[2] easy_lab={0,1};
-int[4] med_lab={0,1,2,4,5,7,8,9};
-int[6] hard_lab={0,1,2,3,4,5,6};
-char[9][33] messages {" ","Impending Didactic Aberation","They're over there, by their ship","Tr@n$|at0r M@lfun(#ion","Lol good luck (^_^)/* ttyl, bai","Can I Ha Your Numba","Thngs r brkng dwn","Come on grab your friends!","May the force be with you","ARRG, spaceship now be a seaship"};
+int lab_len[3]={2,8,7};
+int easy_lab[2]={0,1};
+int med_lab[8]={0,1,2,4,5,7,8,9};
+int hard_lab[7]={0,1,2,3,4,5,6};
+char messages[10][33]={" ","Impending Didactic Aberation","They're over there, by their ship","Tr@n$|at0r M@lfun(#ion","Lol good luck (^_^)/* ttyl, bai","Can I Ha Your Numba","Thngs r brkng dwn","Come on grab your friends!","May the force be with you","ARRG, spaceship now be a seaship"};
+char instructions[3][33]={"Game Starting","Shake ball to avoid asteroids","Press flip to escape wormwhole"};
 
-
-void level_init(_LEV *level){
+void lev_init(_LEV *level){
 	uint8_t i=0;
 	while(i<8){
 		level->asteroids[i]=0;
@@ -51,7 +52,6 @@ void level_init(_LEV *level){
 		level->label1[i]=0;
 		level->label2[i]=0;
 		level->label3[i]=0;
-		level->actuators[i]=0;
 		i++;
 	}
     level->lab_theme=0;
@@ -60,128 +60,123 @@ void level_init(_LEV *level){
     level->arg_shift=0;
     level->level_time=0;
     level->cmd_time=0;
-    level->message={"                                "};
+    level->actuators=6; // We almost always use all of them
 }
 
-void pick_labels(_LEV *level, uint8_t theme, uint8_t num){
+void __lev_pickLabels(_LEV *level, uint8_t theme){
 	// console 1
 	uint8_t i=0;
-	while (i<num){
-		level->lables1[i]=(uint8_t)rng_int(1,theme_len[theme]); // populate random labels
+	while (i<level->actuators){
+		level->label1[i]=(uint8_t)rng_int(1,theme_len[theme]); // populate random labels
 		i++;
 	}
 	// console 2
 	i=0;
-	while (i<num){
-		level->lables2[i]=(uint8_t)rng_int(1,theme_len[theme]); // populate random labels
+	while (i<level->actuators){
+		level->label2[i]=(uint8_t)rng_int(1,theme_len[theme]); // populate random labels
 		i++;
 	}
 	// console 3
 	i=0;
-	while (i<num){
-		level->lables3[i]=(uint8_t)rng_int(1,theme_len[theme]); // populate random labels
+	while (i<level->actuators){
+		level->label3[i]=(uint8_t)rng_int(1,theme_len[theme]); // populate random labels
 		i++;
 	}
 }
 
-void level_setup(_LEV *level, uint8_t lev_num){
+void lev_setup(_LEV *level, uint8_t lev_num){
 	if (lev_num == 1){ // First level has no complications
 		level->lab_theme=0;
 		level->level_time=325;
 		level->cmd_time=20;
-		level->actuators=[1,1,1,1,0,0]; // Only use 4 buttons
-		pick_labels(level,0,4);
+		level->actuators=4; // Only use 4 buttons
+		strcpy(level->message,instructions[0]);
+		__lev_pickLabels(level,0);
 	}
 	else if (lev_num ==2){ // Second Level
 		level->lab_theme=0;
 		level->level_time=300;
 		level->cmd_time=19;
-		level->actuators=[1,1,1,1,1,1]; // Use all buttons
-		pick_labels(level,0,6);
+		strcpy(level->message,messages[0]);
+		__lev_pickLabels(level,0);
 	}
 	else if (lev_num ==3){ // Third Level
 		level->lab_theme=0;
 		level->level_time=275;
 		level->cmd_time=18;
-		level->actuators={1,1,1,1,1,1}; // Use all buttons
 		level->asteroids[0]=(uint8_t)rng_int(4,10); // Seed two asteroids
 		level->asteroids[1]=(uint8_t)rng_int(12,20);
-		level->message="Shake ball to avoid asteroids"
-		pick_labels(level,0,6);
+		strcpy(level->message,instructions[0]);
+		__lev_pickLabels(level,0);
 	}
 
 	else if (lev_num ==4 ){ // Level 4 (tier 2)
 		level->lab_theme=0;
 		level->level_time=250;
 		level->cmd_time=17;
-		level->actuators=[1,1,1,1,1,1]; // Use all buttons
 		level->asteroids[0]=(uint8_t)rng_int(10,35); // Seed an asteroid
 		level->wormholes[0]=(uint8_t)rng_int(0,5); // Seed two wormholes
 		level->wormholes[1]=(uint8_t)rng_int(20,50);
-		level->message="Press flip to escape wormwhole"
-		pick_labels(level,theme,6);
+		strcpy(level->message,instructions[0]);
+		__lev_pickLabels(level,0);
 	}
 
 	else if (lev_num <7){ // Tier 2 levels
-		uint8_t theme=zero_prb(rng_int(1,lab_len[0]),70,0) // 70% chance of default
+		uint8_t theme=(uint8_t)rng_coin_replace(rng_int(1,lab_len[0]),70,0); // 70% chance of default
 		level->lab_theme=easy_lab[theme];
 		level->level_time=250;
 		level->cmd_time=17;
-		level->actuators=[1,1,1,1,1,1]; // Use all buttons
 		level->asteroids[0]=(uint8_t)rng_int(0,15); // Seed two asteroids
 		level->asteroids[1]=(uint8_t)rng_int(30,45);
 		level->wormholes[0]=(uint8_t)rng_int(15,30);// Seed two wormholes
 		level->wormholes[1]=(uint8_t)rng_int(30,45);
-		level->message=messages[theme];
-		pick_labels(level,theme,6);
-		level->mod=(uint8_t)rng_coin_replace(rng_int(0,3),50,0};
+		strcpy(level->message,messages[theme]);
+		__lev_pickLabels(level,theme);
+		level->mod=(uint8_t)rng_coin_replace(rng_int(0,3),50,0);
 		level->arg_freq=(uint8_t)rng_int(5,10);
 
 	}
 
 	else if (lev_num <10){ // Tier 3 levels
-		uint8_t theme=zero_prb(rng_int(1,lab_len[1]),50,0)// 50% chance of default
+		uint8_t theme=(uint8_t)rng_coin_replace(rng_int(1,lab_len[1]),50,0);// 50% chance of default
 		level->lab_theme=easy_lab[theme];
 		level->level_time=225;
 		level->cmd_time=16;
-		level->actuators=[1,1,1,1,1,1]; // Use all buttons
 		level->asteroids[0]=(uint8_t)rng_int(0,10); // Seed three asteroids
 		level->asteroids[1]=(uint8_t)rng_int(20,30);
 		level->asteroids[2]=(uint8_t)rng_int(30,50);
 		level->wormholes[0]=(uint8_t)rng_int(15,30);// Seed two wormholes
 		level->wormholes[1]=(uint8_t)rng_int(30,45);
-		level->message=messages[theme];
-		pick_labels(level,theme,6);
-		level->mod=(uint8_t)rng_coin_replace(rng_int(0,8),50,0};
+		strcpy(level->message,messages[theme]);
+		__lev_pickLabels(level,theme);
+		level->mod=(uint8_t)rng_coin_replace(rng_int(0,8),50,0);
 		level->arg_shift=1; // Make them easy
 		level->arg_freq=(uint8_t)rng_int(5,8);
 	}
 
 	else if (lev_num <14){ // Tier 4 levels
-		uint8_t theme=zero_prb(rng_int(0,lab_len[1]),40,0)
+		uint8_t theme=(uint8_t)rng_coin_replace(rng_int(0,lab_len[1]),40,0);
 		level->lab_theme=easy_lab[theme];
 		level->level_time=200;
 		level->cmd_time=15;
-		level->actuators=[1,1,1,1,1,1]; // Use all buttons
 		level->asteroids[0]=(uint8_t)rng_int(0,10); // Seed three asteroids
 		level->asteroids[1]=(uint8_t)rng_int(20,30);
 		level->asteroids[2]=(uint8_t)rng_int(30,50);
 		level->wormholes[0]=(uint8_t)rng_int(0,20);// Seed three wormholes
 		level->wormholes[1]=(uint8_t)rng_int(20,30);
 		level->wormholes[2]=(uint8_t)rng_int(30,45);
-		level->message=messages[theme];
-		pick_labels(level,theme,6);
-		level->mod=(uint8_t)rng_coin_replace(rng_int(0,8),30,0};
+		strcpy(level->message,messages[theme]);
+		__lev_pickLabels(level,theme);
+		level->mod=(uint8_t)rng_coin_replace(rng_int(0,8),30,0);
 		level->arg_shift=1; // Make them med
 		level->arg_freq=(uint8_t)rng_int(4,6);
 	}
 
 	else if (lev_num <16){ // Tier 5 levels
-		uint8_t theme=zero_prb(rng_int(0,lab_len[2]),30,0)
+		uint8_t theme=(uint8_t)rng_coin_replace(rng_int(0,lab_len[2]),30,0);
 		level->lab_theme=easy_lab[theme];
 		level->level_time=175;
 		level->cmd_time=14;
-		level->actuators=[1,1,1,1,1,1]; // Use all buttons
 		level->asteroids[0]=(uint8_t)rng_int(0,10); // Seed four asteroids
 		level->asteroids[1]=(uint8_t)rng_int(20,30);
 		level->asteroids[2]=(uint8_t)rng_int(30,40);
@@ -190,16 +185,16 @@ void level_setup(_LEV *level, uint8_t lev_num){
 		level->wormholes[1]=(uint8_t)rng_int(20,30);
 		level->wormholes[2]=(uint8_t)rng_int(30,40);
 		level->wormholes[3]=(uint8_t)rng_int(40,50);
-		level->message=messages[theme];
-		pick_labels(level,theme,6);
-		level->mod=(uint8_t)rng_coin_replace(rng_int(0,8),30,0};
+		strcpy(level->message,messages[theme]);
+		__lev_pickLabels(level,theme);
+		level->mod=(uint8_t)rng_coin_replace(rng_int(0,8),30,0);
 		level->arg_shift=3; // Make them hard
 		level->arg_freq=rng_int(3,6);
 	}
 }
 
 
-void send_level(_LEV *level, uint8_t console){
+void lev_send(_LEV *level, uint8_t console){
 	//Send to appropriate Console:
 	// - label#
 	// - lab_theme
@@ -218,6 +213,39 @@ void send_level(_LEV *level, uint8_t console){
 
 	// For testing:
 
+}
+
+void lev_genCmd(_LEV *level){
+	uint16_t i, j, k;
+	uint16_t cmd_num;
+
+    for (k = 0; k < 3; k++) { // k for konsole
+        for (i = 0; i < CONS_NUMACTS[k]; i++) { // for each actuator
+            if (!CONS_HASREST[k][i]){
+                cmd_num=cmd_get(k, i, 0);
+                strcpy(cmds[cmd_num].name,lev_getName(level,k,i));
+                cmd_str(cmd_num,level);
+
+            }
+            for (j = 1; j < CONS_STATES[k][i]; j++) {
+                cmd_num=cmd_get(k, i, j);
+                strcpy(cmds[cmd_num].name,lev_getName(level,k,i));
+                cmd_str(cmd_num,level);
+            }
+        }
+    }
+}
+
+char* lev_getName(_LEV *level, uint8_t console, uint8_t actuator){
+	if (console==0){
+		return &(level->label1[actuator]);
+	}
+	else if (console==1){
+		return &(level->label2[actuator]);		
+	}
+	else if (console==2){
+		return &(level->label3[actuator]);		
+	}
 }
 
 

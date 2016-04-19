@@ -22,7 +22,10 @@ list = Builder(action = 'xc16-objdump -S -D $SOURCE > $TARGET',
 env.Append(BUILDERS = {'List' : list})
 
 env.Program('cmdtest', ['cmdtest.c',
-                        '../lib/ui.c', 
+                        '../lib/strm.c', 
+                        '../lib/lev.c',
+                        '../lib/rng.c',
+                        '../lib/ui.c',
                         '../lib/pin.c', 
                         '../lib/uart.c', 
                         '../lib/timer.c', 

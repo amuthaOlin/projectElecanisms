@@ -29,11 +29,14 @@
 #include "cmd.h"
 #include "spacecomms.h"
 #include "ui.h"
+#include "strm.h"
+#include "lev.h"
 
 // CMD_COUNT is cumsum of members of state arrays minus cumsum of members of hasrest arrays
 #define CMD_COUNT 100 // 97 (100 to be safe)
 _CMD cmds[CMD_COUNT];
 char cmd_strs[CMD_COUNT][33];
+char numbers[9][6]={"zero","one","two","three","four","five","six","seven","eight"};
 
 uint16_t __cmd_log2(uint16_t n) {
     return n<2? 1:ceil(log((double)n)/log(2.));
@@ -80,8 +83,6 @@ void cmd_init(uint16_t actuator, uint16_t action, uint8_t console) {
     cmd_tmp.mask = mask;
     cmds[cmds_ptr] = cmd_tmp;
 
-    cmd_str(cmds_ptr, cmd_strs[cmds_ptr]);
-
     cmds_ptr++;
 }
 
@@ -106,20 +107,20 @@ void cmd_print(uint16_t index) {
     printf("=======\r\n");
     printf("Command for console %d\r\n", cmd->console+1);
     printf("-------\r\n");
-    printf("%s\r\n", cmd_strs[cmd->index]);
+    printf("%s\r\n", cmd->command);
     printf("-------\r\n");
     printf("Actuator %d, action %d\r\n", cmd->actuator, cmd->action);
     printf("Desired bits: %08lx\r\n", (unsigned long)cmd->desired.ul);
     printf("Mask bits   : %08lx\r\n", (unsigned long)cmd->mask.ul);
 }
 
-void cmd_str(uint16_t cmdidx, char* str) { // assume str is 16 char long
+void cmd_str(uint16_t cmdidx, _LEV *level) { // assume str is 16 char long
     _CMD *cmd = &cmds[cmdidx];
 
     if (CONS_HASREST[cmd->console][cmd->actuator] && CONS_STATES[cmd->console][cmd->actuator] == 2) {
-        sprintf(str, "%d:Push button %d!", cmd->console+1, cmd->actuator);
+        strm_genPush(cmd->command,lev_getName(level,cmd->console,cmd->actuator));
     } else {
-        sprintf(str, "%d:Set act %d to %d!", cmd->console+1, cmd->actuator, cmd->action);
+        strm_genSet(cmd->command,lev_getName(level,cmd->console,cmd->actuator),numbers[cmd->action]);
     }
 }
 

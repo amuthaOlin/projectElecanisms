@@ -181,3 +181,61 @@ void strm_Nada(char* str,uint8_t a, uint8_t b){
     //nothing
 }
 
+void strm_genPush(char* command, char* name){
+    char newstr[33] = "                                ";
+    char push[13]="Push button ";
+    char* pushptr =push;
+    char* newstrptr= newstr;
+    char* temp1 = newstrptr;
+    char* temp2 = command;
+    while(*pushptr){
+        *newstrptr=*pushptr;
+        newstrptr++;
+        pushptr++;
+    }
+    while(*name){
+        *newstrptr=*name;
+        newstrptr++;
+        name++;
+    }
+    *newstrptr='!';
+    newstrptr++;
+    strcpy(temp2,temp1);
+}
+
+void strm_genSet(char* command, char* name, char* val){
+    char newstr[33] = "                                ";
+    char set[5]="Set ";
+    char to[4]="to ";
+    char* setptr =set;
+    char* toptr =to;
+    char* newstrptr= newstr;
+    char* temp1 = newstrptr;
+    char* temp2 = command;
+    while(*setptr){
+        *newstrptr=*setptr;
+        newstrptr++;
+        setptr++;
+    }
+    while(*name){
+        *newstrptr=*name;
+        newstrptr++;
+        name++;
+    }
+    while(*toptr){
+        *newstrptr=*toptr;
+        newstrptr++;
+        toptr++;
+    }
+    while(*val){
+        *newstrptr=*name;
+        newstrptr++;
+        name++;
+    }
+    *newstrptr='!';
+    newstrptr++;
+    strcpy(temp2,temp1);
+}
+    
+
+
