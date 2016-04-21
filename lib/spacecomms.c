@@ -13,7 +13,7 @@ uint8_t CONS_STATES[][15] = {
         8, // wordwheel_outside:4
         2, // asteroid:4
         2, // wormhole1:1
-        2 // wormhole2:1
+        2  // wormhole2:1
     }, // not all states are "commandable" but every state must be captured here
     {
         2, // red_button:1
@@ -27,7 +27,7 @@ uint8_t CONS_STATES[][15] = {
         2, // hotsystem2:1
         2, // hotsystem3:1
         2, // hotsystem4:1
-        8,  // dial:3
+        8, // dial:3
         2, // asteroid:1
         2, // wormhole1:1
         2, // wormhole2:1

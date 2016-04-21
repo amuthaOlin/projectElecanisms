@@ -21,12 +21,12 @@ typedef struct CONS1_STATE {
   unsigned toggle2:1;           // 2
   unsigned green_button:1;      // 3
   unsigned joystick:4;          // 4
-  unsigned hotsystem:1;         // 7
-  unsigned wordwheel_inside:4;  // 8
-  unsigned wordwheel_outside:4; // 9
-  unsigned asteroid:1;          // 10
-  unsigned wormhole1:1;         // 5
-  unsigned wormhole2:1;         // 6
+  unsigned hotsystem:1;         // 5
+  unsigned wordwheel_inside:4;  // 6
+  unsigned wordwheel_outside:4; // 7
+  unsigned asteroid:1;          // 8
+  unsigned wormhole1:1;         // 9
+  unsigned wormhole2:1;         // 10
   unsigned long :13;
 } CONS1_STATE;
 
@@ -36,16 +36,16 @@ typedef struct CONS2_STATE {
   unsigned green_button2:1;     // 2
   unsigned green_button3:1;     // 3
   unsigned green_button4:1;     // 4
-  unsigned tri_state:2;         // 7
-  unsigned slider:2;            // 8
-  unsigned hotsystem1:1;        // 9
-  unsigned hotsystem2:1;        // 10
-  unsigned hotsystem3:1;        // 11
-  unsigned hotsystem4:1;        // 12
-  unsigned dial:3;              // 14
-  unsigned asteroid:1;          // 13
-  unsigned wormhole1:1;         // 5
-  unsigned wormhole2:1;         // 6
+  unsigned tri_state:2;         // 5
+  unsigned slider:2;            // 6
+  unsigned hotsystem1:1;        // 7
+  unsigned hotsystem2:1;        // 8
+  unsigned hotsystem3:1;        // 9
+  unsigned hotsystem4:1;        // 10
+  unsigned dial:3;              // 11
+  unsigned asteroid:1;          // 12
+  unsigned wormhole1:1;         // 13
+  unsigned wormhole2:1;         // 14
   unsigned long :13;
 } CONS2_STATE;
 
@@ -56,13 +56,13 @@ typedef struct CONS3_STATE {
   unsigned triangle3:1;         // 3
   unsigned toggle1:1;           // 4
   unsigned toggle2:1;           // 5
-  unsigned clutch:2;            // 8
-  unsigned arming:2;            // 10
-  unsigned arming_button:1;     // 11
-  unsigned dial:3;              // 12
-  unsigned asteroid:1;          // 9
-  unsigned wormhole1:1;         // 6
-  unsigned wormhole2:1;         // 7
+  unsigned clutch:2;            // 6
+  unsigned arming:2;            // 7
+  unsigned arming_button:1;     // 8
+  unsigned dial:3;              // 9
+  unsigned asteroid:1;          // 10
+  unsigned wormhole1:1;         // 11
+  unsigned wormhole2:1;         // 12
   unsigned long :15;
 } CONS3_STATE;
 
