@@ -26,7 +26,7 @@ uint8_t CONS_STATES[][15] = {
         2, // hotsystem2:1
         2, // hotsystem3:1
         2, // hotsystem4:1
-        8  // dial:3
+        8,  // dial:3
         2, // asteroid:1
         2, // wormhole1:1
         2, // wormhole2:1
@@ -93,5 +93,53 @@ uint8_t CONS_HASREST[][15] = {// has a "rest state" that cannot be commanded
         1,
         1,
         1
+    }
+};
+
+uint8_t CONS_GROUP[][15] = {// has a "rest state" that cannot be commanded
+    {
+        4,
+        0,
+        0,
+        1,
+        2,
+        3,
+        5,
+        5,
+        6,
+        7,
+        7
+    },
+    {
+        2,
+        3,
+        3,
+        3,
+        3,
+        4,
+        1,
+        0,
+        0,
+        0,
+        0,
+        5,
+        6,
+        7,
+        7
+    },
+    {
+        2,
+        3,
+        3,
+        3,
+        4,
+        4,
+        0,
+        5,
+        5,
+        1,
+        6,
+        7,
+        7
     }
 };

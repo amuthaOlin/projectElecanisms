@@ -80,6 +80,7 @@ void cmd_init(uint16_t actuator, uint16_t action, uint8_t console) {
     cmd_tmp.console = console;
     cmd_tmp.desired = desired;
     cmd_tmp.mask = mask;
+    cmd_tmp.group = CONS_GROUP[console][actuator];
     cmds[cmds_ptr] = cmd_tmp;
 
     cmds_ptr++;

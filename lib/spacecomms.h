@@ -6,6 +6,7 @@
 extern uint8_t CONS_NUMACTS[];
 extern uint8_t CONS_STATES[][15];
 extern uint8_t CONS_HASREST[][15];
+extern uint8_t CONS_GROUP[][15];
 
 typedef struct SPACK_DIR {
   unsigned packet:2;
