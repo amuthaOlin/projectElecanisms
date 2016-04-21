@@ -286,14 +286,14 @@ void lev_genCmd(_LEV *level){
             if (!CONS_HASREST[k][i]){
                 cmd_num=cmd_get(k, i, 0);
                 // strcpy(cmds[cmd_num].name,"Test Name");
-                strcpy(cmds[cmd_num].name,lev_getName(level,k,i));
+                strcpy(cmds[cmd_num].name,lev_getName(level,k,CONS_GROUP[k][i]));
                 cmd_str(cmd_num,level);
 
             }
             for (j = 1; j < CONS_STATES[k][i]; j++) {
                 cmd_num=cmd_get(k, i, j);
                 // strcpy(cmds[cmd_num].name,"Test Name");
-                strcpy(cmds[cmd_num].name,lev_getName(level,k,i));
+                strcpy(cmds[cmd_num].name,lev_getName(level,k,CONS_GROUP[k][i]));
                 cmd_str(cmd_num,level);
             }
         }
