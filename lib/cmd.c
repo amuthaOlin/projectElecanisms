@@ -33,8 +33,9 @@
 #include "lev.h"
 
 // CMD_COUNT is cumsum of members of state arrays minus cumsum of members of hasrest arrays
-#define CMD_COUNT 100 // 97 (100 to be safe)
+#define CMD_COUNT 100 // 97-9 (100 to be safe)
 _CMD cmds[CMD_COUNT];
+_CMD cmds_special[9];
 char numbers[11][7]={"Zero","One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten"};
 
 uint16_t __cmd_log2(uint16_t n) {
@@ -56,6 +57,7 @@ void init_cmd(void) {
 }
 
 uint16_t cmds_ptr = 0;
+uint16_t cmds_special_ptr = 0;
 void cmd_init(uint16_t actuator, uint16_t action, uint8_t console) {
     WORD32 mask = (WORD32)0;
     WORD32 desired = (WORD32)0;
@@ -81,9 +83,14 @@ void cmd_init(uint16_t actuator, uint16_t action, uint8_t console) {
     cmd_tmp.desired = desired;
     cmd_tmp.mask = mask;
     cmd_tmp.group = CONS_GROUP[console][actuator];
-    cmds[cmds_ptr] = cmd_tmp;
 
-    cmds_ptr++;
+    if (CONS_GROUP[console][actuator] > 5) {// special
+        cmds_special[cmds_ptr] = cmd_tmp;
+        cmds_special_ptr++;
+    } else {
+        cmds[cmds_ptr] = cmd_tmp;
+        cmds_ptr++;
+    }
 }
 
 uint16_t cmd_get(uint8_t console, uint16_t actuator, uint16_t action) {
