@@ -7,12 +7,12 @@ uint8_t CONS_STATES[][15] = {
         2, // toggle1:1
         2, // toggle2:1
         9, // joystick:4
-        2, // wormhole1:1
-        2, // wormhole2:1
         2, // hotsystem:1
         8, // wordwheel_inside:4
         8, // wordwheel_outside:4
         2, // asteroid:4
+        2, // wormhole1:1
+        2 // wormhole2:1
     }, // not all states are "commandable" but every state must be captured here
     {
         2, // red_button:1
@@ -20,16 +20,16 @@ uint8_t CONS_STATES[][15] = {
         2, // green_button2:1
         2, // green_button3:1
         2, // green_button4:1
-        2, // wormhole1:1
-        2, // wormhole2:1
         3, // tri_state:2
         4, // slider:2
         2, // hotsystem1:1
         2, // hotsystem2:1
         2, // hotsystem3:1
         2, // hotsystem4:1
-        2, // asteroid:1
         8  // dial:3
+        2, // asteroid:1
+        2, // wormhole1:1
+        2, // wormhole2:1
     },
     {
         2, // red_button:1
@@ -38,13 +38,13 @@ uint8_t CONS_STATES[][15] = {
         2, // triangle3:1
         2, // toggle1:1
         2, // toggle2:1
-        2, // wormhole1:1
-        2, // wormhole2:1
         4, // clutch:2
-        2, // asteroid:1
         4, // arming:2
         2, // arming_button:1
         8, // dial:3
+        2, // asteroid:1
+        2, // wormhole1:1
+        2, // wormhole2:1
     }
 };
 // 97 commands
@@ -55,11 +55,11 @@ uint8_t CONS_HASREST[][15] = {// has a "rest state" that cannot be commanded
         0,
         0,
         1,
+        0,
+        0,
+        0,
         1,
         1,
-        0,
-        0,
-        0,
         1
     },
     {
@@ -69,15 +69,15 @@ uint8_t CONS_HASREST[][15] = {// has a "rest state" that cannot be commanded
         0,
         0,
         1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
         1,
         1,
-        0,
-        0,
-        0,
-        0,
-        0,
-        1,
-        0
+        1
     },
     {
         1,
@@ -86,12 +86,12 @@ uint8_t CONS_HASREST[][15] = {// has a "rest state" that cannot be commanded
         1,
         0,
         0,
-        1,
-        1,
-        0,
-        1,
         0,
         0,
-        0
+        0,
+        0,
+        1,
+        1,
+        1
     }
 };
