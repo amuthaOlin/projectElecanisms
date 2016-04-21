@@ -71,7 +71,6 @@ void con3_state_change(_INT *intx) {
 
 void game_loop() {
     game_clock++;
-    printf("what why\r\n");
 
     cd_update_all(game_clock);
 
@@ -132,6 +131,7 @@ void init_master() {
     init_i2c();
     init_lcd();
     init_rng();
+    init_con();
 
     spi_open(&spi1, &D[0], &D[1], &D[2], 1e6, 1, 1);
     pin_digitalIn(Sint1);

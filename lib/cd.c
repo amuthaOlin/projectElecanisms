@@ -76,7 +76,6 @@ void cd_advance(_CD *self, float off_sec) {
 }
 
 void cd_update_all(int32_t ticks_cur) {
-    printf("CD_UPDATE_ALL: %ld\r\n", ticks_cur);
     cd_update(&cd1, ticks_cur);
     cd_update(&cd2, ticks_cur);
     cd_update(&cd3, ticks_cur);
