@@ -8,10 +8,9 @@ _CON con[3];
 void init_con(void) {
     _PIN *SSn[] = { &D[3], &D[5], &D[7] };
 
-    uint8_t i;
-    for (i = 0; i < 3; i++) {
-        con_init(&con[i], &cd[i], &lcdcmd[i], SSn[i]);
-    }
+    con_init(&con[0], &cd1, &lcdcmd[0], SSn[0]);
+    con_init(&con[1], &cd2, &lcdcmd[1], SSn[1]);
+    con_init(&con[2], &cd3, &lcdcmd[2], SSn[2]);
 }
 
 void con_init(_CON *self, _CD *cd, _LCD *lcd, _PIN *SSn) {

@@ -70,19 +70,23 @@ void con3_state_change(_INT *intx) {
 
 void game_loop() {
     game_clock++;
+    printf("what why\r\n");
 
     cd_update_all(game_clock);
 
-    if (cd[0].flag) {
-        cd[0].flag = 0;
+    if (cd1.flag) {
+        printf("FLAG BAG 1\r\n");
+        cd1.flag = 0;
         game_advance(0, 0);
     }
-    if (cd[1].flag) {
-        cd[1].flag = 0;
+    if (cd2.flag) {
+        printf("FLAG BAG 2\r\n");
+        cd2.flag = 0;
         game_advance(1, 0);
     }
-    if (cd[2].flag) {
-        cd[2].flag = 0;
+    if (cd3.flag) {
+        printf("FLAG BAG 3\r\n");
+        cd3.flag = 0;
         game_advance(2, 0);
     }
     if (cdcenter.flag) {
@@ -118,9 +122,9 @@ void init_master() {
     init_int();
     init_leds();
     init_cd();
-    cd[0].tick_sec = GAME_TICK;
-    cd[1].tick_sec = GAME_TICK;
-    cd[2].tick_sec = GAME_TICK;
+    cd1.tick_sec = GAME_TICK;
+    cd2.tick_sec = GAME_TICK;
+    cd3.tick_sec = GAME_TICK;
 
     init_cmd();
     init_i2c();
