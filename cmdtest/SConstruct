@@ -24,6 +24,8 @@ env.Append(BUILDERS = {'List' : list})
 env.Program('cmdtest', ['cmdtest.c',
                         '../lib/strm.c', 
                         '../lib/lev.c',
+                        '../lib/i2c.c',
+                        '../lib/lcd.c',
                         '../lib/rng.c',
                         '../lib/ui.c',
                         '../lib/pin.c', 

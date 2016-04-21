@@ -206,7 +206,7 @@ void strm_genPush(char* command, char* name){
 void strm_genSet(char* command, char* name, char* val){
     char newstr[33] = "                                ";
     char set[5]="Set ";
-    char to[4]="to ";
+    char to[5]=" to ";
     char* setptr =set;
     char* toptr =to;
     char* newstrptr= newstr;
@@ -228,12 +228,12 @@ void strm_genSet(char* command, char* name, char* val){
         toptr++;
     }
     while(*val){
-        *newstrptr=*name;
+        *newstrptr=*val;
         newstrptr++;
-        name++;
+        val++;
     }
-    *newstrptr='!';
-    newstrptr++;
+    // *newstrptr='!';
+    // newstrptr++;
     strcpy(temp2,temp1);
 }
     

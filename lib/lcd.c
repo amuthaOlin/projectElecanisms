@@ -96,9 +96,9 @@ void init_lcd(void) {
     i2c_open(__lcd_i2c, 1e3);
 
     //C2
-    lcd_init(&lcd1, 0x07,'T');
-    lcd_init(&lcd2, 0x06,'A');
-    lcd_init(&lcd3, 0x05,'A');
+    // lcd_init(&lcd1, 0x07,'T');
+    // lcd_init(&lcd2, 0x06,'A');
+    // lcd_init(&lcd3, 0x05,'A');
 
     //C1
     // lcd_init(&lcd1, 0x07,'A');
@@ -110,9 +110,9 @@ void init_lcd(void) {
     // lcd_init(&lcd2, 0x06,'A');
     // lcd_init(&lcd3, 0x05,'A');
 
-    // lcd_init(&lcdcmd[0], 0x07,'A');
-    // lcd_init(&lcdcmd[1], 0x06,'A');
-    // lcd_init(&lcdcmd[2], 0x05,'A');
+    lcd_init(&lcdcmd[0], 0x07,'A');
+    lcd_init(&lcdcmd[1], 0x06,'A');
+    lcd_init(&lcdcmd[2], 0x05,'A');
 }
 
 void lcd_init(_LCD *self, uint8_t addr, char vendor) {
@@ -245,5 +245,30 @@ void lcd_print2(_LCD *self, char* line1, char* line2){
 }
 
 void lcd_print(_LCD *self, char* message) {
-    lcd_print2(self, message, message[16]);
+    char newstr1[17] = "                ";
+    char* newstrptr1= newstr1;
+    char newstr2[17] = "                ";
+    char* newstrptr2= newstr2;
+    char* temp1 = newstrptr1;
+    char* temp2 = newstrptr2;
+    uint8_t i=0;
+    while (i <17){
+        if (*message){
+            *newstrptr1=*message;
+            message++;
+            newstrptr1++;
+        }
+        i++;
+    }
+    i=0;
+    message--; //SKETCHY!
+    while (i <17){
+        if (*message){
+            *newstrptr2=*message;
+            message++;
+            newstrptr2++;
+        }
+        i++;
+    }
+    lcd_print2(self, temp1, temp2);
 }

@@ -35,7 +35,7 @@
 // CMD_COUNT is cumsum of members of state arrays minus cumsum of members of hasrest arrays
 #define CMD_COUNT 100 // 97 (100 to be safe)
 _CMD cmds[CMD_COUNT];
-char numbers[9][6]={"zero","one","two","three","four","five","six","seven","eight"};
+char numbers[9][6]={"Zero","One","Two","Three","Four","Five","Six","Seven","Eight"};
 
 uint16_t __cmd_log2(uint16_t n) {
     return n<2? 1:ceil(log((double)n)/log(2.));
@@ -116,12 +116,12 @@ void cmd_print(uint16_t index) {
 void cmd_str(uint16_t cmdidx, _LEV *level) { // assume str is 16 char long
     _CMD *cmd = &cmds[cmdidx];
 
-    // if (CONS_HASREST[cmd->console][cmd->actuator] && CONS_STATES[cmd->console][cmd->actuator] == 2) {
-    //     strm_genPush(cmd->command,lev_getName(level,cmd->console,cmd->actuator));
-    // } else {
-    //     strm_genSet(cmd->command,lev_getName(level,cmd->console,cmd->actuator),numbers[cmd->action]);
-    // }
-    strcpy(cmd->command, "Do something!");
+    if (CONS_HASREST[cmd->console][cmd->actuator] && CONS_STATES[cmd->console][cmd->actuator] == 2) {
+        strm_genPush(cmd->command,lev_getName(level,cmd->console,cmd->actuator));
+    } else {
+        strm_genSet(cmd->command,lev_getName(level,cmd->console,cmd->actuator),numbers[cmd->action]);
+    }
+    // strcpy(cmd->command, "Do something!");
 }
 
 WORD32 cmd_packet(uint16_t cmdidx) {

@@ -27,19 +27,24 @@ int16_t main(void) {
     lcd_clear(&lcd3);
 
 
-    _LABC level;
+    // _LABC level;
 
-    labc_recieve(&level,0);
-    labc_setup(&level);
+    // labc_recieve(&level,0);
+    // labc_setup(&level);
+    
     char string1[17]="Go";
     char* strptr1=string1;
     char string2[17]="Space";
     char* strptr2=string2;
     char string3[17]="Team";
     char* strptr3=string3;
+
+    lcd_print1(&lcd1,strptr1);
+    lcd_print1(&lcd2,strptr2);
+    lcd_print1(&lcd3,strptr3);
     // lcd_print1(&lcd1,strptr2);
     // Brnrd(strptr2,0,0);
-    labc_print(&level);
+    // labc_print(&level);
     //lcd_print1(&lcd2,strptr2);
     // lcd_print2(&lcd1, strptr1,strptr2);
     // strcpy(strptr1,strptr2);

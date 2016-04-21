@@ -43,16 +43,17 @@ char instructions[3][33]={"Game Starting","Shake ball to avoid asteroids","Press
 
 void lev_init(_LEV *level){
 	uint8_t i=0;
+	uint8_t k;
 	while(i<8){
 		level->asteroids[i]=0;
 		level->wormholes[i]=0;
 		i++;
 	}
-	while(i<6){
-		level->label1[i]=0;
-		level->label2[i]=0;
-		level->label3[i]=0;
-		i++;
+	for (k = 0; k < 3; k++) { 
+		while(i<6){
+			level->label[k][i]=0;
+			i++;
+			}
 	}
     level->lab_theme=0;
     level->mod=0;
@@ -64,25 +65,84 @@ void lev_init(_LEV *level){
 }
 
 void __lev_pickLabels(_LEV *level, uint8_t theme){
-	// console 1
+	uint8_t k;
 	uint8_t i=0;
-	while (i<level->actuators){
-		level->label1[i]=(uint8_t)rng_int(1,theme_len[theme]); // populate random labels
-		i++;
-	}
-	// console 2
-	i=0;
-	while (i<level->actuators){
-		level->label2[i]=(uint8_t)rng_int(1,theme_len[theme]); // populate random labels
-		i++;
-	}
-	// console 3
-	i=0;
-	while (i<level->actuators){
-		level->label3[i]=(uint8_t)rng_int(1,theme_len[theme]); // populate random labels
-		i++;
-	}
+	for (k = 0; k < 3; k++) { 
+		switch(theme){
+			case 0:
+				while(i<7){
+				level->label[k][i]=(uint8_t)rng_int(1,theme_len[theme]);
+				strcpy(level->label_name[k][i],lab_general[level->label[k][i]]);
+				i++;
+			}
+				break;
+			case 1:
+				while(i<7){
+					level->label[k][i]=(uint8_t)rng_int(1,theme_len[theme]);
+					strcpy(level->label_name[k][i],lab_long[level->label[k][i]]);
+					i++;
+				}	
+				break;
+			case 2:
+				while(i<7){
+					level->label[k][i]=(uint8_t)rng_int(1,theme_len[theme]);
+					strcpy(level->label_name[k][i],lab_homo[level->label[k][i]]);
+					i++;
+				}	
+				break;
+			case 3:
+				while(i<7){
+					level->label[k][i]=(uint8_t)rng_int(1,theme_len[theme]);
+					strcpy(level->label_name[k][i],lab_sym[level->label[k][i]]);
+					i++;
+				}	
+				break;
+			case 4:
+				while(i<7){
+					level->label[k][i]=(uint8_t)rng_int(1,theme_len[theme]);
+					strcpy(level->label_name[k][i],lab_emo[level->label[k][i]]);
+					i++;
+				}	
+				break;
+			case 5:
+				while(i<7){
+					level->label[k][i]=(uint8_t)rng_int(1,theme_len[theme]);
+					strcpy(level->label_name[k][i],lab_num[level->label[k][i]]);
+					i++;
+				}	
+				break;
+			case 6:
+				while(i<7){
+					level->label[k][i]=(uint8_t)rng_int(1,theme_len[theme]);
+					strcpy(level->label_name[k][i],lab_cons[level->label[k][i]]);
+					i++;
+				}	
+				break;
+			case 7:
+				while(i<7){
+					level->label[k][i]=(uint8_t)rng_int(1,theme_len[theme]);
+					strcpy(level->label_name[k][i],lab_adven[level->label[k][i]]);
+					i++;
+				}	
+				break;
+			case 8:
+				while(i<7){
+					level->label[k][i]=(uint8_t)rng_int(1,theme_len[theme]);
+					strcpy(level->label_name[k][i],lab_wars[level->label[k][i]]);
+					i++;
+				}	
+				break;
+			case 9:
+				while(i<7){
+					level->label[k][i]=(uint8_t)rng_int(1,theme_len[theme]);
+					strcpy(level->label_name[k][i],lab_pir[level->label[k][i]]);
+					i++;
+				}	
+				break;
+			}	
+	}	
 }
+
 
 void lev_setup(_LEV *level, uint8_t lev_num){
 	if (lev_num == 1){ // First level has no complications
@@ -191,6 +251,8 @@ void lev_setup(_LEV *level, uint8_t lev_num){
 		level->arg_shift=3; // Make them hard
 		level->arg_freq=rng_int(3,6);
 	}
+	// lcd_print1(&lcdcmd[2],level->label_name[0][0]);
+
 }
 
 
@@ -223,12 +285,14 @@ void lev_genCmd(_LEV *level){
         for (i = 0; i < CONS_NUMACTS[k]; i++) { // for each actuator
             if (!CONS_HASREST[k][i]){
                 cmd_num=cmd_get(k, i, 0);
+                // strcpy(cmds[cmd_num].name,"Test Name");
                 strcpy(cmds[cmd_num].name,lev_getName(level,k,i));
                 cmd_str(cmd_num,level);
 
             }
             for (j = 1; j < CONS_STATES[k][i]; j++) {
                 cmd_num=cmd_get(k, i, j);
+                // strcpy(cmds[cmd_num].name,"Test Name");
                 strcpy(cmds[cmd_num].name,lev_getName(level,k,i));
                 cmd_str(cmd_num,level);
             }
@@ -237,15 +301,11 @@ void lev_genCmd(_LEV *level){
 }
 
 char* lev_getName(_LEV *level, uint8_t console, uint8_t actuator){
-	if (console==0){
-		return &(level->label1[actuator]);
-	}
-	else if (console==1){
-		return &(level->label2[actuator]);		
-	}
-	else if (console==2){
-		return &(level->label3[actuator]);		
-	}
+	return level->label_name[console][actuator];
+}
+
+void lev_printCmd(uint8_t cons, uint8_t cmd_num){
+	lcd_print(&lcdcmd[cons],cmds[cmd_num].command);
 }
 
 
