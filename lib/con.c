@@ -1,6 +1,8 @@
 #include <p24FJ128GB206.h>
 #include "con.h"
 
+#include "spi.h"
+
 _CON con[3];
 
 void init_con(void) {
@@ -24,12 +26,12 @@ void con_init(_CON *self, _CD *cd, _LCD *lcd, _PIN *SSn) {
     pin_set(self->SSn);
 }
 
-void con_send_cmd(_CON *self, _CMD *cmd, float cd_time) {
+void con_send_cmd(_CON *self, _CMD *cmd, float cd_time, int32_t game_clock) {
     self->last_cmd = cmd;
     self->trans_res = con_transfer(self, cmd_packet(cmd->index));
 
     lcd_clear(self->lcd);
-    lcd_print1(self->lcd, cmd_strs[cmd->index]);
+    lcd_print1(self->lcd, "HEYyyyyyy");
 
     cd_start(self->cd, cd_time, game_clock);
 }

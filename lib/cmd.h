@@ -54,7 +54,7 @@ extern _CMD cmds[];
 extern char cmd_strs[][33];
 
 void cmd_init(uint16_t actuator, uint16_t action, uint8_t console);
-void cmd_str(uint16_t cmdidx,_LEV *level);
+void cmd_str(uint16_t cmdidx, _LEV *level);
 WORD32 cmd_packet(uint16_t cmdidx);
 void cmd_print(uint16_t index);
 

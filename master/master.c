@@ -9,6 +9,7 @@
 #include "ui.h"
 #include "cd.h"
 #include "con.h"
+#include "rng.h"
 #include "i2c.h"
 #include "lcd.h"
 #include "cmd.h"
@@ -34,35 +35,40 @@ _PIN *Sint3 = &D[8];
 
 _PIN *SSn[] = { &D[3], &D[5], &D[7] };
 
+uint16_t game_rand_cmd_idx() {
+    return rng_int(0, GAME_NUM_CMDS);
+}
+
 void game_advance(uint8_t sole, uint8_t success) {
     if (!success)
         cd_advance(&cdcenter, 2.0);
 
-    con_send_cmd(&con[sole], &cmds[game_rand_cmd_idx()], 6);
+    con_send_cmd(&con[sole], &cmds[game_rand_cmd_idx()], 6, game_clock);
 }
 
 void game_state_change(uint8_t sole) {
     uint8_t success = con_state_change(&con[sole]);
     if (success) {
-        led_toggle(&led3);
         game_advance(sole, 1);
     }
 }
 
 void con1_state_change(_INT *intx) {
     game_state_change(0);
+    led_toggle(&led1);
 }
 
 void con2_state_change(_INT *intx) {
     game_state_change(1);
+    led_toggle(&led2);
 }
 
 void con3_state_change(_INT *intx) {
     game_state_change(2);
+    led_toggle(&led3);
 }
 
 void game_loop() {
-    game_rand_inc();
     game_clock++;
 
     cd_update_all(game_clock);
@@ -90,14 +96,13 @@ void game_loop() {
 }
 
 void init_game() {
-    game_rand_init();
     timer_every(&timer1, GAME_TICK, game_loop);
 
     cd_start(&cdcenter, 240, game_clock);
 
-    con_send_cmd(&con[0], &cmds[cmd_get(0, 0, 1)], 6);
-    con_send_cmd(&con[1], &cmds[cmd_get(1, 0, 1)], 6);
-    con_send_cmd(&con[2], &cmds[cmd_get(2, 0, 1)], 6);
+    con_send_cmd(&con[0], &cmds[cmd_get(0, 0, 1)], 6, game_clock);
+    con_send_cmd(&con[1], &cmds[cmd_get(1, 0, 1)], 6, game_clock);
+    con_send_cmd(&con[2], &cmds[cmd_get(2, 0, 1)], 6, game_clock);
 }
 
 void init_master() {
@@ -120,6 +125,7 @@ void init_master() {
     init_cmd();
     init_i2c();
     init_lcd();
+    init_rng();
 
     spi_open(&spi1, &D[0], &D[1], &D[2], 1e6, 1, 1);
     pin_digitalIn(Sint1);
