@@ -282,26 +282,28 @@ void lev_genCmd(_LEV *level){
 	uint16_t cmd_num;
 
     for (k = 0; k < 3; k++) { // k for konsole
-        for (i = 0; i < CONS_NUMACTS[k]; i++) { // for each actuator
+        for (i = 0; i < CONS_NUMACTS[k]-3; i++) { // for each actuator
             if (!CONS_HASREST[k][i]){
                 cmd_num=cmd_get(k, i, 0);
                 // strcpy(cmds[cmd_num].name,"Test Name");
-                strcpy(cmds[cmd_num].name,lev_getName(level,k,CONS_GROUP[k][i]));
+                strcpy(cmds[cmd_num].name,lev_getName(level,k,cmds[cmd_num].group));
                 cmd_str(cmd_num,level);
 
             }
             for (j = 1; j < CONS_STATES[k][i]; j++) {
                 cmd_num=cmd_get(k, i, j);
                 // strcpy(cmds[cmd_num].name,"Test Name");
-                strcpy(cmds[cmd_num].name,lev_getName(level,k,CONS_GROUP[k][i]));
+                strcpy(cmds[cmd_num].name,lev_getName(level,k,cmds[cmd_num].group));
                 cmd_str(cmd_num,level);
             }
         }
     }
 }
 
-char* lev_getName(_LEV *level, uint8_t console, uint8_t actuator){
-	return level->label_name[console][actuator];
+char* lev_getName(_LEV *level, uint8_t console, uint8_t group){
+	printf("GROUP: %d\r\n", group);
+	return level->label_name[console][group];
+	// return "Test";
 }
 
 void lev_printCmd(uint8_t cons, uint8_t cmd_num){

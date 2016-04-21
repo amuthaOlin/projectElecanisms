@@ -76,7 +76,6 @@ void cmd_init(uint16_t actuator, uint16_t action, uint8_t console) {
     }
 
     _CMD cmd_tmp;
-    cmd_tmp.index = cmds_ptr;
     cmd_tmp.actuator = actuator;
     cmd_tmp.action = action;
     cmd_tmp.console = console;
@@ -85,9 +84,11 @@ void cmd_init(uint16_t actuator, uint16_t action, uint8_t console) {
     cmd_tmp.group = CONS_GROUP[console][actuator];
 
     if (CONS_GROUP[console][actuator] > 5) {// special
-        cmds_special[cmds_ptr] = cmd_tmp;
+        cmd_tmp.index = cmds_special_ptr;
+        cmds_special[cmds_special_ptr] = cmd_tmp;
         cmds_special_ptr++;
     } else {
+        cmd_tmp.index = cmds_ptr;
         cmds[cmds_ptr] = cmd_tmp;
         cmds_ptr++;
     }
@@ -117,6 +118,7 @@ void cmd_print(uint16_t index) {
     printf("%s\r\n", cmd->command);
     printf("-------\r\n");
     printf("Actuator %d, action %d\r\n", cmd->actuator, cmd->action);
+    printf("Group %d\r\n", cmd->group);
     printf("Desired bits: %08lx\r\n", (unsigned long)cmd->desired.ul);
     printf("Mask bits   : %08lx\r\n", (unsigned long)cmd->mask.ul);
 }
