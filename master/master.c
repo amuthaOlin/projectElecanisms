@@ -34,6 +34,7 @@ _PIN *Sint2 = &D[6];
 _PIN *Sint3 = &D[8];
 
 _PIN *SSn[] = { &D[3], &D[5], &D[7] };
+_PIN *Coin = &D11;
 
 uint16_t game_rand_cmd_idx() {
     return rng_int(0, GAME_NUM_CMDS);
@@ -100,6 +101,7 @@ void game_loop() {
 }
 
 void init_game() {
+    int_disable_interrupt(&int4);
     timer_every(&timer1, GAME_TICK, game_loop);
 
     cd_start(&cdcenter, 240, game_clock);
@@ -139,8 +141,9 @@ void init_master() {
     int_attach(&int1, Sint1, 1, con1_state_change);
     int_attach(&int2, Sint2, 1, con2_state_change);
     int_attach(&int3, Sint3, 1, con3_state_change);
+    int_attach(&int4, Coin, 1, init_game);
 
-    init_game();
+    //init_game()
 }
 
 int16_t main(void) {
