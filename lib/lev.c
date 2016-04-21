@@ -68,7 +68,7 @@ void __lev_pickLabels(_LEV *level, uint8_t theme){
 	uint8_t k;
 	uint8_t i=0;
 	for (k = 0; k < 3; k++) { 
-		switch(theme){
+		switch(theme){ //FUCK THIS SHIT IN PARTICULAR 
 			case 0:
 				while(i<7){
 				level->label[k][i]=(uint8_t)rng_int(1,theme_len[theme]);

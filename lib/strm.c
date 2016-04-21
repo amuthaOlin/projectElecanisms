@@ -232,8 +232,8 @@ void strm_genSet(char* command, char* name, char* val){
         newstrptr++;
         val++;
     }
-    // *newstrptr='!';
-    // newstrptr++;
+    *newstrptr='!';
+    newstrptr++;
     strcpy(temp2,temp1);
 }
     
