@@ -183,13 +183,14 @@ int16_t main(void) {
     pin_digitalOut(&MPU9250_CSN);
     pin_set(&MPU9250_CSN);
 
-    spi_open(&spi1, &FOO_MISO, &FOO_MOSI, &FOO_SCK, 1e6, 0, 0);
+    spi_open(&spi3, &FOO_MISO, &FOO_MOSI, &FOO_SCK, 1e6, 0, 0);
 
     led_on(&led3);
 
     // init IMU
     mpu_writeReg(MPU_PWR_MGMT_1, 0x80);
     mpu_writeReg(MPU_ACCEL_CONFIG, 0x08);
+    mpu_writeReg(MPU_ACCEL_CONFIG2, 0x09);
 
     timer_delayMicro(DELAY_INIT);
 

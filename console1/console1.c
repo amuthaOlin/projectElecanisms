@@ -87,7 +87,6 @@ void poll_state(_CONSOLE *self) {
     self->state.s1.hotsystem = (uint8_t)pin_read(&A[0]);
     self->state.s1.wordwheel_inside = read_wordwheel_inside();
     self->state.s1.wordwheel_outside = read_wordwheel_outside();
-    //led_write(&led2, self->state.s0.red_button);
 
     printf("State: %08lx\r\n", (unsigned long)self->state.ul);
 }
