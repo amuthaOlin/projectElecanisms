@@ -1,11 +1,12 @@
 #include "spacecomms.h"
 
-uint8_t CONS_NUMACTS[] = {10, 15, 13};
+uint8_t CONS_NUMACTS[] = {11, 15, 13};
 uint8_t CONS_STATES[][15] = {
     {
         2, // red_button:1
         2, // toggle1:1
         2, // toggle2:1
+        2, // green_button:1
         9, // joystick:4
         2, // hotsystem:1
         8, // wordwheel_inside:4
