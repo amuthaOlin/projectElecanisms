@@ -3,7 +3,7 @@
 
 typedef struct _LABC {
     // constant
-    uint8_t lab_num[6];
+    uint8_t lab_numb[6];
     char lab_str[6][17];
     uint8_t lab_theme;
     uint8_t mod;
