@@ -127,9 +127,9 @@ void cmd_str(uint16_t cmdidx, _LEV *level) { // assume str is 16 char long
     _CMD *cmd = &cmds[cmdidx];
 
     if (CONS_HASREST[cmd->console][cmd->actuator] && CONS_STATES[cmd->console][cmd->actuator] == 2) {
-        strm_genPush(cmd->command,lev_getName(level,cmd->console,cmd->actuator));
+        strm_genPush(cmd->command,cmd->name);
     } else {
-        strm_genSet(cmd->command,lev_getName(level,cmd->console,cmd->actuator),numbers[cmd->action]);
+        strm_genSet(cmd->command,cmd->name,numbers[cmd->action]);
     }
     // strcpy(cmd->command, "Do something!");
 }

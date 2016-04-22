@@ -5,7 +5,9 @@ typedef struct _LEV {
     uint8_t asteroids[8];  
     uint8_t wormholes[8];
     uint8_t label[3][6];
-    char label_name[3][6][17];
+    char label_name1[6][17];
+    char label_name2[6][17];
+    char label_name3[6][17];
     uint8_t lab_theme;
     uint8_t mod;
     uint8_t arg_freq;

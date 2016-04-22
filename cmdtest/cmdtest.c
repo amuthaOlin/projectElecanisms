@@ -44,9 +44,12 @@ int16_t main(void) {
     _LEV level;
     lev_setup(&level,3);
     lev_genCmd(&level);
-    lev_printCmd(0,29);
-    lev_printCmd(1,30);
-    lev_printCmd(2,31);
+    lev_printCmd(0,30);
+    lev_printCmd(1,60);
+    lev_printCmd(2,89);
+    // cmd_print(32);
+    // cmd_print(33);
+    // cmd_print(34);
 
     // char command[33] = "                                ";
     // strm_genSet(command,"Thingymagig","One");

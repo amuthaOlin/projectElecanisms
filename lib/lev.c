@@ -67,80 +67,120 @@ void lev_init(_LEV *level){
 void __lev_pickLabels(_LEV *level, uint8_t theme){
 	uint8_t k;
 	uint8_t i=0;
-	for (k = 0; k < 3; k++) { 
-		switch(theme){ //FUCK THIS SHIT IN PARTICULAR 
-			case 0:
-				while(i<7){
-				level->label[k][i]=(uint8_t)rng_int(1,theme_len[theme]);
-				strcpy(level->label_name[k][i],lab_general[level->label[k][i]]);
+	
+	switch(theme){ //FUCK THIS SHIT IN PARTICULAR 
+		case 0:
+			while(i<7){
+				level->label[0][i]=(uint8_t)rng_int(1,theme_len[theme]);
+				level->label[1][i]=(uint8_t)rng_int(1,theme_len[theme]);
+				level->label[2][i]=(uint8_t)rng_int(1,theme_len[theme]);
+				strcpy(level->label_name1[i],lab_general[level->label[0][i]]);
+				strcpy(level->label_name2[i],lab_general[level->label[1][i]]);
+				strcpy(level->label_name3[i],lab_general[level->label[2][i]]);
 				i++;
-			}
-				break;
-			case 1:
-				while(i<7){
-					level->label[k][i]=(uint8_t)rng_int(1,theme_len[theme]);
-					strcpy(level->label_name[k][i],lab_long[level->label[k][i]]);
-					i++;
-				}	
-				break;
-			case 2:
-				while(i<7){
-					level->label[k][i]=(uint8_t)rng_int(1,theme_len[theme]);
-					strcpy(level->label_name[k][i],lab_homo[level->label[k][i]]);
-					i++;
-				}	
-				break;
-			case 3:
-				while(i<7){
-					level->label[k][i]=(uint8_t)rng_int(1,theme_len[theme]);
-					strcpy(level->label_name[k][i],lab_sym[level->label[k][i]]);
-					i++;
-				}	
-				break;
-			case 4:
-				while(i<7){
-					level->label[k][i]=(uint8_t)rng_int(1,theme_len[theme]);
-					strcpy(level->label_name[k][i],lab_emo[level->label[k][i]]);
-					i++;
-				}	
-				break;
-			case 5:
-				while(i<7){
-					level->label[k][i]=(uint8_t)rng_int(1,theme_len[theme]);
-					strcpy(level->label_name[k][i],lab_num[level->label[k][i]]);
-					i++;
-				}	
-				break;
-			case 6:
-				while(i<7){
-					level->label[k][i]=(uint8_t)rng_int(1,theme_len[theme]);
-					strcpy(level->label_name[k][i],lab_cons[level->label[k][i]]);
-					i++;
-				}	
-				break;
-			case 7:
-				while(i<7){
-					level->label[k][i]=(uint8_t)rng_int(1,theme_len[theme]);
-					strcpy(level->label_name[k][i],lab_adven[level->label[k][i]]);
-					i++;
-				}	
-				break;
-			case 8:
-				while(i<7){
-					level->label[k][i]=(uint8_t)rng_int(1,theme_len[theme]);
-					strcpy(level->label_name[k][i],lab_wars[level->label[k][i]]);
-					i++;
-				}	
-				break;
-			case 9:
-				while(i<7){
-					level->label[k][i]=(uint8_t)rng_int(1,theme_len[theme]);
-					strcpy(level->label_name[k][i],lab_pir[level->label[k][i]]);
-					i++;
-				}	
-				break;
+		}
+			break;
+		case 1:
+			while(i<7){
+				level->label[0][i]=(uint8_t)rng_int(1,theme_len[theme]);
+				level->label[1][i]=(uint8_t)rng_int(1,theme_len[theme]);
+				level->label[2][i]=(uint8_t)rng_int(1,theme_len[theme]);
+				strcpy(level->label_name1[i],lab_long[level->label[0][i]]);
+				strcpy(level->label_name2[i],lab_long[level->label[1][i]]);
+				strcpy(level->label_name3[i],lab_long[level->label[2][i]]);
+				i++;
 			}	
-	}	
+			break;
+		case 2:
+			while(i<7){
+				level->label[0][i]=(uint8_t)rng_int(1,theme_len[theme]);
+				level->label[1][i]=(uint8_t)rng_int(1,theme_len[theme]);
+				level->label[2][i]=(uint8_t)rng_int(1,theme_len[theme]);
+				strcpy(level->label_name1[i],lab_homo[level->label[0][i]]);
+				strcpy(level->label_name2[i],lab_homo[level->label[1][i]]);
+				strcpy(level->label_name3[i],lab_homo[level->label[2][i]]);
+				i++;
+			}	
+			break;
+		case 3:
+			while(i<7){
+				level->label[0][i]=(uint8_t)rng_int(1,theme_len[theme]);
+				level->label[1][i]=(uint8_t)rng_int(1,theme_len[theme]);
+				level->label[2][i]=(uint8_t)rng_int(1,theme_len[theme]);
+				strcpy(level->label_name1[i],lab_sym[level->label[0][i]]);
+				strcpy(level->label_name2[i],lab_sym[level->label[1][i]]);
+				strcpy(level->label_name3[i],lab_sym[level->label[2][i]]);
+				i++;
+			}	
+			break;
+		case 4:
+			while(i<7){
+				level->label[0][i]=(uint8_t)rng_int(1,theme_len[theme]);
+				level->label[1][i]=(uint8_t)rng_int(1,theme_len[theme]);
+				level->label[2][i]=(uint8_t)rng_int(1,theme_len[theme]);
+				strcpy(level->label_name1[i],lab_emo[level->label[0][i]]);
+				strcpy(level->label_name2[i],lab_emo[level->label[1][i]]);
+				strcpy(level->label_name3[i],lab_emo[level->label[2][i]]);
+				i++;
+			}	
+			break;
+		case 5:
+			while(i<7){
+				level->label[0][i]=(uint8_t)rng_int(1,theme_len[theme]);
+				level->label[1][i]=(uint8_t)rng_int(1,theme_len[theme]);
+				level->label[2][i]=(uint8_t)rng_int(1,theme_len[theme]);
+				strcpy(level->label_name1[i],lab_num[level->label[0][i]]);
+				strcpy(level->label_name2[i],lab_num[level->label[1][i]]);
+				strcpy(level->label_name3[i],lab_num[level->label[2][i]]);
+				i++;
+			}	
+			break;
+		case 6:
+			while(i<7){
+				level->label[0][i]=(uint8_t)rng_int(1,theme_len[theme]);
+				level->label[1][i]=(uint8_t)rng_int(1,theme_len[theme]);
+				level->label[2][i]=(uint8_t)rng_int(1,theme_len[theme]);
+				strcpy(level->label_name1[i],lab_cons[level->label[0][i]]);
+				strcpy(level->label_name2[i],lab_cons[level->label[1][i]]);
+				strcpy(level->label_name3[i],lab_cons[level->label[2][i]]);
+				i++;
+			}	
+			break;
+		case 7:
+			while(i<7){
+				level->label[0][i]=(uint8_t)rng_int(1,theme_len[theme]);
+				level->label[1][i]=(uint8_t)rng_int(1,theme_len[theme]);
+				level->label[2][i]=(uint8_t)rng_int(1,theme_len[theme]);
+				strcpy(level->label_name1[i],lab_adven[level->label[0][i]]);
+				strcpy(level->label_name2[i],lab_adven[level->label[1][i]]);
+				strcpy(level->label_name3[i],lab_adven[level->label[2][i]]);
+				i++;
+			}	
+			break;
+		case 8:
+			while(i<7){
+				level->label[0][i]=(uint8_t)rng_int(1,theme_len[theme]);
+				level->label[1][i]=(uint8_t)rng_int(1,theme_len[theme]);
+				level->label[2][i]=(uint8_t)rng_int(1,theme_len[theme]);
+				strcpy(level->label_name1[i],lab_wars[level->label[0][i]]);
+				strcpy(level->label_name2[i],lab_wars[level->label[1][i]]);
+				strcpy(level->label_name3[i],lab_wars[level->label[2][i]]);
+				i++;
+			}	
+			break;
+		case 9:
+			while(i<7){
+				level->label[0][i]=(uint8_t)rng_int(1,theme_len[theme]);
+				level->label[1][i]=(uint8_t)rng_int(1,theme_len[theme]);
+				level->label[2][i]=(uint8_t)rng_int(1,theme_len[theme]);
+				strcpy(level->label_name1[i],lab_pir[level->label[0][i]]);
+				strcpy(level->label_name2[i],lab_pir[level->label[1][i]]);
+				strcpy(level->label_name3[i],lab_pir[level->label[2][i]]);
+				i++;
+			}	
+			break;
+		}	
+		
 }
 
 
@@ -286,14 +326,18 @@ void lev_genCmd(_LEV *level){
             if (!CONS_HASREST[k][i]){
                 cmd_num=cmd_get(k, i, 0);
                 // strcpy(cmds[cmd_num].name,"Test Name");
+                // printf("GROUPA1: %d\r\n", cmds[cmd_num].group);
                 strcpy(cmds[cmd_num].name,lev_getName(level,k,cmds[cmd_num].group));
+                
                 cmd_str(cmd_num,level);
 
             }
             for (j = 1; j < CONS_STATES[k][i]; j++) {
                 cmd_num=cmd_get(k, i, j);
                 // strcpy(cmds[cmd_num].name,"Test Name");
+                // printf("GROUPA2: %d\r\n", cmds[cmd_num].group);
                 strcpy(cmds[cmd_num].name,lev_getName(level,k,cmds[cmd_num].group));
+                
                 cmd_str(cmd_num,level);
             }
         }
@@ -301,8 +345,20 @@ void lev_genCmd(_LEV *level){
 }
 
 char* lev_getName(_LEV *level, uint8_t console, uint8_t group){
-	printf("GROUP: %d\r\n", group);
-	return level->label_name[console][group];
+	// printf("GROUPB: %d\r\n", group);
+	// printf("---\r\n");
+	if (console==0){
+		return level->label_name1[group];
+
+	}
+	if (console==1){
+		return level->label_name2[group];
+
+	}
+	if (console==2){
+		return level->label_name3[group];
+
+	}
 	// return "Test";
 }
 
