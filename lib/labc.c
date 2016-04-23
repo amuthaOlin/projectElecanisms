@@ -29,7 +29,7 @@ char lab_adven [47][17]={" ","Nightosphere", "Prismos Pickles", "Hambo", "Prison
 // Theme 8
 char lab_wars [47][17]={" ","Deathstar", "X-Wing", "TIE Fighter", "Alderaan", "Coruscant", "Dagobah", "Endor", "Hoth", "Empire", "Jakku", "Rebel Alliance", "Naboo", "Starkiller", "Tatooine", "The Force", "Kylo Ren", "Rey", "Finn", "Skywalker", "Falcon", "Han Solo", "Yoda", "Princess Leia", "Jabba the Hut", "Wookies", "Ewoks", "Darth Vader", "Daddy Issues", "Darth Maul", "Palpatine", "Star Destroyer", "Landspeeder", "C-3PO", "BB-8", "R2-D2", "Lightsaber", "The Light Side", "The Dark Side", "Clone", "Chewbacca", "First Order", "It's a Trap!", "Hosian Prime", "POE", "Resistance", "AT-AT"};
 // Theme 9
-char lab_pir [47][17]={" ","Treasure", "Galleon", "Black Beard", "Carribean", "Tortuga", "Jack Sparrow", "Black Pearl", "Davvy Jones", "Islands", "Spiced Rum", "Rum Gone", "Starboard", "Port", "Mast", "Rigging", "Plank", "Keel Haul", "Anchor", "Bermuda", "Avast", "Shiver Timbers", "Monkey", "Poop Deck", "Cockswain", "Landlubber", "Chips Ahoy", "Batten Hatches", "Booty", "Crows Nest", "Jolly Roger", "Man-O-War", "Scallyway", "Calico Jack", "Captian Kidd", "Barbary Coast", "Cat O Nine", "Cutlass", "Cannon", "Powder Chest", "Kraken", "Parrot", "Wooden Leg", "Captian Hook", "Eye Patch", "Dread Pirate", "Hydra"};
+char lab_pir [47][17]={" ","Treasure", "Galleon", "Black Beard", "Carribean", "Tortuga", "Jack Sparrow", "Black Pearl", "Davvy Jones", "Islands", "Spiced Rum", "Rum Gone", "Starboard", "Port", "Mast", "Rigging", "Plank", "Keel Haul", "Anchor", "Bermuda", "Avast", "Shiver Timbers", "Monkey", "Poop Deck", "Cockswain", "Landlubber", "Chips Ahoy", "Batten Hatches", "Booty", "Crows Nest", "Jolly Roger", "Man-O-War", "Scallyway", "Calico Jack", "Captain Kidd", "Barbary Coast", "Cat O Nine", "Cutlass", "Cannon", "Powder Chest", "Kraken", "Parrot", "Wooden Leg", "Captian Hook", "Eye Patch", "Dread Pirate", "Hydra"};
 
 int theme_len[9]={101,47,47,47,47,47,47,47,47};
 
@@ -45,7 +45,7 @@ void labc_setup(_LABC *level){
 	switch(level->lab_theme){
 		case 0:
 			while(i<7){
-			strcpy(stringp,lab_general[level->lab_num[i]]);
+			strcpy(stringp,lab_general[level->lab_numb[i]]);
 		    (*mods[level->mod])(stringp,level->arg_freq, level->arg_shift);
 		 	strcpy(level->lab_str[i],stringp);
 			i++;
@@ -53,7 +53,7 @@ void labc_setup(_LABC *level){
 			break;
 		case 1:
 			while(i<7){
-				strcpy(stringp,lab_long[level->lab_num[i]]);
+				strcpy(stringp,lab_long[level->lab_numb[i]]);
 		    	(*mods[level->mod])(stringp,level->arg_freq, level->arg_shift);
 		 		strcpy(level->lab_str[i],stringp);
 				i++;
@@ -61,7 +61,7 @@ void labc_setup(_LABC *level){
 			break;
 		case 2:
 			while(i<7){
-				strcpy(stringp,lab_homo[level->lab_num[i]]);
+				strcpy(stringp,lab_homo[level->lab_numb[i]]);
 		    	(*mods[level->mod])(stringp,level->arg_freq, level->arg_shift);
 		 		strcpy(level->lab_str[i],stringp);
 				i++;
@@ -69,7 +69,7 @@ void labc_setup(_LABC *level){
 			break;
 		case 3:
 			while(i<7){
-				strcpy(stringp,lab_sym[level->lab_num[i]]);
+				strcpy(stringp,lab_sym[level->lab_numb[i]]);
 		    	(*mods[level->mod])(stringp,level->arg_freq, level->arg_shift);
 		 		strcpy(level->lab_str[i],stringp);
 				i++;
@@ -77,7 +77,7 @@ void labc_setup(_LABC *level){
 			break;
 		case 4:
 			while(i<7){
-				strcpy(stringp,lab_emo[level->lab_num[i]]);
+				strcpy(stringp,lab_emo[level->lab_numb[i]]);
 		    	(*mods[level->mod])(stringp,level->arg_freq, level->arg_shift);
 		 		strcpy(level->lab_str[i],stringp);
 				i++;
@@ -85,7 +85,7 @@ void labc_setup(_LABC *level){
 			break;
 		case 5:
 			while(i<7){
-				strcpy(stringp,lab_num[level->lab_num[i]]);
+				strcpy(stringp,lab_num[level->lab_numb[i]]);
 		    	(*mods[level->mod])(stringp,level->arg_freq, level->arg_shift);
 		 		strcpy(level->lab_str[i],stringp);
 				i++;
@@ -93,7 +93,7 @@ void labc_setup(_LABC *level){
 			break;
 		case 6:
 			while(i<7){
-				strcpy(stringp,lab_cons[level->lab_num[i]]);
+				strcpy(stringp,lab_cons[level->lab_numb[i]]);
 		    	(*mods[level->mod])(stringp,level->arg_freq, level->arg_shift);
 		 		strcpy(level->lab_str[i],stringp);
 				i++;
@@ -101,7 +101,7 @@ void labc_setup(_LABC *level){
 			break;
 		case 7:
 			while(i<7){
-				strcpy(stringp,lab_adven[level->lab_num[i]]);
+				strcpy(stringp,lab_adven[level->lab_numb[i]]);
 		    	(*mods[level->mod])(stringp,level->arg_freq, level->arg_shift);
 		 		strcpy(level->lab_str[i],stringp);
 				i++;
@@ -109,7 +109,7 @@ void labc_setup(_LABC *level){
 			break;
 		case 8:
 			while(i<7){
-				strcpy(stringp,lab_wars[level->lab_num[i]]);
+				strcpy(stringp,lab_wars[level->lab_numb[i]]);
 		    	(*mods[level->mod])(stringp,level->arg_freq, level->arg_shift);
 		 		strcpy(level->lab_str[i],stringp);
 				i++;
@@ -117,7 +117,7 @@ void labc_setup(_LABC *level){
 			break;
 		case 9:
 			while(i<7){
-				strcpy(stringp,lab_pir[level->lab_num[i]]);
+				strcpy(stringp,lab_pir[level->lab_numb[i]]);
 		    	(*mods[level->mod])(stringp,level->arg_freq, level->arg_shift);
 		 		strcpy(level->lab_str[i],stringp);
 				i++;
@@ -141,12 +141,12 @@ void labc_recieve(_LABC *level, uint8_t console){
 	// - arg_freq
 	// - arg_shift
 	//FOR TESTING
-	level->lab_num[0]=3;
-	level->lab_num[1]=40;
-	level->lab_num[2]=33;
-	level->lab_num[3]=12;
-	level->lab_num[4]=9;
-	level->lab_num[5]=44;
+	level->lab_numb[0]=3;
+	level->lab_numb[1]=40;
+	level->lab_numb[2]=33;
+	level->lab_numb[3]=12;
+	level->lab_numb[4]=9;
+	level->lab_numb[5]=44;
 	level->lab_theme=9;
 	level->mod=0;
 	level->arg_freq=0;

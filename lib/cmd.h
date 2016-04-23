@@ -39,6 +39,7 @@ typedef struct _CMD {
     uint8_t console;
     uint16_t actuator;
     uint16_t action;
+    uint8_t group;
 
     WORD32 mask;
     WORD32 desired;

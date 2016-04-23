@@ -4,9 +4,10 @@
 typedef struct _LEV {
     uint8_t asteroids[8];  
     uint8_t wormholes[8];
-    uint8_t label1[6];
-    uint8_t label2[6];
-    uint8_t label3[6];
+    uint8_t label[3][6];
+    char label_name1[6][17];
+    char label_name2[6][17];
+    char label_name3[6][17];
     uint8_t lab_theme;
     uint8_t mod;
     uint8_t arg_freq;
@@ -24,5 +25,6 @@ void lev_setup(_LEV *level, uint8_t lev_num);
 void lev_send(_LEV *level, uint8_t console);
 void lev_genCmd(_LEV *level);
 char* lev_getName(_LEV *level, uint8_t console, uint8_t actuator);
+void lev_printCmd(uint8_t cons, uint8_t cmd_num);
 
 #endif
