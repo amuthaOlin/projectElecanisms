@@ -34,7 +34,7 @@ _PIN *Sint2 = &D[6];
 _PIN *Sint3 = &D[8];
 
 _PIN *SSn[] = { &D[3], &D[5], &D[7] };
-_PIN *Coin = &D[11];
+_PIN *Coin = &D[12];
 
 uint16_t game_rand_cmd_idx() {
     return rng_int(0, GAME_NUM_CMDS);
@@ -61,12 +61,12 @@ void con1_state_change(_INT *intx) {
 
 void con2_state_change(_INT *intx) {
     game_state_change(1);
-    led_toggle(&led2);
+    //led_toggle(&led2);
 }
 
 void con3_state_change(_INT *intx) {
     game_state_change(2);
-    led_toggle(&led3);
+    //led_toggle(&led3);
 }
 
 void game_loop() {
@@ -99,15 +99,14 @@ void game_loop() {
     }
 }
 
-void init_game() {
-    //int_disableInterrupt(&int4);
+void init_game(_INT *intx) {
     timer_every(&timer1, GAME_TICK, game_loop);
-    printf("Game init\n\t");
     cd_start(&cdcenter, 240, game_clock);
 
     con_send_cmd(&con[0], &cmds[cmd_get(0, 0, 1)], 6, game_clock);
     con_send_cmd(&con[1], &cmds[cmd_get(1, 0, 1)], 6, game_clock);
     con_send_cmd(&con[2], &cmds[cmd_get(2, 0, 1)], 6, game_clock);
+    printf("Game init\n\r");
 }
 
 void init_master() {
@@ -122,32 +121,32 @@ void init_master() {
     init_int();
     init_leds();
     init_cd();
+
     cd1.tick_sec = GAME_TICK;
     cd2.tick_sec = GAME_TICK;
     cd3.tick_sec = GAME_TICK;
+
     init_cmd();
     init_i2c();
     init_lcd();
     init_rng();
     init_con();
+
     spi_open(&spi1, &D[0], &D[1], &D[2], 1e6, 1, 1);
     pin_digitalIn(Sint1);
     pin_digitalIn(Sint2);
     pin_digitalIn(Sint3);
+    pin_digitalIn(Coin);
 
     int_attach(&int1, Sint1, 1, con1_state_change);
     int_attach(&int2, Sint2, 1, con2_state_change);
     int_attach(&int3, Sint3, 1, con3_state_change);
-    //int_attach(&int4, Coin, 1, init_game);
+    int_attach(&int4, Coin, 0, init_game);
 
-    init_game();
+    //init_game();
 }
 
 int16_t main(void) {
     init_master();
-    led_toggle(&led1);
-    while (1) {
-        led_toggle(&led2);
-        printf("pinread:%x\n\t",(uint16_t)pin_read(&D[11]));
-    }
+    while (1) {}
 }
