@@ -165,7 +165,6 @@ void init_master() {
     init_leds();
     init_cd();
 
-
     // this represents a problem
     // cd1.tick_sec = GAME_TICK;
     // cd2.tick_sec = GAME_TICK;

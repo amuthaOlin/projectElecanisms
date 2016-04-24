@@ -64,8 +64,14 @@ typedef union {
     CONS1_STATE s1;
     CONS2_STATE s2;
     CONS3_STATE s3;
-    SPACK_DIR d;
 } WORD32;
+
+typedef union {
+    uint16_t w[4];
+    uint8_t b[8];
+    SPACK_DIR1 d1;
+    SPACK_DIR2 d2;
+} WORD64;
 
 uint8_t parity(uint16_t v);
 

@@ -8,12 +8,26 @@ extern uint8_t CONS_STATES[][15];
 extern uint8_t CONS_HASREST[][15];
 extern uint8_t CONS_GROUP[][15];
 
-typedef struct SPACK_DIR {
-  unsigned packet:2;
-  unsigned actaddr:5;
-  unsigned actact:6;
-  unsigned long :19;
-} SPACK_DIR;
+typedef struct SPACK_DIR1 {
+  unsigned packet:8;
+  unsigned index1:8;
+  unsigned index2:8;
+  unsigned index3:8;
+  unsigned index4:8;
+  unsigned index5:8;
+  unsigned index6:8
+  unsigned long :8;
+} SPACK_DIR1;
+
+typedef struct SPACK_DIR2 {
+  unsigned packet:8;
+  unsigned theme:8;
+  unsigned mods:8;
+  unsigned argument1:8;
+  unsigned argument2:8;
+  unsigned long :24;
+} SPACK_DIR2;
+
 
 typedef struct CONS1_STATE {
   unsigned red_button:1;        // 0
