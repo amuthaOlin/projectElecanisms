@@ -11,7 +11,6 @@
 #include "cmd.h"
 #include "int.h"
 #include "timer.h"
-#include "imu.h"
 
 // MPU-9250 Register Map for Gyroscope and Accelerometer
 #define MPU_SELF_TEST_X_GYRO 0x00
@@ -120,7 +119,7 @@
 _PIN FOO_SCK, FOO_MISO, FOO_MOSI;
 _PIN MPU9250_CSN, MPU9250_INT;
 
-void mpu_writeReg(uint8_t address, uint8_t value) {
+void __mpu_writeReg(uint8_t address, uint8_t value) {
     if (address<=0x7E) {
         pin_clear(&MPU9250_CSN);
         spi_transfer(&spi2, address);
@@ -129,7 +128,7 @@ void mpu_writeReg(uint8_t address, uint8_t value) {
     }
 }
 
-uint8_t mpu_readReg(uint8_t address) {
+uint8_t __mpu_readReg(uint8_t address) {
     uint8_t value;
 
     if (address<=0x7E) {
@@ -142,14 +141,14 @@ uint8_t mpu_readReg(uint8_t address) {
         return 0xFF;
 }
 
-void mpu_readRegs(uint8_t address, uint8_t *buffer, uint8_t n) {
+void __mpu_readRegs(uint8_t address, uint8_t *buffer, uint8_t n, uint8_t stride) {
     uint8_t i;
 
     if (address+n<=0x7E) {
         pin_clear(&MPU9250_CSN);
         spi_transfer(&spi2, 0x80|address);
-        for (i = 0; i<n; i++)
-            buffer[i] = spi_transfer(&spi2, 0);
+        for (i = 0; i<n*stride; i+=stride)
+            buffer[i/stride] = spi_transfer(&spi2, 0);
         pin_set(&MPU9250_CSN);
     } else {
         for (i = 0; i<n; i++)
@@ -157,20 +156,7 @@ void mpu_readRegs(uint8_t address, uint8_t *buffer, uint8_t n) {
     }
 }
 
-int16_t main(void) {
-    init_clock();
-    init_uart();
-    init_spi();
-    init_timer();
-    init_ui();
-
-    timer_initDelayMicro(&timer5);
-
-    init_pin();
-    init_oc();
-
-    led_on(&led3);
-
+void init_mpu(void) {
     pin_init(&FOO_SCK, (uint16_t *)&PORTB, (uint16_t *)&TRISB, 
              (uint16_t *)&ANSB, 9, 9, 8, 9, (uint16_t *)&RPOR4);
     pin_init(&FOO_MISO, (uint16_t *)&PORTB, (uint16_t *)&TRISB, 
@@ -188,25 +174,35 @@ int16_t main(void) {
 
     spi_open(&spi2, &FOO_MISO, &FOO_MOSI, &FOO_SCK, 1e6, 0, 0);
 
-    led_on(&led3);
-
-    // init IMU
-    mpu_writeReg(MPU_PWR_MGMT_1, 0x80);
-    mpu_writeReg(MPU_ACCEL_CONFIG, 0x08);
-    mpu_writeReg(MPU_ACCEL_CONFIG2, 0x09);
+    __mpu_writeReg(MPU_PWR_MGMT_1, 0x80);
+    __mpu_writeReg(MPU_ACCEL_CONFIG, 0x08);
+    __mpu_writeReg(MPU_ACCEL_CONFIG2, 0x09);
 
     timer_delayMicro(DELAY_INIT);
+}
 
-    // read accel
-    uint8_t res[6];
-    mpu_readRegs(MPU_ACCEL_XOUT_H, &res, 6);
+uint8_t accel_bits() {
+    return __mpu_readReg(MPU_ACCEL_XOUT_L);
+}
+
+int16_t main(void) {
+    init_clock();
+    init_uart();
+    init_spi();
+    init_timer();
+    timer_initDelayMicro(&timer5);
+
+    init_ui();
+    init_mpu();
+    init_pin();
+    init_oc();
+
+    led_on(&led3);
 
     printf("====================\r\n");
-    // upper lower upper lower upper lower
-    uint8_t i;
-    for (i = 0; i < 6; i++) {
-        printf("Reading: %d\r\n", res[i]);
-    }
+    uint8_t bits = accel_bits();
+
+    printf("Reading: %d\r\n", bits);
 
     while (1) {}
 }
