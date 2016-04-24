@@ -152,7 +152,7 @@ void init_master() {
 
     init_cmd();
     init_i2c();
-    init_lcd();
+    init_lcd(0);
     init_rng();
     init_con();
 

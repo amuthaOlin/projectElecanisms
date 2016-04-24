@@ -363,8 +363,5 @@ char* lev_getName(_LEV *level, uint8_t console, uint8_t group){
 }
 
 void lev_printCmd(uint8_t cons, uint8_t cmd_num){
-	lcd_print(&lcdcmd[cons],cmds[cmd_num].command);
+	lcd_print(&lcd[cons],cmds[cmd_num].command);
 }
-
-
-

@@ -50,7 +50,7 @@
 #define DR_WRITE 0x09
 #define DR_READ 0x0B
 
-_LCD lcd1, lcd2, lcd3, lcd4, lcdcmd[3];
+_LCD lcd[3];
 
 _I2C *__lcd_i2c;
 
@@ -91,28 +91,32 @@ void __lcd_send8(_LCD *self, uint8_t value, uint8_t command) {
 }
 
 
-void init_lcd(void) {
+void init_lcd(uint8_t initiator) {
     __lcd_i2c = &i2c3;
     i2c_open(__lcd_i2c, 1e3);
 
-    //C2
-    // lcd_init(&lcd1, 0x07,'T');
-    // lcd_init(&lcd2, 0x06,'A');
-    // lcd_init(&lcd3, 0x05,'A');
-
-    //C1
-    // lcd_init(&lcd1, 0x07,'A');
-    // lcd_init(&lcd3, 0x06,'A');
-    // lcd_init(&lcd2, 0x05,'A');
-
-    // //C3
-    // lcd_init(&lcd1, 0x07,'A');
-    // lcd_init(&lcd2, 0x06,'A');
-    // lcd_init(&lcd3, 0x05,'A');
-
-    lcd_init(&lcdcmd[0], 0x07,'A');
-    lcd_init(&lcdcmd[1], 0x06,'A');
-    lcd_init(&lcdcmd[2], 0x05,'A');
+    switch (initiator) {
+        case 0:
+            lcd_init(&lcd[0], 0x07,'A');
+            lcd_init(&lcd[1], 0x06,'A');
+            lcd_init(&lcd[2], 0x05,'A');
+            break;
+        case 1:
+            lcd_init(&lcd[0], 0x07,'A');
+            lcd_init(&lcd[2], 0x06,'A');
+            lcd_init(&lcd[1], 0x05,'A');
+            break;
+        case 2:
+            lcd_init(&lcd[0], 0x07,'T');
+            lcd_init(&lcd[1], 0x06,'A');
+            lcd_init(&lcd[2], 0x05,'A');
+            break;
+        case 3:
+            lcd_init(&lcd[0], 0x07,'A');
+            lcd_init(&lcd[1], 0x06,'A');
+            lcd_init(&lcd[2], 0x05,'A');
+            break;
+    }
 }
 
 void lcd_init(_LCD *self, uint8_t addr, char vendor) {

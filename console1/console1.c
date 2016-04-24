@@ -113,8 +113,13 @@ int16_t main(void) {
     init_int();
     init_spi();
     init_timer();
+    timer_initDelay(&timer5);
+
     init_uart();
     init_console();
+
+    init_i2c();
+    init_lcd(1);
 
     console1_init();
     console_attach_poll(&console, poll_state);

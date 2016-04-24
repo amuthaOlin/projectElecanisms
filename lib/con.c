@@ -16,9 +16,9 @@ WORD32 __con_transfer(_CON *self, WORD32 cmd) {
 void init_con(void) {
     _PIN *SSn[] = { &D[3], &D[5], &D[7] };
 
-    con_init(&con[0], &cd1, &lcdcmd[0], SSn[0]);
-    con_init(&con[1], &cd2, &lcdcmd[1], SSn[1]);
-    con_init(&con[2], &cd3, &lcdcmd[2], SSn[2]);
+    con_init(&con[0], &cd1, &lcd[0], SSn[0]);
+    con_init(&con[1], &cd2, &lcd[1], SSn[1]);
+    con_init(&con[2], &cd3, &lcd[2], SSn[2]);
 }
 
 void con_init(_CON *self, _CD *cd, _LCD *lcd, _PIN *SSn) {
