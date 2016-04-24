@@ -3,6 +3,8 @@
 
 #include "rng.h"
 
+// volatile uint8_t PLAYING = 0;
+
 _PLAY play;
 
 void play_state_change(uint8_t sole) {
@@ -37,7 +39,8 @@ void play_loop() {
         leds_clear(&ledcenter);
         leds_writeRGBs(&ledcenter, 255,0,0);
 
-        return play_end(0);
+        play.success = 0;
+        return __play_end();
     }
 
     uint8_t i;
@@ -50,15 +53,17 @@ void play_loop() {
 
     // we won!
     if (play.cmds_progress >= play.cmds_to_win) {
-        return play_end(1);
+        play.success = 1;
+        return __play_end();
     }
 }
 
-void play_begin() {
+void __play_begin() {
     play.timer = timer1;
     play.clock = 0;
     play.cmds_to_win = 50;
     play.cmds_progress = play.cmds_to_win/2;
+    play.success = 0;
 
     timer_every(&play.timer, GAME_TICK, play_loop);
     cd_start(&cdcenter, 240, play.clock);
@@ -70,10 +75,14 @@ void play_begin() {
     printf("Begin level play!\r\n");
 }
 
-void play_end(uint8_t success) {
+void __play_end() {
+    PLAYING = 0;
     timer_cancel(&play.timer);
+}
 
-    if (success) {
-    } else {
-    }
+uint8_t play_level() {
+    PLAYING = 1;
+    __play_begin();
+    while (PLAYING) {}
+    return play.success;
 }

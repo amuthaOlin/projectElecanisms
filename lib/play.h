@@ -14,6 +14,8 @@ typedef struct _PLAY {
 
     uint16_t cmds_to_win;
     uint16_t cmds_progress;
+
+    uint8_t success;
 } _PLAY;
 
 extern _PLAY play;
@@ -21,7 +23,6 @@ volatile extern int32_t play_clock; // time unit seconds
 
 void play_state_change(uint8_t sole);
 
-void play_begin();
-void play_end(uint8_t success);
+uint8_t play_level();
 
 #endif

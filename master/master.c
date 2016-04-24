@@ -49,7 +49,7 @@ void con3_state_change(_INT *intx) {
 }
 
 void init_game(_INT *intx) {
-    play_begin(); // (for now)
+    uint8_t level_success = play_level(); // (for now)
 }
 
 void init_master() {
