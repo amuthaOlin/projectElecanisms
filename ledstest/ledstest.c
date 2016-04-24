@@ -35,10 +35,11 @@ int16_t main(void) {
     timer_every(&timer1, 1e-2, game_loop);
 
     while(1) {
-        leds_bar(&ledbar1, fill, .5);
-        // leds_bar(&ledbar2, (bar2_ms-count)/(float)bar2_ms, 0.5);
-        // leds_bar(&ledbar3, (bar3_ms-count)/(float)bar3_ms, 0.5);
-        // leds_bar(&ledcenter, (barc_ms-count)/(float)barc_ms, 0.5);
+        // leds_bar(&ledbar1, fill, 0.5);
+        // leds_bar(&ledbar2, fill, 0.5);
+        // leds_bar(&ledbar3, fill, 0.5);
+        leds_bar(&ledcenter, fill, 0.5);
+        // leds_writeRGB(&ledcenter, 2, 255,255,255);
 
         led_on(&led1);
     }
