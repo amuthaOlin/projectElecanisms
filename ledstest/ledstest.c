@@ -17,8 +17,11 @@ int16_t bar3_ms = 3e2;
 int16_t barc_ms = 8e2;
 
 volatile float fill = 1;
-void game_loop(_TIMER *timer) {
-    fill -= .01;
+volatile float space = 0.5;
+volatile float fire = 0.25;
+void led_loop(_TIMER *timer) {
+    fill -= 0.01;
+    leds_centerDisplay(&ledcenter, fire, space);
 }
 
 int16_t main(void) {
@@ -28,19 +31,16 @@ int16_t main(void) {
     init_timer();
     init_uart();
     init_oc();
+    init_rng();
     init_leds();
 
     led_on(&led3);
 
-    timer_every(&timer1, 1e-2, game_loop);
+    timer_every(&timer1, 1e-2, led_loop);
 
     while(1) {
-        // leds_bar(&ledbar1, fill, 0.5);
-        // leds_bar(&ledbar2, fill, 0.5);
-        // leds_bar(&ledbar3, fill, 0.5);
-        leds_bar(&ledcenter, fill, 0.5);
-        // leds_writeRGB(&ledcenter, 2, 255,255,255);
-
-        led_on(&led1);
+        leds_bar(&ledbar1, fill, 0.5);
+        leds_bar(&ledbar2, fill, 0.5);
+        leds_bar(&ledbar3, fill, 0.5);
     }
 }

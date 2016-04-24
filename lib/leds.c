@@ -125,11 +125,11 @@ void leds_bar(_LEDS *self, float fill, float bri) {
 }
 
 // space and time are floats 0-1
-void leds_centerDisplay(_LEDS *self, float space, float fire) {
+void leds_centerDisplay(_LEDS *self, float fire, float space) {
     uint16_t i;
     // write a red bar from the bottom up based on `fire`
     uint16_t leds_fire = fire*self->num;
-    leds_writeRange(self, 0, leds_fire+1, 255,60,0); // fire color
+    leds_writeRange(self, 0, leds_fire+1, rng_int(0,255),rng_int(0,255),rng_int(0,255)); // fire color
     leds_brighten(self, leds_fire, (fire*self->num)-leds_fire);
     // write a blue dot based on `space`
     uint16_t space_pos = space*self->num;
