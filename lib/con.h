@@ -13,7 +13,6 @@ void init_con(void);
 
 typedef struct _CON {
     WORD32 state;
-    WORD32 trans_res;
 
     _CMD *last_cmd;
 
@@ -26,7 +25,6 @@ extern _CON con[3];
 
 void con_init(_CON *self, _CD *cd, _LCD *lcd, _PIN *SSn);
 void con_send_cmd(_CON *self, _CMD *cmd, float cd_time, int32_t game_clock);
-WORD32 con_transfer(_CON *self, WORD32 cmd);
 
 uint8_t con_state_change(_CON *self);
 

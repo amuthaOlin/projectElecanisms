@@ -5,7 +5,7 @@
 #include "timer.h"
 #include "i2c.h"
 
-void init_lcd(void);
+void init_lcd(uint8_t initiator);
 
 typedef struct {
     uint8_t addr_write;
@@ -16,7 +16,7 @@ typedef struct {
     uint8_t display_mode;
 } _LCD;
 
-extern _LCD lcd1, lcd2, lcd3, lcd4, lcdcmd[3];
+extern _LCD lcd[3];
 
 void lcd_init(_LCD *self, uint8_t addr, char vendor);
 void lcd_stop(_LCD *self);
@@ -31,5 +31,5 @@ void lcd_cursor(_LCD *self, uint8_t cur);
 void lcd_print1(_LCD *self, char *str);
 void lcd_print2(_LCD *self, char* line1, char* line2);
 void lcd_print(_LCD *self, char* message);
-void lcd_printboth(_LCD *self, char* message);
+void lcd_broadcast(char* message);
 #endif
