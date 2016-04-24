@@ -21,6 +21,7 @@ typedef struct _CONSOLE {
     _SPI *spi;
     _PIN *Sint;
     void (*poll)(struct _CONSOLE *self);
+    uint8_t LCD_flag;
 } _CONSOLE;
 
 extern _CONSOLE console;

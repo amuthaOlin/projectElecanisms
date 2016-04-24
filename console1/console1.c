@@ -11,6 +11,35 @@
 #include "spacecomms.h"
 #include "console.h"
 
+typedef void (*STATE_HANDLER_T)(void);
+STATE_HANDLER_T state, last_state;
+
+void change_lcds(void);
+void level(void);
+
+void change_lcds(void){
+    if (state != last_state){
+        last_state = state;
+        update_lcds(console.res);
+    }
+    state = level;
+    if (state != last_state){
+        
+    }
+}
+
+void level(void){
+    if (state != last_state){
+        last_state = state;
+    }
+    if(console.LCD_flag == 1){
+        state = change_lcds;
+    }
+    if (state != last_state){
+        
+    }
+}
+
 uint8_t read_wordwheel_inside(){
     uint16_t wordwheel_in = (uint16_t)pin_read(&A[1]);
     //printf("wordwheel_inside:%u\n\r",wordwheel_in);
@@ -91,10 +120,6 @@ void poll_state(_CONSOLE *self) {
     printf("State: %08lx\r\n", (unsigned long)self->state.ul);
 }
 
-void handle_CSn(_INT *intx) {
-    console.res = spi_read_slave(console.spi);
-    //printf("res:%x%x\n\r",res.l[1],res.l[0]);
-}
 
 void console1_poll(_TIMER *timer) {
     console_poll_changes(&console);
@@ -123,11 +148,13 @@ int16_t main(void) {
 
     console1_init();
     console_attach_poll(&console, poll_state);
-    int_attach(&int1, console.spi->SSn, 1, handle_CSn);
+
 
     timer_every(&timer4, 1e-2, console1_poll);
 
+    state = level;
     while(1) {
+        state();
         // printf("Slave sent: 0x%x\r\n", 0x5A);
         // printf("Slave received: 0x%x\r\n", res);
     }
