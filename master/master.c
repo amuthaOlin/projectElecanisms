@@ -81,13 +81,12 @@ void level(){
     if (level_succes == 0){
         game_success = 0;
         state = game_over;
-    }
-    else if(level_succes == 1){
-        if(level_number == 15){
+    } else if (level_succes == 1){
+        if (level_number == 15){
             game_success = 1;
             state = game_over;
         }
-        else{
+        else {
             level_number = level_number +1;
             state = pre_level;
         }
@@ -95,16 +94,10 @@ void level(){
 }
 
 void game_over(){
-    uint8_t i;
     if (game_success == 0){
-        for(i=0;i<3;i++){
-            lcd_print(con[i].lcd,"Game Over. You lost. You reached level ");//TODO get level num and string cat
-        }
-    }
-    else{
-        for(i=0;i<3;i++){
-            lcd_print(con[i].lcd,"Game Over. You lost. You reached level ");//TODO get level num and string cat
-        }
+        lcd_broadcast("Game Over. You lost. You reached level ");//TODO get level num and string cat
+    } else {
+        lcd_broadcast("Game Over. You won! You reached level ");//TODO get level num and string cat
     }
     led_on(&led1);
 }
