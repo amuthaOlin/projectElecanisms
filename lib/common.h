@@ -69,8 +69,8 @@ typedef union {
 typedef union {
     uint16_t w[4];
     uint8_t b[8];
-    SPACK_DIR1 d1;
-    SPACK_DIR2 d2;
+    LCD_NAMES1 d1;
+    LCD_NAMES2 d2;
 } WORD64;
 
 uint8_t parity(uint16_t v);

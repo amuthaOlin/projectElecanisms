@@ -8,7 +8,7 @@ extern uint8_t CONS_STATES[][15];
 extern uint8_t CONS_HASREST[][15];
 extern uint8_t CONS_GROUP[][15];
 
-typedef struct SPACK_DIR1 {
+typedef struct LCD_NAMES1 {
   unsigned packet:8;
   unsigned index1:8;
   unsigned index2:8;
@@ -17,16 +17,16 @@ typedef struct SPACK_DIR1 {
   unsigned index5:8;
   unsigned index6:8
   unsigned long :8;
-} SPACK_DIR1;
+} LCD_NAMES1;
 
-typedef struct SPACK_DIR2 {
+typedef struct LCD_NAMES2 {
   unsigned packet:8;
   unsigned theme:8;
   unsigned mods:8;
   unsigned argument1:8;
   unsigned argument2:8;
   unsigned long :24;
-} SPACK_DIR2;
+} LCD_NAMES2;
 
 
 typedef struct CONS1_STATE {
