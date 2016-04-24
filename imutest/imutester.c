@@ -123,8 +123,8 @@ _PIN MPU9250_CSN, MPU9250_INT;
 void mpu_writeReg(uint8_t address, uint8_t value) {
     if (address<=0x7E) {
         pin_clear(&MPU9250_CSN);
-        spi_transfer(&spi1, address);
-        spi_transfer(&spi1, value);
+        spi_transfer(&spi2, address);
+        spi_transfer(&spi2, value);
         pin_set(&MPU9250_CSN);
     }
 }
@@ -134,8 +134,8 @@ uint8_t mpu_readReg(uint8_t address) {
 
     if (address<=0x7E) {
         pin_clear(&MPU9250_CSN);
-        spi_transfer(&spi1, 0x80|address);
-        value = spi_transfer(&spi1, 0);
+        spi_transfer(&spi2, 0x80|address);
+        value = spi_transfer(&spi2, 0);
         pin_set(&MPU9250_CSN);
         return value;
     } else
@@ -147,9 +147,9 @@ void mpu_readRegs(uint8_t address, uint8_t *buffer, uint8_t n) {
 
     if (address+n<=0x7E) {
         pin_clear(&MPU9250_CSN);
-        spi_transfer(&spi1, 0x80|address);
+        spi_transfer(&spi2, 0x80|address);
         for (i = 0; i<n; i++)
-            buffer[i] = spi_transfer(&spi1, 0);
+            buffer[i] = spi_transfer(&spi2, 0);
         pin_set(&MPU9250_CSN);
     } else {
         for (i = 0; i<n; i++)
@@ -162,11 +162,14 @@ int16_t main(void) {
     init_uart();
     init_spi();
     init_timer();
+    init_ui();
 
     timer_initDelayMicro(&timer5);
 
     init_pin();
     init_oc();
+
+    led_on(&led3);
 
     pin_init(&FOO_SCK, (uint16_t *)&PORTB, (uint16_t *)&TRISB, 
              (uint16_t *)&ANSB, 9, 9, 8, 9, (uint16_t *)&RPOR4);
@@ -183,7 +186,7 @@ int16_t main(void) {
     pin_digitalOut(&MPU9250_CSN);
     pin_set(&MPU9250_CSN);
 
-    spi_open(&spi3, &FOO_MISO, &FOO_MOSI, &FOO_SCK, 1e6, 0, 0);
+    spi_open(&spi2, &FOO_MISO, &FOO_MOSI, &FOO_SCK, 1e6, 0, 0);
 
     led_on(&led3);
 
