@@ -59,6 +59,7 @@ void __attribute__((interrupt, auto_psv)) _OC1Interrupt(void) {
 
 void __leds_update(_TIMER *timer) {
     oc_pwm(&oc1, &D[9], NULL, LEDS_FREQ, 0x0000);
+    led_toggle(&led2);
     bitset(&IEC0, 2); // enable OC1 interrupt
 }
 
@@ -68,8 +69,8 @@ void init_leds(void) { // init the objects and set up the unified controller
     leds_init(&ledbar3, 8, 16);
     leds_init(&ledcenter, 60, 24);
 
-    timer_every(&timer4, 0.035, __leds_update);
     IPC0 |= 0x0300; // OC1 interrupt low priority
+    timer_every(&timer4, 0.035, __leds_update);
 }
 
 void leds_init(_LEDS *self, uint16_t num, uint16_t stateptr) {
