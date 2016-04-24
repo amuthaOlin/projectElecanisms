@@ -19,12 +19,8 @@
 #include "spacecomms.h"
 #include "oc.h"
 
-#define GAME_TICK 1e-2 // seconds
-
 volatile WORD32 res[3];
 volatile _CMD *commands[3];
-
-#define GAME_NUM_CMDS 97
 
 _PIN *MISO  = &D[1];
 _PIN *MOSI  = &D[0];
@@ -65,9 +61,10 @@ void init_master() {
     init_leds();
     init_cd();
 
-    cd1.tick_sec = GAME_TICK;
-    cd2.tick_sec = GAME_TICK;
-    cd3.tick_sec = GAME_TICK;
+    // this represents a problem
+    // cd1.tick_sec = GAME_TICK;
+    // cd2.tick_sec = GAME_TICK;
+    // cd3.tick_sec = GAME_TICK;
 
     init_cmd();
     init_i2c();
