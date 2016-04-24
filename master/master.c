@@ -35,11 +35,15 @@ _PIN *Coin = &D[12];
 volatile uint8_t coin = 0;
 volatile uint8_t level_number = 0;
 volatile uint8_t game_success = 0;
+volatile uint8_t level_success = 0;
+volatile uint8_t in_level= 0;
+
+char numbers[16][3]={"0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15"};
 
 typedef void (*STATE_HANDLER_T)(void);
 void coin_wait(void);
 void pre_level(void);
-void level(void);
+void level_play(void);
 void game_over(void);
 
 STATE_HANDLER_T state, last_state;
@@ -60,9 +64,10 @@ void con3_state_change(_INT *intx) {
 }
 
 void coin_wait(){
+    char coin_str[33] = "Please insert a penny";
     if (state != last_state) {  // if we are entering the state, do initialization stuff
         last_state = state;
-        lcd_broadcast("Please insert a penny");
+        lcd_broadcast(coin_str);
     }
     if (coin == 1){
         state = pre_level;
@@ -74,28 +79,31 @@ void coin_wait(){
 
 volatile uint8_t red_pressed = 0;
 void pre_level(){
+    char ready_str[33]="Hold the red button if ready";
+    char launch_str[33]=" Space Team      Launched";
     if (state != last_state) {
         last_state = state;
-        lcd_broadcast("Hold the red button if ready");
+        lcd_broadcast(ready_str);
     }
     
     red_pressed = con[0].state.s1.red_button && con[1].state.s2.red_button && con[2].state.s3.red_button;
     if (red_pressed == 1){
-        state = level
+        state = level_play;
     }
 
     if (state != last_state) {
-        lcd_broadcast(" Space Team      Launched");
+        lcd_broadcast(launch_str);
     }
         
 }
 
 volatile uint8_t level_successs = 0;
-void level(){
+void level_play(){
+    char win_str[33]="You Beat Level ";
     if (state != last_state) {
         last_state = state;
-        // lev_setup(&lev1,level_number);
-        play_begin()
+        lev_setup(level_number);
+        play_begin();
     }
 
     if(play.PLAYING == 0){
@@ -118,7 +126,8 @@ void level(){
 
     if(state != last_state){
         if(level_success == 1){
-            lcd_broadcast("You beat level") //TODO get level_number and string cat
+            strcat(win_str,numbers[level_number]);
+            lcd_broadcast(win_str); //TODO get level_number and string cat
         }
     }
 
@@ -126,20 +135,26 @@ void level(){
 }
 
 void game_over(){
+    char lose_str[33]="You made it to  level ";
+    char win_str[33]="Congratulations!You Win!";
     if (state != last_state) {
         last_state = state;
         if (game_success == 0){
-            lcd_broadcast("You lost at level .Hold Red Button to go");//TODO get level_number and string cat
+            strcat(lose_str,numbers[level_number]);
+            strcat(lose_str,"!");
+            lcd_broadcast(lose_str);//TODO get level_number and string cat//TODO get level_number and string cat
         } else {
-            lcd_broadcast("You won! Hold Red Button to go.");//TODO get level num and string cat
+            lcd_broadcast(win_str);//TODO get level num and string cat
         }
     }
     led_on(&led1);
-
-    red_pressed = con[0].state.s1.red_button && con[1].state.s2.red_button && con[2].state.s3.red_button;
-    if (red_pressed == 1){
-        state = coin_wait;
+    uint8_t i;
+    for (i=0; i<10; i++ ){
+    timer_delayMicro(50000);
     }
+
+    state = coin_wait;
+    
 
 }
 
@@ -149,7 +164,7 @@ void coin_handler(_INT *intx) {
 }
 
 void init_game(){
-    uint8_t level_successs = play_level(); // (for now)
+    // uint8_t level_successs = level_play(); // (for now)
 }
 
 void init_master() {
@@ -173,7 +188,7 @@ void init_master() {
 
     init_cmd();
     init_i2c();
-    init_lcd(0);
+    init_lcd(1);
     init_rng();
     init_con();
 
@@ -191,10 +206,19 @@ void init_master() {
 }
 
 int16_t main(void) {
+
     init_master();
-    state = coin_wait;
+    level_number=15;
+    state = game_over;
+    game_success = 1;
     last_state = (STATE_HANDLER_T)NULL;
     while (1) {
         state();
     }
+    // init_master();
+    // state = coin_wait;
+    // last_state = (STATE_HANDLER_T)NULL;
+    // while (1) {
+    //     state();
+    // }
 }
