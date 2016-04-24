@@ -199,8 +199,6 @@ uint16_t __rng_seed() {
 void init_rng() {
     __rng_init_mpu();
     rng_val = __rng_seed();
-
-    timer_every(&timer3, 1e-2, (void*)rng_gen);
 }
 
 uint16_t rng_gen() {

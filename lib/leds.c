@@ -28,6 +28,7 @@
 #include "leds.h"
 #include "ui.h"
 #include "oc.h"
+#include "rng.h"
 #include "timer.h"
 
 #define LEDS_HIGH_R 0x000F // high word of LEDS_HIGH*OC1RS
@@ -125,11 +126,11 @@ void leds_bar(_LEDS *self, float fill, float bri) {
 }
 
 // space and time are floats 0-1
-void leds_centerDisplay(_LEDS *self, float space, float fire) {
+void leds_centerDisplay(_LEDS *self, float fire, float space) {
     uint16_t i;
     // write a red bar from the bottom up based on `fire`
     uint16_t leds_fire = fire*self->num;
-    leds_writeRange(self, 0, leds_fire+1, 255,60,0); // fire color
+    leds_writeFire(self, 0, leds_fire+1); // fire color
     leds_brighten(self, leds_fire, (fire*self->num)-leds_fire);
     // write a blue dot based on `space`
     uint16_t space_pos = space*self->num;
@@ -137,6 +138,12 @@ void leds_centerDisplay(_LEDS *self, float space, float fire) {
     // clear all the LEDs that aren't supposed to be lit
     leds_writeRange(self, leds_fire, space_pos, 0,0,0);
     leds_writeRange(self, space_pos+1, self->num, 0,0,0);
+}
+
+void leds_writeFire(_LEDS *self, uint16_t start, uint16_t end) {
+    uint16_t i;
+    for (i = start; i < end; i++)
+        leds_writeRGB(self, i, rng_int(220,255),rng_int(10,20),0);
 }
 
 void leds_clear(_LEDS *self) {
