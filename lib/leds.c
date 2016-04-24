@@ -119,7 +119,7 @@ void leds_bar(_LEDS *self, float fill, float bri) {
 
     // clear all non-lit LEDs
     for (i = leds_lit+2; i < self->num; i++)
-        leds_clear(self, i);
+        leds_clearOne(self, i);
 
     leds_writeRange(self, 0, leds_lit+1, bar_r*bri,bar_g*bri,bar_b*bri);
     leds_brighten(self, leds_lit, ((fill*self->num)-leds_lit)*bri);
@@ -130,7 +130,7 @@ void leds_centerDisplay(_LEDS *self, float space, float fire) {
     uint16_t i;
     // write a red bar from the bottom up based on `fire`
     uint16_t leds_fire = fire*self->num;
-    leds_writeRange(0, leds_fire+1, 255,60,0); // fire color
+    leds_writeRange(self, 0, leds_fire+1, 255,60,0); // fire color
     leds_brighten(self, leds_fire, (fire*self->num)-leds_fire);
     // write a blue dot based on `space`
     uint16_t space_pos = space*self->num;
@@ -142,6 +142,10 @@ void leds_centerDisplay(_LEDS *self, float space, float fire) {
 
 void leds_clear(_LEDS *self) {
     leds_writeRGBs(self, 0,0,0);
+}
+
+void leds_clearOne(_LEDS *self, uint16_t led) {
+    leds_writeRGB(self, led, 0,0,0);
 }
 
 void leds_writeRange(_LEDS *self, uint16_t start, uint16_t end, uint8_t red, uint8_t green, uint8_t blue) {

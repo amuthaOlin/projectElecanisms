@@ -48,6 +48,7 @@ void leds_brighten(_LEDS *self, uint8_t led, float factor);
 void leds_writeRGBs(_LEDS *self, uint8_t red, uint8_t green, uint8_t blue);
 void leds_writeRange(_LEDS *self, uint16_t start, uint16_t end, uint8_t red, uint8_t green, uint8_t blue);
 void leds_clear(_LEDS *self);
+void leds_clearOne(_LEDS *self, uint16_t led);
 
 // void leds_bounce(_LEDS *self, float period, uint8_t red, uint8_t green, uint8_t blue);
 void leds_centerDisplay(_LEDS *self, float space, float fire);
