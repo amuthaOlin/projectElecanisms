@@ -97,9 +97,9 @@ void init_lcd(uint8_t initiator) {
 
     switch (initiator) {
         case 0:
-            lcd_init(&lcd[0], 0x07,'A');
-            lcd_init(&lcd[1], 0x06,'A');
-            lcd_init(&lcd[2], 0x05,'A');
+            lcd_init(&lcd[0], 0x05,'A');
+            lcd_init(&lcd[1], 0x07,'A');
+            lcd_init(&lcd[2], 0x06,'T');
             break;
         case 1:
             lcd_init(&lcd[0], 0x07,'A');
@@ -275,4 +275,10 @@ void lcd_print(_LCD *self, char* message) {
         i++;
     }
     lcd_print2(self, temp1, temp2);
+}
+
+void lcd_broadcast(char* message) {
+    uint8_t i;
+    for (i = 0; i < 3; i++)
+        lcd_print(lcd[i], message);
 }

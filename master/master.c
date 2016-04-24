@@ -58,40 +58,26 @@ void con3_state_change(_INT *intx) {
 }
 
 void coin_wait(){
-    int i = 0;
-    for(i=0;i<3;i++){
-        lcd_print(con[i].lcd,"Please insert a penny");
-    }
+    lcd_broadcast("Please insert a penny");
 }
 
 void pre_level(){
     uint8_t red_pressed = 0;
-    int i = 0;
-    for(i=0;i<3;i++){
-        lcd_print(con[i].lcd,"hold down the red button when ready");
-    }
+    lcd_broadcast("Hold down the red button when ready");
     while(red_pressed == 0){
         red_pressed = con[0].state.s1.red_button && con[1].state.s2.red_button && con[2].state.s3.red_button;
     }
-    for(i=0;i<3;i++){
-        lcd_print(con[i].lcd,"Start in 3");
-    }
-    for(i=0;i<3;i++){
-        lcd_print(con[i].lcd,"Start in 2");
-    }
-    for(i=0;i<3;i++){
-        lcd_print(con[i].lcd,"Start in 1");
-    }
-    for(i=0;i<3;i++){
-        lcd_print(con[i].lcd," Space Team      Launched");
-    }
+    lcd_broadcast("Start in 3");
+    lcd_broadcast("Start in 2");
+    lcd_broadcast("Start in 1");
+    lcd_broadcast(" Space Team      Launched");
     state = level;
 }
 
 void level(){
     uint8_t level_succes = 0;
-    lev_setup(&lev1,level_number);
-    level_succes = play_level(&lev1); //TODO fix play_level() so it works in this way
+    // lev_setup(&lev1,level_number);
+    // level_succes = play_level(&lev1); //TODO fix play_level() so it works in this way
     if (level_succes == 0){
         game_success = 0;
         state = game_over;
@@ -109,7 +95,7 @@ void level(){
 }
 
 void game_over(){
-
+    uint8_t i;
     if (game_success == 0){
         for(i=0;i<3;i++){
             lcd_print(con[i].lcd,"Game Over. You lost. You reached level ");//TODO get level num and string cat
@@ -120,10 +106,8 @@ void game_over(){
             lcd_print(con[i].lcd,"Game Over. You lost. You reached level ");//TODO get level num and string cat
         }
     }
+    led_on(&led1);
 }
-
-
-
 
 void init_game(_INT *intx) {
     level_number = 1;
@@ -143,7 +127,7 @@ void init_master() {
     init_int();
     init_leds();
     init_cd();
-    init_lev(); // TODO:NEEDS TO BE WRITTEN
+    // init_lev(); // TODO:NEEDS TO BE WRITTEN
 
     // this represents a problem
     // cd1.tick_sec = GAME_TICK;
@@ -165,9 +149,8 @@ void init_master() {
     int_attach(&int1, Sint1, 1, con1_state_change);
     int_attach(&int2, Sint2, 1, con2_state_change);
     int_attach(&int3, Sint3, 1, con3_state_change);
-    int_attach(&int4, Coin, 0, init_game);
-
-    //init_game();
+    // int_attach(&int4, Coin, 0, init_game);
+    init_game(&int4);
 }
 
 int16_t main(void) {
