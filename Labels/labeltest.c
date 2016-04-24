@@ -21,10 +21,10 @@ int16_t main(void) {
     init_timer();
     timer_initDelayMicro(&timer5);
 
-    init_lcd();
-    lcd_clear(&lcd1);
-    lcd_clear(&lcd2);
-    lcd_clear(&lcd3);
+    init_lcd(1);
+    lcd_clear(&lcd[0]);
+    lcd_clear(&lcd[1]);
+    lcd_clear(&lcd[2]);
 
 
     // _LABC level;
@@ -39,9 +39,9 @@ int16_t main(void) {
     char string3[17]="Team";
     char* strptr3=string3;
 
-    lcd_print1(&lcd1,strptr1);
-    lcd_print1(&lcd2,strptr2);
-    lcd_print1(&lcd3,strptr3);
+    lcd_print1(&lcd[1],strptr1);
+    lcd_print1(&lcd[2],strptr2);
+    lcd_print1(&lcd[3],strptr3);
     // lcd_print1(&lcd1,strptr2);
     // Brnrd(strptr2,0,0);
     // labc_print(&level);
@@ -49,7 +49,7 @@ int16_t main(void) {
     // lcd_print2(&lcd1, strptr1,strptr2);
     // strcpy(strptr1,strptr2);
     // lcd_print2(&lcd3, strptr1, strptr2);
-    lcd_stop(&lcd1);
+    lcd_stop(&lcd[1]);
 
     while(1) {
         //

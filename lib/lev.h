@@ -19,12 +19,12 @@ typedef struct _LEV {
 
 } _LEV;
 
-void lev_init(_LEV *level);
-void __lev_pickLabels(_LEV *level, uint8_t theme);
-void lev_setup(_LEV *level, uint8_t lev_num);
-void lev_send(_LEV *level, uint8_t console);
-void lev_genCmd(_LEV *level);
-char* lev_getName(_LEV *level, uint8_t console, uint8_t actuator);
+void lev_init(void);
+void __lev_pickLabels(uint8_t theme);
+void lev_setup(uint8_t lev_num);
+void lev_send(uint8_t console);
+void lev_genCmd(void);
+char* lev_getName( uint8_t console, uint8_t actuator);
 void lev_printCmd(uint8_t cons, uint8_t cmd_num);
 
 #endif
