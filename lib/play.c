@@ -34,7 +34,7 @@ void __play_advance(uint8_t sole, uint8_t success) {
 
 void __play_loop();
 
-void __play_begin() {
+void play_begin() {
     play.timer = &timer1;
     play.clock = 0;
     play.cmds_to_win = 50;
@@ -56,12 +56,6 @@ void __play_end() {
     timer_cancel(play.timer);
 }
 
-uint8_t play_level() {
-    PLAYING = 1;
-    __play_begin();
-    while (PLAYING) {}
-    return play.success;
-}
 
 void __play_loop() {
     play.clock++;

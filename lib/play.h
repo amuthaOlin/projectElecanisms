@@ -16,12 +16,13 @@ typedef struct _PLAY {
     uint16_t cmds_progress;
 
     uint8_t success;
+    uint8_t PLAYING;
 } _PLAY;
 
 extern _PLAY play;
 
 void play_state_change(uint8_t sole);
 
-uint8_t play_level();
+void play_begin();
 
 #endif
