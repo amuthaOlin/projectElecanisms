@@ -17,10 +17,13 @@ uint16_t __play_rand_cmd_idx() {
 }
 
 void __play_advance(uint8_t sole, uint8_t success) {
-    if (!success)
+    if (!success) {
+        play.cmds_progress++;
         cd_advance(&cdcenter, 2.0);
-
-    con_send_cmd(&con[sole], &cmds[__play_rand_cmd_idx()], 6, play.clock);
+    } else {
+        play.cmds_progress--;
+        con_send_cmd(&con[sole], &cmds[__play_rand_cmd_idx()], 6, play.clock);
+    }
 }
 
 void play_loop() {
@@ -28,40 +31,49 @@ void play_loop() {
 
     cd_update_all(play.clock);
 
-    if (cd1.flag) {
-        cd1.flag = 0;
-        __play_advance(0, 0);
-    }
-    if (cd2.flag) {
-        cd2.flag = 0;
-        __play_advance(1, 0);
-    }
-    if (cd3.flag) {
-        cd3.flag = 0;
-        __play_advance(2, 0);
-    }
+    // we lost!
     if (cdcenter.flag) {
         cdcenter.flag = 0;
         leds_clear(&ledcenter);
         leds_writeRGBs(&ledcenter, 255,0,0);
 
-        // level over
-        play_end();
+        return play_end(0);
+    }
+
+    uint8_t i;
+    for (i = 0; i < 3; i++) {
+        if (con[i].flag) {
+            con[i].flag = 0;
+            return __play_advance(i, 0);
+        }
+    }
+
+    // we won!
+    if (play.cmds_progress >= play.cmds_to_win) {
+        return play_end(1);
     }
 }
 
 void play_begin() {
     play.timer = timer1;
     play.clock = 0;
+    play.cmds_to_win = 50;
+    play.cmds_progress = play.cmds_to_win/2;
+
     timer_every(&play.timer, GAME_TICK, play_loop);
     cd_start(&cdcenter, 240, play.clock);
 
     uint8_t i;
     for (i = 0; i < 3; i++)
         con_send_cmd(&con[i], &cmds[__play_rand_cmd_idx()], 6, play.clock);
+
     printf("Begin level play!\r\n");
 }
 
-void play_end() {
+void play_end(uint8_t success) {
     timer_cancel(&play.timer);
+
+    if (success) {
+    } else {
+    }
 }

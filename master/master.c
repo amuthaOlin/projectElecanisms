@@ -49,6 +49,7 @@ void con3_state_change(_INT *intx) {
 }
 
 void init_game(_INT *intx) {
+    play_begin(); // (for now)
 }
 
 void init_master() {
