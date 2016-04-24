@@ -123,7 +123,7 @@ void cmd_print(uint16_t index) {
     printf("Mask bits   : %08lx\r\n", (unsigned long)cmd->mask.ul);
 }
 
-void cmd_str(uint16_t cmdidx, _LEV *level) { // assume str is 16 char long
+void cmd_str(uint16_t cmdidx) { // assume str is 16 char long
     _CMD *cmd = &cmds[cmdidx];
 
     if (CONS_HASREST[cmd->console][cmd->actuator] && CONS_STATES[cmd->console][cmd->actuator] == 2) {

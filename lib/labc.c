@@ -35,91 +35,91 @@ int theme_len[9]={101,47,47,47,47,47,47,47,47};
 
 void (*mods[9]) (char* str, uint8_t freq, uint8_t shift) ={strm_Nada,strm_CamelCase,strm_Brnrd,strm_Missing,strm_Leet,strm_Pig,strm_Reverse,strm_Scramble,strm_Caesar};
 
-
-void labc_setup(_LABC *level){
+_LABC level;
+void labc_setup(void){
 
 	// stringcpy(level->lab_str[0],lab_general[3]);
 	char string[17]= "                ";
 	char* stringp = string;
 	uint8_t i=0;
-	switch(level->lab_theme){
+	switch(level.lab_theme){
 		case 0:
 			while(i<7){
-			strcpy(stringp,lab_general[level->lab_numb[i]]);
-		    (*mods[level->mod])(stringp,level->arg_freq, level->arg_shift);
-		 	strcpy(level->lab_str[i],stringp);
+			strcpy(stringp,lab_general[level.lab_numb[i]]);
+		    (*mods[level.mod])(stringp,level.arg_freq, level.arg_shift);
+		 	strcpy(level.lab_str[i],stringp);
 			i++;
 		}
 			break;
 		case 1:
 			while(i<7){
-				strcpy(stringp,lab_long[level->lab_numb[i]]);
-		    	(*mods[level->mod])(stringp,level->arg_freq, level->arg_shift);
-		 		strcpy(level->lab_str[i],stringp);
+				strcpy(stringp,lab_long[level.lab_numb[i]]);
+		    	(*mods[level.mod])(stringp,level.arg_freq, level.arg_shift);
+		 		strcpy(level.lab_str[i],stringp);
 				i++;
 			}	
 			break;
 		case 2:
 			while(i<7){
-				strcpy(stringp,lab_homo[level->lab_numb[i]]);
-		    	(*mods[level->mod])(stringp,level->arg_freq, level->arg_shift);
-		 		strcpy(level->lab_str[i],stringp);
+				strcpy(stringp,lab_homo[level.lab_numb[i]]);
+		    	(*mods[level.mod])(stringp,level.arg_freq, level.arg_shift);
+		 		strcpy(level.lab_str[i],stringp);
 				i++;
 			}	
 			break;
 		case 3:
 			while(i<7){
-				strcpy(stringp,lab_sym[level->lab_numb[i]]);
-		    	(*mods[level->mod])(stringp,level->arg_freq, level->arg_shift);
-		 		strcpy(level->lab_str[i],stringp);
+				strcpy(stringp,lab_sym[level.lab_numb[i]]);
+		    	(*mods[level.mod])(stringp,level.arg_freq, level.arg_shift);
+		 		strcpy(level.lab_str[i],stringp);
 				i++;
 			}	
 			break;
 		case 4:
 			while(i<7){
-				strcpy(stringp,lab_emo[level->lab_numb[i]]);
-		    	(*mods[level->mod])(stringp,level->arg_freq, level->arg_shift);
-		 		strcpy(level->lab_str[i],stringp);
+				strcpy(stringp,lab_emo[level.lab_numb[i]]);
+		    	(*mods[level.mod])(stringp,level.arg_freq, level.arg_shift);
+		 		strcpy(level.lab_str[i],stringp);
 				i++;
 			}	
 			break;
 		case 5:
 			while(i<7){
-				strcpy(stringp,lab_num[level->lab_numb[i]]);
-		    	(*mods[level->mod])(stringp,level->arg_freq, level->arg_shift);
-		 		strcpy(level->lab_str[i],stringp);
+				strcpy(stringp,lab_num[level.lab_numb[i]]);
+		    	(*mods[level.mod])(stringp,level.arg_freq, level.arg_shift);
+		 		strcpy(level.lab_str[i],stringp);
 				i++;
 			}	
 			break;
 		case 6:
 			while(i<7){
-				strcpy(stringp,lab_cons[level->lab_numb[i]]);
-		    	(*mods[level->mod])(stringp,level->arg_freq, level->arg_shift);
-		 		strcpy(level->lab_str[i],stringp);
+				strcpy(stringp,lab_cons[level.lab_numb[i]]);
+		    	(*mods[level.mod])(stringp,level.arg_freq, level.arg_shift);
+		 		strcpy(level.lab_str[i],stringp);
 				i++;
 			}	
 			break;
 		case 7:
 			while(i<7){
-				strcpy(stringp,lab_adven[level->lab_numb[i]]);
-		    	(*mods[level->mod])(stringp,level->arg_freq, level->arg_shift);
-		 		strcpy(level->lab_str[i],stringp);
+				strcpy(stringp,lab_adven[level.lab_numb[i]]);
+		    	(*mods[level.mod])(stringp,level.arg_freq, level.arg_shift);
+		 		strcpy(level.lab_str[i],stringp);
 				i++;
 			}	
 			break;
 		case 8:
 			while(i<7){
-				strcpy(stringp,lab_wars[level->lab_numb[i]]);
-		    	(*mods[level->mod])(stringp,level->arg_freq, level->arg_shift);
-		 		strcpy(level->lab_str[i],stringp);
+				strcpy(stringp,lab_wars[level.lab_numb[i]]);
+		    	(*mods[level.mod])(stringp,level.arg_freq, level.arg_shift);
+		 		strcpy(level.lab_str[i],stringp);
 				i++;
 			}	
 			break;
 		case 9:
 			while(i<7){
-				strcpy(stringp,lab_pir[level->lab_numb[i]]);
-		    	(*mods[level->mod])(stringp,level->arg_freq, level->arg_shift);
-		 		strcpy(level->lab_str[i],stringp);
+				strcpy(stringp,lab_pir[level.lab_numb[i]]);
+		    	(*mods[level.mod])(stringp,level.arg_freq, level.arg_shift);
+		 		strcpy(level.lab_str[i],stringp);
 				i++;
 			}	
 			break;
@@ -127,13 +127,13 @@ void labc_setup(_LABC *level){
 }
 
 
-void labc_print(_LABC *level){
-	lcd_print2(&lcd1,level->lab_str[0],level->lab_str[1]);
-    lcd_print2(&lcd2,level->lab_str[2],level->lab_str[3]);
-    lcd_print2(&lcd3,level->lab_str[4],level->lab_str[5]);
+void labc_print(void){
+	lcd_print2(&lcd[0],level.lab_str[0],level.lab_str[1]);
+    lcd_print2(&lcd[1],level.lab_str[2],level.lab_str[3]);
+    lcd_print2(&lcd[2],level.lab_str[4],level.lab_str[5]);
 }
 
-void labc_recieve(_LABC *level, uint8_t console){
+void labc_recieve(uint8_t console){
 	//Unpack into struct:
 	// - label1
 	// - lab_theme
@@ -141,15 +141,15 @@ void labc_recieve(_LABC *level, uint8_t console){
 	// - arg_freq
 	// - arg_shift
 	//FOR TESTING
-	level->lab_numb[0]=3;
-	level->lab_numb[1]=40;
-	level->lab_numb[2]=33;
-	level->lab_numb[3]=12;
-	level->lab_numb[4]=9;
-	level->lab_numb[5]=44;
-	level->lab_theme=9;
-	level->mod=0;
-	level->arg_freq=0;
-	level->arg_shift=0;
+	level.lab_numb[0]=3;
+	level.lab_numb[1]=40;
+	level.lab_numb[2]=33;
+	level.lab_numb[3]=12;
+	level.lab_numb[4]=9;
+	level.lab_numb[5]=44;
+	level.lab_theme=9;
+	level.mod=0;
+	level.arg_freq=0;
+	level.arg_shift=0;
 }
 

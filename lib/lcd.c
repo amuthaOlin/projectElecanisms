@@ -96,7 +96,7 @@ void init_lcd(uint8_t initiator) {
     i2c_open(__lcd_i2c, 1e3);
 
     switch (initiator) {
-        case 0:
+        case 0: // Central
             lcd_init(&lcd[0], 0x05,'A');
             lcd_init(&lcd[1], 0x07,'A');
             lcd_init(&lcd[2], 0x06,'T');

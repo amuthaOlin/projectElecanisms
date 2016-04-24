@@ -29,12 +29,12 @@ int16_t main(void) {
     init_cd();
     init_cmd();
     timer_initDelayMicro(&timer5);
-    init_lcd();
+    init_lcd(0);
     init_rng();
 
-    lcd_clear(&lcdcmd[0]);
-    lcd_clear(&lcdcmd[1]);
-    lcd_clear(&lcdcmd[2]);
+    lcd_clear(&lcd[0]);
+    lcd_clear(&lcd[1]);
+    lcd_clear(&lcd[2]);
 
 
     // lcd_print1(&lcdcmd[0],".");
@@ -42,8 +42,8 @@ int16_t main(void) {
     // lcd_print1(&lcdcmd[2],".");
 
     _LEV level;
-    lev_setup(&level,3);
-    lev_genCmd(&level);
+    lev_setup(3);
+    lev_genCmd();
     lev_printCmd(0,30);
     lev_printCmd(1,60);
     lev_printCmd(2,89);
@@ -57,7 +57,7 @@ int16_t main(void) {
 
 
 
-    lcd_stop(&lcdcmd[0]);
+    lcd_stop(&lcd[0]);
     led_on(&led3);
 
     // uint8_t success;

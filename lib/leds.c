@@ -33,9 +33,7 @@
 #define LEDS_HIGH_R 0x000F // high word of LEDS_HIGH*OC1RS
 #define LEDS_LOW_R 0x0001 // high word of LEDS_LOW*OC1RS
 #define LEDS_NUM 84 // 8*3+60
-#define LEDS_FREQ 1.5e5
-#define LEDS_PERIOD FCY/(LEDS_FREQ*1.) // cycles for LEDS_FREQ (FCY = 16e6)
-#define LEDS_RS_PERIOD 0xFFFF // cycles for 60us reset
+#define LEDS_FREQ 2e5
 
 _LEDS ledbar1, ledbar2, ledbar3, ledcenter;
 
@@ -50,6 +48,7 @@ void __attribute__((interrupt, auto_psv)) _OC1Interrupt(void) {
 
     bitcount++;
     if (bitcount == 24*LEDS_NUM+1) {
+        OC1R = 0;
         bitclear(&IEC0, 2); // disable OC1 interrupt
         oc_free(&oc1);
         bitcount = 0;
@@ -68,8 +67,8 @@ void init_leds(void) { // init the objects and set up the unified controller
     leds_init(&ledbar3, 8, 16);
     leds_init(&ledcenter, 60, 24);
 
+    IPC0 |= 0x0700; // OC1 interrupt highest priority
     timer_every(&timer4, 0.035, __leds_update);
-    IPC0 |= 0x0300; // OC1 interrupt low priority
 }
 
 void leds_init(_LEDS *self, uint16_t num, uint16_t stateptr) {
@@ -109,7 +108,7 @@ volatile uint8_t bar_g = 0;
 volatile uint8_t bar_b = 0;
 void leds_bar(_LEDS *self, float fill, float bri) {
     if (fill > 1) fill = 1;
-    if (fill < 0) fill = 0;
+    if (fill < 0) return leds_clear(self);
 
     uint16_t leds_lit = fill*self->num;
     uint8_t i;

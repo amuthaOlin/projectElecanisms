@@ -42,7 +42,7 @@ void play_begin() {
     play.success = 0;
 
     timer_every(play.timer, PLAY_TICK, __play_loop);
-    cd_start(&cdcenter, 240, play.clock);
+    cd_start(&cdcenter, level.cmd_time, play.clock);
 
     uint8_t i;
     for (i = 0; i < 3; i++)

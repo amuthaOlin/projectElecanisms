@@ -11,9 +11,11 @@ typedef struct _LABC {
     uint8_t arg_shift;
 } _LABC;
 
-void labc_setup(_LABC *level);
-void labc_print(_LABC *level);
-void labc_recievel(_LABC *level, uint8_t console);
+extern _LABC level;
+
+void labc_setup(void);
+void labc_print(void);
+void labc_recieve(uint8_t console);
 
 #endif
 
