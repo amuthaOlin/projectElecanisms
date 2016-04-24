@@ -164,7 +164,7 @@ void init_master() {
     init_int();
     init_leds();
     init_cd();
-    // init_lev(); // TODO:NEEDS TO BE WRITTEN
+
 
     // this represents a problem
     // cd1.tick_sec = GAME_TICK;
