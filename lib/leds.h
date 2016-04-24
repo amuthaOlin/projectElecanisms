@@ -52,6 +52,7 @@ void leds_clearOne(_LEDS *self, uint16_t led);
 
 // void leds_bounce(_LEDS *self, float period, uint8_t red, uint8_t green, uint8_t blue);
 void leds_centerDisplay(_LEDS *self, float fire, float space);
+void leds_writeFire(_LEDS *self, uint16_t start, uint16_t end);
 void leds_bar(_LEDS *self, float fill, float bri);
 
 #endif

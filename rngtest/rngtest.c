@@ -8,6 +8,7 @@
 #include "leds.h"
 #include "ui.h"
 #include "cd.h"
+#include "rng.h"
 #include "cmd.h"
 #include "int.h"
 #include "timer.h"
@@ -30,8 +31,8 @@ int16_t main(void) {
 
     led_on(&led3);
 
-    printf("Random int: %u\r\n", rng_int());
-    printf("Random int: %u\r\n", rng_int());
+    printf("Random int: %u\r\n", rng_int(0,255));
+    printf("Random int: %u\r\n", rng_int(0,255));
 
     while (1) {}
 }

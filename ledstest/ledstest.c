@@ -29,8 +29,11 @@ int16_t main(void) {
     init_ui();
     init_pin();
     init_timer();
+    timer_initDelayMicro(&timer5);
+
     init_uart();
     init_oc();
+    init_spi();
     init_rng();
     init_leds();
 
