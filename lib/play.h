@@ -19,7 +19,6 @@ typedef struct _PLAY {
 } _PLAY;
 
 extern _PLAY play;
-volatile extern int32_t play_clock; // time unit seconds
 
 void play_state_change(uint8_t sole);
 
