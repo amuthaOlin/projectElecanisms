@@ -17,19 +17,21 @@ int16_t main(void) {
     init_uart();
     init_spi();
     init_timer();
+
+    timer_initDelayMicro(&timer5);
+
     init_ui();
     init_pin();
     init_oc();
     init_int();
     init_leds();
     init_cd();
-    init_cmd();
     init_rng();
 
     led_on(&led3);
 
-    printf("Random int: %d\r\n", rng_int());
-    printf("Random int: %d\r\n", rng_int());
+    printf("Random int: %u\r\n", rng_int());
+    printf("Random int: %u\r\n", rng_int());
 
     while (1) {}
 }
