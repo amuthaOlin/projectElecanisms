@@ -181,8 +181,14 @@ void init_mpu(void) {
     timer_delayMicro(DELAY_INIT);
 }
 
-uint8_t accel_bits() {
-    return __mpu_readReg(MPU_ACCEL_XOUT_L);
+uint16_t accel_bits() {
+    uint16_t rn = 0;
+    uint16_t i;
+    for (i = 0; i < 16; i++) {
+        rn |= (0x0004 & (uint16_t)__mpu_readReg(MPU_ACCEL_XOUT_L)) << i;
+        timer_delayMicro(50);
+    }
+    return rn;
 }
 
 int16_t main(void) {
@@ -199,10 +205,9 @@ int16_t main(void) {
 
     led_on(&led3);
 
-    printf("====================\r\n");
-    uint8_t bits = accel_bits();
-
-    printf("Reading: %d\r\n", bits);
-
-    while (1) {}
+    while (1) {
+        printf("====================\r\n");
+        printf("Reading: %04x\r\n", accel_bits());
+        timer_delayMicro(100e3);
+    }
 }
