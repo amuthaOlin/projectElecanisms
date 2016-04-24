@@ -280,5 +280,5 @@ void lcd_print(_LCD *self, char* message) {
 void lcd_broadcast(char* message) {
     uint8_t i;
     for (i = 0; i < 3; i++)
-        lcd_print(lcd[i], message);
+        lcd_print(&lcd[i], message);
 }
