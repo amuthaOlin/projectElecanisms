@@ -111,7 +111,7 @@ void leds_bar(_LEDS *self, float fill, float bri) {
     if (fill > 1) fill = 1;
     if (fill < 0) fill = 0;
 
-    uint8_t leds_lit = fill*self->num;
+    uint16_t leds_lit = fill*self->num;
     uint8_t i;
 
     bar_g = fill*255;
@@ -119,15 +119,39 @@ void leds_bar(_LEDS *self, float fill, float bri) {
 
     // clear all non-lit LEDs
     for (i = leds_lit+2; i < self->num; i++)
-        leds_writeRGB(self, i, 0,0,0);
+        leds_clearOne(self, i);
 
-    for (i = 0; i < leds_lit+1; i++)
-        leds_writeRGB(self, i, bar_r*bri,bar_g*bri,bar_b*bri);
-    leds_brighten(self, i-1, ((fill*self->num)-leds_lit)*bri);
+    leds_writeRange(self, 0, leds_lit+1, bar_r*bri,bar_g*bri,bar_b*bri);
+    leds_brighten(self, leds_lit, ((fill*self->num)-leds_lit)*bri);
+}
+
+// space and time are floats 0-1
+void leds_centerDisplay(_LEDS *self, float space, float fire) {
+    uint16_t i;
+    // write a red bar from the bottom up based on `fire`
+    uint16_t leds_fire = fire*self->num;
+    leds_writeRange(self, 0, leds_fire+1, 255,60,0); // fire color
+    leds_brighten(self, leds_fire, (fire*self->num)-leds_fire);
+    // write a blue dot based on `space`
+    uint16_t space_pos = space*self->num;
+    leds_writeRGB(self, space_pos, 0,40,255); // spaceship color
+    // clear all the LEDs that aren't supposed to be lit
+    leds_writeRange(self, leds_fire, space_pos, 0,0,0);
+    leds_writeRange(self, space_pos+1, self->num, 0,0,0);
 }
 
 void leds_clear(_LEDS *self) {
     leds_writeRGBs(self, 0,0,0);
+}
+
+void leds_clearOne(_LEDS *self, uint16_t led) {
+    leds_writeRGB(self, led, 0,0,0);
+}
+
+void leds_writeRange(_LEDS *self, uint16_t start, uint16_t end, uint8_t red, uint8_t green, uint8_t blue) {
+    uint16_t i;
+    for (i = start; i < end; i++)
+        leds_writeRGB(self, i, red,green,blue);
 }
 
 void leds_writeRGB(_LEDS *self, uint8_t led, uint8_t red, uint8_t green, uint8_t blue) {
