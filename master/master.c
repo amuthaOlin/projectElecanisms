@@ -99,6 +99,30 @@ void game_loop() {
     }
 }
 
+void pre_level(uint8_t lev_num){
+    uint8_t red_pressed = 0;
+    int i = 0;
+    for(i=0;i<3;i++){
+        lcd_print(con[i].lcd,"hold down the red button when ready");
+    }
+    while(red_pressed == 0){
+        red_pressed = con[0].state.s1.red_button && con[1].state.s2.red_button && con[2].state.s3.red_button;
+    }
+    for(i=0;i<3;i++){
+        lcd_print(con[i].lcd,"Start in 3");
+    }
+    for(i=0;i<3;i++){
+        lcd_print(con[i].lcd,"Start in 2");
+    }
+    for(i=0;i<3;i++){
+        lcd_print(con[i].lcd,"Start in 1");
+    }
+    for(i=0;i<3;i++){
+        lcd_print(con[i].lcd,"Space Team Launched");
+    }
+}
+
+
 void init_game(_INT *intx) {
     timer_every(&timer1, GAME_TICK, game_loop);
     cd_start(&cdcenter, 240, game_clock);
@@ -106,7 +130,8 @@ void init_game(_INT *intx) {
     con_send_cmd(&con[0], &cmds[cmd_get(0, 0, 1)], 6, game_clock);
     con_send_cmd(&con[1], &cmds[cmd_get(1, 0, 1)], 6, game_clock);
     con_send_cmd(&con[2], &cmds[cmd_get(2, 0, 1)], 6, game_clock);
-    printf("Game init\n\r");
+    //printf("Game init\n\r");
+    pre_level(1);
 }
 
 void init_master() {
