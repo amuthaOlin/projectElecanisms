@@ -20,7 +20,7 @@ int16_t main(void) {
     init_timer();
     timer_initDelayMicro(&timer5);
 
-    init_lcd(1);
+    init_lcd(0);
 
     lcd_clear(&lcd[0]);
     lcd_clear(&lcd[1]);

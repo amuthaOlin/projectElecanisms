@@ -66,7 +66,7 @@ void coin_wait(){
         last_state = state;
         lcd_broadcast(coin_str);
     }
-    if (coin == 1){
+    if (coin) {
         state = pre_level;
         level_number = 1;
         coin = 0;
@@ -74,7 +74,7 @@ void coin_wait(){
 }
 
 volatile uint8_t red_pressed = 0;
-void pre_level(){
+void pre_level() {
     char ready_str[33]="Hold the red button if ready";
     char launch_str[33]=" Space Team      Launched";
     if (state != last_state) {
@@ -92,7 +92,6 @@ void pre_level(){
     }
 }
 
-volatile uint8_t level_success = 0;
 char level_win_str[33] = "You Beat Level ";
 void level_play() {
     if (state != last_state) {
@@ -176,7 +175,7 @@ void init_master() {
 
     init_cmd();
     init_i2c();
-    init_lcd(1);
+    init_lcd(0);
     init_rng();
     init_con();
 
@@ -194,11 +193,8 @@ void init_master() {
 }
 
 int16_t main(void) {
-
     init_master();
-    level_number=15;
-    state = game_over;
-    game_success = 1;
+    state = coin_wait;
     last_state = (STATE_HANDLER_T)NULL;
     while (1) {
         state();
