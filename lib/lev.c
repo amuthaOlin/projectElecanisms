@@ -66,16 +66,40 @@ void __lev_init(void) {
     level.actuators=6; // We almost always use all of them
 }
 
+
+bool __lev_already_exists(int *array, int array_size, int value)
+{
+    for (int i = 0; i < array_size; i++)
+        if (array[i] == value)
+            return true; // we found the same value, return true
+
+    return false; // if we get here we have not found it
+}
+
 void __lev_pickLabels(uint8_t theme){
-	uint8_t k;
-	uint8_t i=0;
+	uint8_t i = 0;
+	uint8_t j = 0;
+	uint8_t k = 0;
+	uint8_t random_num;
+	uint8_t random_num_array[18];
+
+	for(j=0;j<18;j++){
+		random_num = (uint8_t)rng_int(1,theme_len[theme]);
+		while(__lev_already_exists(random_num)){
+			random_num = (uint8_t)rng_int(1,theme_len[theme]);
+		}
+		random_num_array[j] = random_num;
+	}
+
+	while(i<6){
+		level.label[0][i]=random_num_array[i];
+		level.label[1][i]=random_num_array[i+6];
+		level.label[2][i]=random_num_array[i+12];
+	}
 	
 	switch(theme) { //FUCK THIS SHIT IN PARTICULAR 
 		case 0:
 			while(i<6){
-				level.label[0][i]=(uint8_t)rng_int(1,theme_len[theme]);
-				level.label[1][i]=(uint8_t)rng_int(1,theme_len[theme]);
-				level.label[2][i]=(uint8_t)rng_int(1,theme_len[theme]);
 				strcpy(level.label_name1[i],lab_general[level.label[0][i]]);
 				strcpy(level.label_name2[i],lab_general[level.label[1][i]]);
 				strcpy(level.label_name3[i],lab_general[level.label[2][i]]);
@@ -84,9 +108,7 @@ void __lev_pickLabels(uint8_t theme){
 			break;
 		case 1:
 			while(i<6){
-				level.label[0][i]=(uint8_t)rng_int(1,theme_len[theme]);
-				level.label[1][i]=(uint8_t)rng_int(1,theme_len[theme]);
-				level.label[2][i]=(uint8_t)rng_int(1,theme_len[theme]);
+
 				strcpy(level.label_name1[i],lab_long[level.label[0][i]]);
 				strcpy(level.label_name2[i],lab_long[level.label[1][i]]);
 				strcpy(level.label_name3[i],lab_long[level.label[2][i]]);
@@ -95,9 +117,7 @@ void __lev_pickLabels(uint8_t theme){
 			break;
 		case 2:
 			while(i<6){
-				level.label[0][i]=(uint8_t)rng_int(1,theme_len[theme]);
-				level.label[1][i]=(uint8_t)rng_int(1,theme_len[theme]);
-				level.label[2][i]=(uint8_t)rng_int(1,theme_len[theme]);
+
 				strcpy(level.label_name1[i],lab_homo[level.label[0][i]]);
 				strcpy(level.label_name2[i],lab_homo[level.label[1][i]]);
 				strcpy(level.label_name3[i],lab_homo[level.label[2][i]]);
@@ -106,9 +126,7 @@ void __lev_pickLabels(uint8_t theme){
 			break;
 		case 3:
 			while(i<6){
-				level.label[0][i]=(uint8_t)rng_int(1,theme_len[theme]);
-				level.label[1][i]=(uint8_t)rng_int(1,theme_len[theme]);
-				level.label[2][i]=(uint8_t)rng_int(1,theme_len[theme]);
+
 				strcpy(level.label_name1[i],lab_sym[level.label[0][i]]);
 				strcpy(level.label_name2[i],lab_sym[level.label[1][i]]);
 				strcpy(level.label_name3[i],lab_sym[level.label[2][i]]);
@@ -117,9 +135,7 @@ void __lev_pickLabels(uint8_t theme){
 			break;
 		case 4:
 			while(i<6){
-				level.label[0][i]=(uint8_t)rng_int(1,theme_len[theme]);
-				level.label[1][i]=(uint8_t)rng_int(1,theme_len[theme]);
-				level.label[2][i]=(uint8_t)rng_int(1,theme_len[theme]);
+
 				strcpy(level.label_name1[i],lab_emo[level.label[0][i]]);
 				strcpy(level.label_name2[i],lab_emo[level.label[1][i]]);
 				strcpy(level.label_name3[i],lab_emo[level.label[2][i]]);
@@ -128,9 +144,7 @@ void __lev_pickLabels(uint8_t theme){
 			break;
 		case 5:
 			while(i<6){
-				level.label[0][i]=(uint8_t)rng_int(1,theme_len[theme]);
-				level.label[1][i]=(uint8_t)rng_int(1,theme_len[theme]);
-				level.label[2][i]=(uint8_t)rng_int(1,theme_len[theme]);
+
 				strcpy(level.label_name1[i],lab_num[level.label[0][i]]);
 				strcpy(level.label_name2[i],lab_num[level.label[1][i]]);
 				strcpy(level.label_name3[i],lab_num[level.label[2][i]]);
@@ -139,9 +153,7 @@ void __lev_pickLabels(uint8_t theme){
 			break;
 		case 6:
 			while(i<6){
-				level.label[0][i]=(uint8_t)rng_int(1,theme_len[theme]);
-				level.label[1][i]=(uint8_t)rng_int(1,theme_len[theme]);
-				level.label[2][i]=(uint8_t)rng_int(1,theme_len[theme]);
+
 				strcpy(level.label_name1[i],lab_cons[level.label[0][i]]);
 				strcpy(level.label_name2[i],lab_cons[level.label[1][i]]);
 				strcpy(level.label_name3[i],lab_cons[level.label[2][i]]);
@@ -150,9 +162,6 @@ void __lev_pickLabels(uint8_t theme){
 			break;
 		case 7:
 			while(i<6){
-				level.label[0][i]=(uint8_t)rng_int(1,theme_len[theme]);
-				level.label[1][i]=(uint8_t)rng_int(1,theme_len[theme]);
-				level.label[2][i]=(uint8_t)rng_int(1,theme_len[theme]);
 				strcpy(level.label_name1[i],lab_adven[level.label[0][i]]);
 				strcpy(level.label_name2[i],lab_adven[level.label[1][i]]);
 				strcpy(level.label_name3[i],lab_adven[level.label[2][i]]);
@@ -161,9 +170,6 @@ void __lev_pickLabels(uint8_t theme){
 			break;
 		case 8:
 			while(i<6){
-				level.label[0][i]=(uint8_t)rng_int(1,theme_len[theme]);
-				level.label[1][i]=(uint8_t)rng_int(1,theme_len[theme]);
-				level.label[2][i]=(uint8_t)rng_int(1,theme_len[theme]);
 				strcpy(level.label_name1[i],lab_wars[level.label[0][i]]);
 				strcpy(level.label_name2[i],lab_wars[level.label[1][i]]);
 				strcpy(level.label_name3[i],lab_wars[level.label[2][i]]);
@@ -172,9 +178,6 @@ void __lev_pickLabels(uint8_t theme){
 			break;
 		case 9:
 			while(i<6){
-				level.label[0][i]=(uint8_t)rng_int(1,theme_len[theme]);
-				level.label[1][i]=(uint8_t)rng_int(1,theme_len[theme]);
-				level.label[2][i]=(uint8_t)rng_int(1,theme_len[theme]);
 				strcpy(level.label_name1[i],lab_pir[level.label[0][i]]);
 				strcpy(level.label_name2[i],lab_pir[level.label[1][i]]);
 				strcpy(level.label_name3[i],lab_pir[level.label[2][i]]);
