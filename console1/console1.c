@@ -11,36 +11,6 @@
 #include "spacecomms.h"
 #include "console.h"
 
-typedef void (*STATE_HANDLER_T)(void);
-STATE_HANDLER_T state, last_state;
-
-void change_lcds(void);
-void level(void);
-
-void change_lcds(void){
-    if (state != last_state){
-        last_state = state;
-        update_lcds();
-        LCD_flag = 0;
-    }
-    state = level;
-    if (state != last_state){
-        
-    }
-}
-
-void level(void){
-    if (state != last_state){
-        last_state = state;
-    }
-    if(console.LCD_flag == 2){
-        state = change_lcds;
-    }
-    if (state != last_state){
-        
-    }
-}
-
 uint8_t read_wordwheel_inside(){
     uint16_t wordwheel_in = (uint16_t)pin_read(&A[1]);
     //printf("wordwheel_inside:%u\n\r",wordwheel_in);
@@ -153,7 +123,7 @@ int16_t main(void) {
 
     timer_every(&timer4, 1e-2, console1_poll);
 
-    state = level;
+    state = console_s_level;
     while(1) {
         state();
         // printf("Slave sent: 0x%x\r\n", 0x5A);

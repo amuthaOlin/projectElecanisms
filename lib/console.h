@@ -28,9 +28,16 @@ typedef struct _CONSOLE {
 
 extern _CONSOLE console;
 
+typedef void (*STATE_HANDLER_T)(void);
+extern STATE_HANDLER_T state, last_state;
+
 void console_init(_CONSOLE *self, _PIN *MISO, _PIN *MOSI, _PIN *SCK, _PIN *Sint, _PIN *CSn, _SPI *spi);
 void console_tx(_CONSOLE *self, WORD32 cmd);
 void console_attach_poll(_CONSOLE *self, void (*poll)(_CONSOLE *self));
 void console_poll_changes(_CONSOLE *self);
+
+void console_update_lcds(void);
+void console_s_change_lcds(void);
+void console_s_level(void);
 
 #endif

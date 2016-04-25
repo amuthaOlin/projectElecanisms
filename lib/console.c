@@ -5,6 +5,31 @@
 
 _CONSOLE console;
 
+STATE_HANDLER_T state, last_state;
+
+void console_s_change_lcds(void) {
+    if (state != last_state){
+        last_state = state;
+        console_update_lcds();
+        LCD_flag = 0;
+    }
+    state = level;
+    if (state != last_state){
+
+    }
+}
+
+void console_s_level(void) {
+    if (state != last_state){
+        last_state = state;
+    }
+    if(console.LCD_flag == 2){
+        state = change_lcds;
+    }
+    if (state != last_state){
+
+    }
+}
 
 void init_console(void) {
     console_init(&console, &D[1], &D[0], &D[2], &D[4], &D[3], &spi1);
@@ -23,7 +48,7 @@ void handle_CSn(_INT *intx) {
     //printf("res:%x%x\n\r",res.l[1],res.l[0]);
 }
 
-void update_lcds(void){
+void console_update_lcds(void) {
     level.lab_numb[0] = console.lcd_update1.d1.index1;
     level.lab_numb[1] = console.lcd_update1.d1.index2;
     level.lab_numb[2] = console.lcd_update1.d1.index3;

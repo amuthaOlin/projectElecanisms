@@ -11,7 +11,6 @@
 #include "spacecomms.h"
 #include "console.h"
 
-
 uint8_t read_clutch(uint16_t clutch_prev){
     uint16_t clutch_in = (uint16_t)pin_read(&A[0]);
     uint8_t clutch_out;
@@ -90,7 +89,9 @@ int16_t main(void) {
 
     timer_every(&timer4, 1e-2, console3_poll);
 
+    state = console_s_level;
     while(1) {
+        state();
         // printf("Slave sent: 0x%x\r\n", 0x5A);
         // printf("Slave received: 0x%x\r\n", res);
     }

@@ -104,7 +104,9 @@ int16_t main(void) {
 
     timer_every(&timer4, 1e-2, console1_poll);
 
+    state = console_s_level;
     while(1) {
+        state();
         // printf("Slave sent: 0x%x\r\n", 0x5A);
         // printf("Slave received: 0x%x\r\n", res);
     }
