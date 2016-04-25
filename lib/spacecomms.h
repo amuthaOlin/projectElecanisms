@@ -42,7 +42,7 @@ typedef struct CONS1_STATE {
   unsigned asteroid:1;          // 8
   unsigned wormhole1:1;         // 9
   unsigned wormhole2:1;         // 10
-  unsigned long :13;
+  unsigned long :12;
 } CONS1_STATE;
 
 typedef struct CONS2_STATE {
