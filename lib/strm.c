@@ -186,14 +186,15 @@ void strm_Nada(char* str,uint8_t a, uint8_t b){
 }
 
 void strm_genPush(char* command, char* name, uint8_t number){
+    char* numb;
     if (number > 0){
-        char* numb=numbers_word[number];
+        numb=numbers_word[number];
     }
     else{
-        char* numb="";
+        numb="";
     }
     char newstr[33] = "                                ";
-    char push[13]="Push button ";
+    char push[6]="Push ";
     char* pushptr =push;
     char* newstrptr= newstr;
     char* temp1 = newstrptr;
@@ -258,7 +259,13 @@ void strm_genSet(char* command, char* name, char* val){
 }
 
 void strm_genAct(char* command, char* name, uint8_t number, uint8_t action){
-    char* numb=numbers_word[number];
+    char* numb;
+    if (number > 0){
+        numb=numbers_word[number];
+    }
+    else{
+        numb="";
+    }
     char newstr[33] = "                                ";
     char act[10]="Activate ";
     char deact[12]="Deactivate ";
@@ -287,9 +294,10 @@ void strm_genAct(char* command, char* name, uint8_t number, uint8_t action){
         newstrptr++;
         name++;
     }
-    *newstrptr=" ";
-    newstrptr++;
-
+    if (numb > 0) {
+        *newstrptr=" ";
+        newstrptr++;
+    }
     while(*numb){
         *newstrptr=*numb;
         newstrptr++;
