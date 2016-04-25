@@ -26,7 +26,7 @@ void console_s_level(void) {
         last_state = state;
     }
 
-    led_toggle(&led3);
+    // led_toggle(&led3);
     if(console.LCD_flag == 2){
         state = console_s_change_lcds;
     }
@@ -39,20 +39,20 @@ void init_console(void) {
 void handle_CSn(_INT *intx) {
     console.res = spi_read_slave(console.spi);
     led_on(&led1);
-    printf("Result index 1: %d\r\n",console.res.b[1]);
+    // printf("Result index 1: %d\r\n",console.res.b[1]);
     if (console.res.d1.packet == 1) {
-        printf("First packet type\r\n");
+        // printf("First packet type\r\n");
         console.LCD_flag = 1;
         console.lcd_update1 = console.res;
     }
     if (console.res.d2.packet == 2) {
-        printf("Second packet type\r\n");
+        // printf("Second packet type\r\n");
         console.LCD_flag = 2;
         console.lcd_update2 = console.res;
-        printf("Sending theme: %d\r\n", console.lcd_update2.d2.theme);
-        printf("Sending mod: %d\r\n", console.lcd_update2.d2.mods);
-        printf("Sending arg1: %d\r\n", console.lcd_update2.d2.argument1);
-        printf("Sending arg2: %d\r\n", console.lcd_update2.d2.argument2);
+        // printf("Sending theme: %d\r\n", console.lcd_update2.d2.theme);
+        // printf("Sending mod: %d\r\n", console.lcd_update2.d2.mods);
+        // printf("Sending arg1: %d\r\n", console.lcd_update2.d2.argument1);
+        // printf("Sending arg2: %d\r\n", console.lcd_update2.d2.argument2);
         // printf("Packet 2:%d\r\n",console.lcd_update1.b[1], console.lcd_update2.b[1]);
     }
 }

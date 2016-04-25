@@ -16,15 +16,16 @@ WORD32 con_transfer(_CON *self, WORD64 cmd) {
 void init_con(void) {
     _PIN *SSn[] = { &D[3], &D[5], &D[7] };
 
-    con_init(&con[0], &cd1, &lcd[0], SSn[0]);
-    con_init(&con[1], &cd2, &lcd[1], SSn[1]);
-    con_init(&con[2], &cd3, &lcd[2], SSn[2]);
+    con_init(&con[0], &cd1, &lcd[0], SSn[0], 0);
+    con_init(&con[1], &cd2, &lcd[1], SSn[1], 1);
+    con_init(&con[2], &cd3, &lcd[2], SSn[2], 2);
 }
 
-void con_init(_CON *self, _CD *cd, _LCD *lcd, _PIN *SSn) {
+void con_init(_CON *self, _CD *cd, _LCD *lcd, _PIN *SSn, uint8_t num) {
     self->cd = cd;
     self->lcd = lcd;
     self->SSn = SSn;
+    self->num = num;
 
     self->state = (WORD32)0;
 
@@ -40,11 +41,23 @@ void con_send_cmd(_CON *self, _CMD *cmd, float cd_time, int32_t game_clock) {
     cd_start(self->cd, cd_time, game_clock);
 }
 
+// test MY state against all commands FOR ME
+uint8_t con_cmd_test(_CON *self) {
+    uint8_t i;
+    uint8_t success = 0;
+    for (i = 0; i < 3; i++) {
+        if (con[i].last_cmd->console == self->num) {
+            success |= cmd_test(con[i].last_cmd->index, self->state);
+        }
+    }
+    return success;
+}
+
 // returns command success/failure
 uint8_t con_state_change(_CON *self) {
     WORD64 empty = (WORD64){0,0,0,0,0,0,0,0};
     self->state = con_transfer(self, empty);
-    uint8_t success = cmd_test(self->last_cmd->index, self->state);
+    uint8_t success = con_cmd_test(self);
 
     return self->cd->active && success;
 }

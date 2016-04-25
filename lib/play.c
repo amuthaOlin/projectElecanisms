@@ -36,7 +36,6 @@ void play_state_change(uint8_t sole) {
     }
 }
 
-
 void __play_loop();
 
 void __play_update_level_begin_packet() {
