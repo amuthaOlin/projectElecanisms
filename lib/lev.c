@@ -109,7 +109,6 @@ void __lev_pickLabels(uint8_t theme){
 			break;
 		case 1:
 			while(i<6){
-
 				strcpy(level.label_name1[i],lab_long[level.label[0][i]]);
 				strcpy(level.label_name2[i],lab_long[level.label[1][i]]);
 				strcpy(level.label_name3[i],lab_long[level.label[2][i]]);
@@ -118,7 +117,6 @@ void __lev_pickLabels(uint8_t theme){
 			break;
 		case 2:
 			while(i<6){
-
 				strcpy(level.label_name1[i],lab_homo[level.label[0][i]]);
 				strcpy(level.label_name2[i],lab_homo[level.label[1][i]]);
 				strcpy(level.label_name3[i],lab_homo[level.label[2][i]]);
@@ -127,7 +125,6 @@ void __lev_pickLabels(uint8_t theme){
 			break;
 		case 3:
 			while(i<6){
-
 				strcpy(level.label_name1[i],lab_sym[level.label[0][i]]);
 				strcpy(level.label_name2[i],lab_sym[level.label[1][i]]);
 				strcpy(level.label_name3[i],lab_sym[level.label[2][i]]);
@@ -136,7 +133,6 @@ void __lev_pickLabels(uint8_t theme){
 			break;
 		case 4:
 			while(i<6){
-
 				strcpy(level.label_name1[i],lab_emo[level.label[0][i]]);
 				strcpy(level.label_name2[i],lab_emo[level.label[1][i]]);
 				strcpy(level.label_name3[i],lab_emo[level.label[2][i]]);
@@ -145,7 +141,6 @@ void __lev_pickLabels(uint8_t theme){
 			break;
 		case 5:
 			while(i<6){
-
 				strcpy(level.label_name1[i],lab_num[level.label[0][i]]);
 				strcpy(level.label_name2[i],lab_num[level.label[1][i]]);
 				strcpy(level.label_name3[i],lab_num[level.label[2][i]]);
@@ -154,7 +149,6 @@ void __lev_pickLabels(uint8_t theme){
 			break;
 		case 6:
 			while(i<6){
-
 				strcpy(level.label_name1[i],lab_cons[level.label[0][i]]);
 				strcpy(level.label_name2[i],lab_cons[level.label[1][i]]);
 				strcpy(level.label_name3[i],lab_cons[level.label[2][i]]);
@@ -187,9 +181,6 @@ void __lev_pickLabels(uint8_t theme){
             break;
 		case 10:
 			while(i<6){
-				level.label[0][i]=i;
-				level.label[1][i]=i+6;
-				level.label[2][i]=i+12;
 				strcpy(level.label_name1[i],lab_descr[level.label[0][i]]);
 				strcpy(level.label_name2[i],lab_descr[level.label[1][i]]);
 				strcpy(level.label_name3[i],lab_descr[level.label[2][i]]);
