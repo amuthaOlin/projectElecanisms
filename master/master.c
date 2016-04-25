@@ -97,6 +97,7 @@ void level_play() {
     if (state != last_state) {
         last_state = state;
         lev_setup(level_number);
+        lev_genCmd();
         play_begin();
     }
 
@@ -124,9 +125,9 @@ void level_play() {
     }
 }
 
-void game_over(){
-    char lose_str[33]="You made it to  level ";
-    char win_str[33]="Congratulations!You Win!";
+void game_over() {
+    char lose_str[33] = "You made it to  level ";
+    char win_str[33] = "Congratulations!You Win!";
     if (state != last_state) {
         last_state = state;
         if (game_success == 0){

@@ -97,10 +97,6 @@ void play_begin() {
     play.cmds_to_win = 50;
     play.cmds_progress = play.cmds_to_win/2;
     play.success = 0;
-    // play.level_packet1 = (WORD64){0,0,0,0,0,0,0,0};
-    // play.level_packet2 = (WORD64){0,0,0,0,0,0,0,0};
-    // play.level_packet3 = (WORD64){0,0,0,0,0,0,0,0};
-    // play.level_packet_type_2 = (WORD64){0,0,0,0,0,0,0,0};
 
     __play_update_level_begin_packet();
     __play_send_level_begin_packet();

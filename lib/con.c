@@ -35,8 +35,7 @@ void con_init(_CON *self, _CD *cd, _LCD *lcd, _PIN *SSn) {
 void con_send_cmd(_CON *self, _CMD *cmd, float cd_time, int32_t game_clock) {
     self->last_cmd = cmd;
 
-    lcd_clear(self->lcd);
-    lcd_print1(self->lcd, "HEYyyyyyy");
+    lcd_print(self->lcd, cmd->command);
 
     cd_start(self->cd, cd_time, game_clock);
 }

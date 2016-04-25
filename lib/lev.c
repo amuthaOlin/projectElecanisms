@@ -349,17 +349,14 @@ void lev_genCmd(void){
 char* lev_getName(uint8_t console, uint8_t group){
 	// printf("GROUPB: %d\r\n", group);
 	// printf("---\r\n");
-	if (console==0){
+	if (console == 0) {
 		return level.label_name1[group];
-
 	}
-	if (console==1){
+	if (console == 1) {
 		return level.label_name2[group];
-
 	}
-	if (console==2){
+	if (console == 2) {
 		return level.label_name3[group];
-
 	}
 	// return "Test";
 }
