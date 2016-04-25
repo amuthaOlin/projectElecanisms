@@ -73,6 +73,16 @@ void update_level_begin_packet(){
 
 }
 
+void send_level_begin_packet(){
+    con_transfer(&con[0],play.level_packet1);
+    con_transfer(&con[0],play.level_packet_type_2);
+    con_transfer(&con[1],play.level_packet2);
+    con_transfer(&con[1],play.level_packet_type_2);
+    con_transfer(&con[2],play.level_packet3);
+    con_transfer(&con[2],play.level_packet_type_2);
+}
+
+
 void play_begin() {
     play.timer = &timer1;
     play.clock = 0;
@@ -80,6 +90,7 @@ void play_begin() {
     play.cmds_progress = play.cmds_to_win/2;
     play.success = 0;
     update_level_begin_packet();
+    send_level_begin_packet();
 
     lcd_broadcast(level.message);
     timer_every(play.timer, PLAY_TICK, __play_loop);
