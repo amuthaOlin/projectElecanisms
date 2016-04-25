@@ -72,7 +72,7 @@ void __lev_pickLabels(uint8_t theme){
 	
 	switch(theme) { //FUCK THIS SHIT IN PARTICULAR 
 		case 0:
-			while(i<7){
+			while(i<6){
 				level.label[0][i]=(uint8_t)rng_int(1,theme_len[theme]);
 				level.label[1][i]=(uint8_t)rng_int(1,theme_len[theme]);
 				level.label[2][i]=(uint8_t)rng_int(1,theme_len[theme]);
@@ -83,7 +83,7 @@ void __lev_pickLabels(uint8_t theme){
 		}
 			break;
 		case 1:
-			while(i<7){
+			while(i<6){
 				level.label[0][i]=(uint8_t)rng_int(1,theme_len[theme]);
 				level.label[1][i]=(uint8_t)rng_int(1,theme_len[theme]);
 				level.label[2][i]=(uint8_t)rng_int(1,theme_len[theme]);
@@ -94,7 +94,7 @@ void __lev_pickLabels(uint8_t theme){
 			}	
 			break;
 		case 2:
-			while(i<7){
+			while(i<6){
 				level.label[0][i]=(uint8_t)rng_int(1,theme_len[theme]);
 				level.label[1][i]=(uint8_t)rng_int(1,theme_len[theme]);
 				level.label[2][i]=(uint8_t)rng_int(1,theme_len[theme]);
@@ -105,7 +105,7 @@ void __lev_pickLabels(uint8_t theme){
 			}	
 			break;
 		case 3:
-			while(i<7){
+			while(i<6){
 				level.label[0][i]=(uint8_t)rng_int(1,theme_len[theme]);
 				level.label[1][i]=(uint8_t)rng_int(1,theme_len[theme]);
 				level.label[2][i]=(uint8_t)rng_int(1,theme_len[theme]);
@@ -116,7 +116,7 @@ void __lev_pickLabels(uint8_t theme){
 			}	
 			break;
 		case 4:
-			while(i<7){
+			while(i<6){
 				level.label[0][i]=(uint8_t)rng_int(1,theme_len[theme]);
 				level.label[1][i]=(uint8_t)rng_int(1,theme_len[theme]);
 				level.label[2][i]=(uint8_t)rng_int(1,theme_len[theme]);
@@ -127,7 +127,7 @@ void __lev_pickLabels(uint8_t theme){
 			}	
 			break;
 		case 5:
-			while(i<7){
+			while(i<6){
 				level.label[0][i]=(uint8_t)rng_int(1,theme_len[theme]);
 				level.label[1][i]=(uint8_t)rng_int(1,theme_len[theme]);
 				level.label[2][i]=(uint8_t)rng_int(1,theme_len[theme]);
@@ -138,7 +138,7 @@ void __lev_pickLabels(uint8_t theme){
 			}	
 			break;
 		case 6:
-			while(i<7){
+			while(i<6){
 				level.label[0][i]=(uint8_t)rng_int(1,theme_len[theme]);
 				level.label[1][i]=(uint8_t)rng_int(1,theme_len[theme]);
 				level.label[2][i]=(uint8_t)rng_int(1,theme_len[theme]);
@@ -149,7 +149,7 @@ void __lev_pickLabels(uint8_t theme){
 			}	
 			break;
 		case 7:
-			while(i<7){
+			while(i<6){
 				level.label[0][i]=(uint8_t)rng_int(1,theme_len[theme]);
 				level.label[1][i]=(uint8_t)rng_int(1,theme_len[theme]);
 				level.label[2][i]=(uint8_t)rng_int(1,theme_len[theme]);
@@ -160,7 +160,7 @@ void __lev_pickLabels(uint8_t theme){
 			}	
 			break;
 		case 8:
-			while(i<7){
+			while(i<6){
 				level.label[0][i]=(uint8_t)rng_int(1,theme_len[theme]);
 				level.label[1][i]=(uint8_t)rng_int(1,theme_len[theme]);
 				level.label[2][i]=(uint8_t)rng_int(1,theme_len[theme]);
@@ -171,7 +171,7 @@ void __lev_pickLabels(uint8_t theme){
 			}	
 			break;
 		case 9:
-			while(i<7){
+			while(i<6){
 				level.label[0][i]=(uint8_t)rng_int(1,theme_len[theme]);
 				level.label[1][i]=(uint8_t)rng_int(1,theme_len[theme]);
 				level.label[2][i]=(uint8_t)rng_int(1,theme_len[theme]);
@@ -206,8 +206,17 @@ void lev_setup(uint8_t lev_num){
 		level.cmd_time=18;
 		level.asteroids[0]=(uint8_t)rng_int(4,10); // Seed two asteroids
 		level.asteroids[1]=(uint8_t)rng_int(12,20);
-		strcpy(level.message,instructions[0]);
+
+        strcpy(level.message,instructions[0]);
+        printf("BEFOREEEEEEE Label theme: %d\r\n", level.lab_theme);
+        printf("Label mod: %d\r\n", level.mod);
+        printf("Label arg1: %d\r\n", level.arg_freq);
+        printf("Label arg2: %d\r\n", level.arg_shift);
 		__lev_pickLabels(0);
+        printf("AFTERRRRRRRRRRR Label theme: %d\r\n", level.lab_theme);
+        printf("Label mod: %d\r\n", level.mod);
+        printf("Label arg1: %d\r\n", level.arg_freq);
+        printf("Label arg2: %d\r\n", level.arg_shift);
 	}
 
 	else if (lev_num ==4 ){ // Level 4 (tier 2)
