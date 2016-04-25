@@ -224,6 +224,7 @@ void lcd_cursor(_LCD *self, uint8_t cur) {
 }
 
 void lcd_print1(_LCD *self, char *str) {
+    lcd_clear(self);
     while (*str) {
         lcd_putc(self, *str);
         str++;
@@ -231,6 +232,7 @@ void lcd_print1(_LCD *self, char *str) {
 }
 
 void lcd_print2(_LCD *self, char* line1, char* line2){
+    lcd_clear(self);
     char str[56] ="                                                        ";
     int i =0;
     while (*line1){
@@ -278,6 +280,9 @@ void lcd_print(_LCD *self, char* message) {
 }
 
 void lcd_broadcast(char* message) {
+    lcd_clear(&lcd[0]);
+    lcd_clear(&lcd[1]);
+    lcd_clear(&lcd[2]);
     uint8_t i;
     for (i = 0; i < 3; i++)
         lcd_print(&lcd[i], message);

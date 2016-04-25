@@ -19,6 +19,8 @@ typedef struct _LEV {
 
 } _LEV;
 
+extern _LEV level;
+
 void lev_init(void);
 void __lev_pickLabels(uint8_t theme);
 void lev_setup(uint8_t lev_num);

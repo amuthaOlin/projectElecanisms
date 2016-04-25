@@ -36,7 +36,7 @@
 #define CMD_COUNT 100 // 97-9 (100 to be safe)
 _CMD cmds[CMD_COUNT];
 _CMD cmds_special[9];
-char numbers[11][7]={"Zero","One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten"};
+char numbers_word[11][7]={"Zero","One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten"};
 
 uint16_t __cmd_log2(uint16_t n) {
     return n<2? 1:ceil(log((double)n)/log(2.));
@@ -129,7 +129,7 @@ void cmd_str(uint16_t cmdidx) { // assume str is 16 char long
     if (CONS_HASREST[cmd->console][cmd->actuator] && CONS_STATES[cmd->console][cmd->actuator] == 2) {
         strm_genPush(cmd->command,cmd->name);
     } else {
-        strm_genSet(cmd->command,cmd->name,numbers[cmd->action]);
+        strm_genSet(cmd->command,cmd->name,numbers_word[cmd->action]);
     }
     // strcpy(cmd->command, "Do something!");
 }

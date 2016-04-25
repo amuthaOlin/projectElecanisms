@@ -3,6 +3,8 @@
 
 #include "rng.h"
 #include "con.h"
+#include "lev.h"
+#include "lcd.h"
 
 #define PLAY_NUM_CMDS 90
 #define PLAY_TICK 1e-2 // seconds
@@ -11,16 +13,10 @@ volatile uint8_t PLAYING = 0;
 
 _PLAY play;
 
-void play_state_change(uint8_t sole) {
-    uint8_t success = con_state_change(&con[sole]);
-    if (success) {
-        __play_advance(sole, 1);
-    }
-}
-
 uint16_t __play_rand_cmd_idx() {
     return rng_int(0, PLAY_NUM_CMDS);
 }
+
 
 void __play_advance(uint8_t sole, uint8_t success) {
     if (!success) {
@@ -32,6 +28,14 @@ void __play_advance(uint8_t sole, uint8_t success) {
     }
 }
 
+void play_state_change(uint8_t sole) {
+    uint8_t success = con_state_change(&con[sole]);
+    if (success) {
+        __play_advance(sole, 1);
+    }
+}
+
+
 void __play_loop();
 
 void play_begin() {
@@ -41,6 +45,7 @@ void play_begin() {
     play.cmds_progress = play.cmds_to_win/2;
     play.success = 0;
 
+    lcd_broadcast(level.message);
     timer_every(play.timer, PLAY_TICK, __play_loop);
     cd_start(&cdcenter, level.cmd_time, play.clock);
 
