@@ -17,6 +17,11 @@ typedef struct _PLAY {
 
     uint8_t success;
     uint8_t PLAYING;
+    WORD64 level_packet1;
+    WORD64 level_packet2;
+    WORD64 level_packet3;
+    WORD64 level_packet_type_2;
+
 } _PLAY;
 
 extern _PLAY play;

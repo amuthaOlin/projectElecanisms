@@ -38,12 +38,48 @@ void play_state_change(uint8_t sole) {
 
 void __play_loop();
 
+void update_level_begin_packet(){
+    play.level_packet_type_2.d2.packet = 2;
+    play.level_packet_type_2.d2.theme = level.lab_theme;
+    play.level_packet_type_2.d2.mods = level.mod;
+    play.level_packet_type_2.d2.argument1 = level.arg_freq;
+    play.level_packet_type_2.d2.argument2 = level.arg_shift;
+
+
+    play.level_packet1.d1.packet = 1;
+    play.level_packet1.d1.index1 = level.label_name[0];
+    play.level_packet1.d1.index2 = level.label_name[1];
+    play.level_packet1.d1.index3 = level.label_name[2];
+    play.level_packet1.d1.index4 = level.label_name[3];
+    play.level_packet1.d1.index5 = level.label_name[4];
+    play.level_packet1.d1.index6 = level.label_name[5];
+
+
+    play.level_packet2.d1.packet = 1;
+    play.level_packet2.d1.index1 = level.label_name[0];
+    play.level_packet2.d1.index2 = level.label_name[1];
+    play.level_packet2.d1.index3 = level.label_name[2];
+    play.level_packet2.d1.index4 = level.label_name[3];
+    play.level_packet2.d1.index5 = level.label_name[4];
+    play.level_packet2.d1.index6 = level.label_name[5];
+
+    play.level_packet3.d1.packet = 1;
+    play.level_packet3.d1.index1 = level.label_name[0];
+    play.level_packet3.d1.index2 = level.label_name[1];
+    play.level_packet3.d1.index3 = level.label_name[2];
+    play.level_packet3.d1.index4 = level.label_name[3];
+    play.level_packet3.d1.index5 = level.label_name[4];
+    play.level_packet3.d1.index6 = level.label_name[5];
+
+}
+
 void play_begin() {
     play.timer = &timer1;
     play.clock = 0;
     play.cmds_to_win = 50;
     play.cmds_progress = play.cmds_to_win/2;
     play.success = 0;
+    update_level_begin_packet();
 
     lcd_broadcast(level.message);
     timer_every(play.timer, PLAY_TICK, __play_loop);
