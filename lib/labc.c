@@ -31,7 +31,7 @@ char lab_wars [47][17]={" ","Deathstar", "X-Wing", "TIE Fighter", "Alderaan", "C
 // Theme 9
 char lab_pir [47][17]={" ","Treasure", "Galleon", "Black Beard", "Carribean", "Tortuga", "Jack Sparrow", "Black Pearl", "Davvy Jones", "Islands", "Spiced Rum", "Rum Gone", "Starboard", "Port", "Mast", "Rigging", "Plank", "Keel Haul", "Anchor", "Bermuda", "Avast", "Shiver Timbers", "Monkey", "Poop Deck", "Cockswain", "Landlubber", "Chips Ahoy", "Batten Hatches", "Booty", "Crows Nest", "Jolly Roger", "Man-O-War", "Scallyway", "Calico Jack", "Captain Kidd", "Barbary Coast", "Cat O Nine", "Cutlass", "Cannon", "Powder Chest", "Kraken", "Parrot", "Wooden Leg", "Captian Hook", "Eye Patch", "Dread Pirate", "Hydra"};
 // Theme 10
-char lab_descr=[18][17]={"Two Toggles C1","Green Button","Word Wheel","Joystick","One Hot","Red C1","Four Hot","Slider","Red C2","Four Green","Rocker","C2 Dial","Clutch","Dial C3","Red C3","Triangle","Two Toggles C3","Arming"}
+char lab_descr [18][17]={"Two Toggles C1","Green Button","Word Wheel","Joystick","One Hot","Red C1","Four Hot","Slider","Red C2","Four Green","Rocker","C2 Dial","Clutch","Dial C3","Red C3","Triangle","Two Toggles C3","Arming"};
 
 int theme_len[9]={101,47,49,47,47,47,47,47,47};
 
