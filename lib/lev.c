@@ -55,7 +55,7 @@ void lev_init(void){
 		while(i<6){
 			level.label[k][i]=0;
 			i++;
-			}
+		}
 	}
     level.lab_theme=0;
     level.mod=0;
@@ -208,15 +208,7 @@ void lev_setup(uint8_t lev_num){
 		level.asteroids[1]=(uint8_t)rng_int(12,20);
 
         strcpy(level.message,instructions[0]);
-        printf("BEFOREEEEEEE Label theme: %d\r\n", level.lab_theme);
-        printf("Label mod: %d\r\n", level.mod);
-        printf("Label arg1: %d\r\n", level.arg_freq);
-        printf("Label arg2: %d\r\n", level.arg_shift);
 		__lev_pickLabels(0);
-        printf("AFTERRRRRRRRRRR Label theme: %d\r\n", level.lab_theme);
-        printf("Label mod: %d\r\n", level.mod);
-        printf("Label arg1: %d\r\n", level.arg_freq);
-        printf("Label arg2: %d\r\n", level.arg_shift);
 	}
 
 	else if (lev_num ==4 ){ // Level 4 (tier 2)

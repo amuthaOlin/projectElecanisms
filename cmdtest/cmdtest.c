@@ -78,13 +78,20 @@ int16_t main(void) {
     // int_attach(&int3, Sint3, 1, con3_state_change);
 
 
-    lev_setup(3);
-    printf("Label theme: %d\r\n", level.lab_theme);
-    printf("Label mod: %d\r\n", level.mod);
-    printf("Label arg1: %d\r\n", level.arg_freq);
-    printf("Label arg2: %d\r\n", level.arg_shift);
-
-    play_begin();
+    uint8_t i, j;
+    for (i = 1; i < 15; i++) {
+        for (j = 0; j < 10; j++) {
+            timer_delayMicro(0xFFFF);
+        }
+        lev_init();
+        lev_setup(i);
+        play_begin();
+        printf("LEVEL %d===========================\r\n", i);
+        printf("Label theme: %d\r\n", level.lab_theme);
+        printf("Label mod: %d\r\n", level.mod);
+        printf("Label arg1: %d\r\n", level.arg_freq);
+        printf("Label arg2: %d\r\n", level.arg_shift);
+    }
 
     // uint8_t success;
     // printf("=================\r\n");
