@@ -93,6 +93,9 @@ int16_t main(void) {
 
     init_i2c();
     init_lcd(2);
+    lcd_clear(&lcd[0]);
+    lcd_clear(&lcd[1]);
+    lcd_clear(&lcd[2]);
 
     init_console();
     
