@@ -22,7 +22,7 @@ list = Builder(action = 'xc16-objdump -S -D $SOURCE > $TARGET',
 env.Append(BUILDERS = {'List' : list})
 
 env.Program('lcdtest', ['lcdtest.c',
-                        'strmanip.c',
+                        '../lib/strm.c',
                         '../lib/ui.c', 
                         '../lib/lcd.c', 
                         '../lib/pin.c', 

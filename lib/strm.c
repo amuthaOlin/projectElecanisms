@@ -236,6 +236,48 @@ void strm_genSet(char* command, char* name, char* val){
     newstrptr++;
     strcpy(temp2,temp1);
 }
+
+void strm_genAct(char* command, char* name, char* numb, uint8_t action){
+    char newstr[33] = "                                ";
+    char act[10]="Activate ";
+    char deact[12]="Deactivate ";
+    char* actptr =act;
+    char* deactptr=deact;
+    char* newstrptr= newstr;
+    char* temp1 = newstrptr;
+    char* temp2 = command;
+
+    if (action==1){
+    while(*actptr){
+        *newstrptr=*actptr;
+        newstrptr++;
+        actptr++;
+    }
+    }
+    if (action==0){
+    while(*deactptr){
+        *newstrptr=*deactptr;
+        newstrptr++;
+        deactptr++;
+    }
+    }
+    while(*name){
+        *newstrptr=*name;
+        newstrptr++;
+        name++;
+    }
+    *newstrptr=" ";
+    newstrptr++;
+    
+    while(*numb){
+        *newstrptr=*numb;
+        newstrptr++;
+        numb++;
+    }
+    *newstrptr='!';
+    newstrptr++;
+    strcpy(temp2,temp1);
+}
     
 
 
