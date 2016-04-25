@@ -47,29 +47,29 @@ void __play_update_level_begin_packet(){
 
 
     play.level_packet1.d1.packet = 1;
-    play.level_packet1.d1.index1 = level.label_name[0];
-    play.level_packet1.d1.index2 = level.label_name[1];
-    play.level_packet1.d1.index3 = level.label_name[2];
-    play.level_packet1.d1.index4 = level.label_name[3];
-    play.level_packet1.d1.index5 = level.label_name[4];
-    play.level_packet1.d1.index6 = level.label_name[5];
+    play.level_packet1.d1.index1 = level.label_name1[0];
+    play.level_packet1.d1.index2 = level.label_name1[1];
+    play.level_packet1.d1.index3 = level.label_name1[2];
+    play.level_packet1.d1.index4 = level.label_name1[3];
+    play.level_packet1.d1.index5 = level.label_name1[4];
+    play.level_packet1.d1.index6 = level.label_name1[5];
 
 
     play.level_packet2.d1.packet = 1;
-    play.level_packet2.d1.index1 = level.label_name[0];
-    play.level_packet2.d1.index2 = level.label_name[1];
-    play.level_packet2.d1.index3 = level.label_name[2];
-    play.level_packet2.d1.index4 = level.label_name[3];
-    play.level_packet2.d1.index5 = level.label_name[4];
-    play.level_packet2.d1.index6 = level.label_name[5];
+    play.level_packet2.d1.index1 = level.label_name2[0];
+    play.level_packet2.d1.index2 = level.label_name2[1];
+    play.level_packet2.d1.index3 = level.label_name2[2];
+    play.level_packet2.d1.index4 = level.label_name2[3];
+    play.level_packet2.d1.index5 = level.label_name2[4];
+    play.level_packet2.d1.index6 = level.label_name2[5];
 
     play.level_packet3.d1.packet = 1;
-    play.level_packet3.d1.index1 = level.label_name[0];
-    play.level_packet3.d1.index2 = level.label_name[1];
-    play.level_packet3.d1.index3 = level.label_name[2];
-    play.level_packet3.d1.index4 = level.label_name[3];
-    play.level_packet3.d1.index5 = level.label_name[4];
-    play.level_packet3.d1.index6 = level.label_name[5];
+    play.level_packet3.d1.index1 = level.label_name3[0];
+    play.level_packet3.d1.index2 = level.label_name3[1];
+    play.level_packet3.d1.index3 = level.label_name3[2];
+    play.level_packet3.d1.index4 = level.label_name3[3];
+    play.level_packet3.d1.index5 = level.label_name3[4];
+    play.level_packet3.d1.index6 = level.label_name3[5];
 
 }
 
