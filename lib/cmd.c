@@ -128,10 +128,11 @@ void cmd_str(uint16_t cmdidx) { // assume str is 16 char long
 
     if (CONS_HASREST[cmd->console][cmd->actuator] && CONS_STATES[cmd->console][cmd->actuator] == 2) {
         strm_genPush(cmd->command,cmd->name);
+    } else if (CONS_STATES[cmd->console][cmd->actuator] == 2) {
+        strm_genAct(cmd->command,cmd->name,cmd->action);
     } else {
         strm_genSet(cmd->command,cmd->name,numbers_word[cmd->action]);
     }
-    // strcpy(cmd->command, "Do something!");
 }
 
 // returns 1 if command passes

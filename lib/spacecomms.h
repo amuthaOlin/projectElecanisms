@@ -7,6 +7,7 @@ extern uint8_t CONS_NUMACTS[];
 extern uint8_t CONS_STATES[][15];
 extern uint8_t CONS_HASREST[][15];
 extern uint8_t CONS_GROUP[][15];
+uint8_t CONS_GROUPNUM[][15];
 
 typedef struct LCD_NAMES1 {
   unsigned packet:8;
