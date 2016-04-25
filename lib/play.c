@@ -38,7 +38,7 @@ void play_state_change(uint8_t sole) {
 
 void __play_loop();
 
-void update_level_begin_packet(){
+void __play_update_level_begin_packet(){
     play.level_packet_type_2.d2.packet = 2;
     play.level_packet_type_2.d2.theme = level.lab_theme;
     play.level_packet_type_2.d2.mods = level.mod;
@@ -73,7 +73,7 @@ void update_level_begin_packet(){
 
 }
 
-void send_level_begin_packet(){
+void __play_send_level_begin_packet(){
     con_transfer(&con[0],play.level_packet1);
     con_transfer(&con[0],play.level_packet_type_2);
     con_transfer(&con[1],play.level_packet2);
@@ -89,8 +89,8 @@ void play_begin() {
     play.cmds_to_win = 50;
     play.cmds_progress = play.cmds_to_win/2;
     play.success = 0;
-    update_level_begin_packet();
-    send_level_begin_packet();
+    __play_update_level_begin_packet();
+    __play_send_level_begin_packet();
 
     lcd_broadcast(level.message);
     timer_every(play.timer, PLAY_TICK, __play_loop);
