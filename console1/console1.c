@@ -6,6 +6,8 @@
 #include "pin.h"
 #include "int.h"
 #include "spi.h"
+#include "lcd.h"
+#include "labc.h"
 #include "timer.h"
 #include "uart.h"
 #include "spacecomms.h"
@@ -15,7 +17,7 @@ uint8_t read_wordwheel_inside(){
     uint16_t wordwheel_in = (uint16_t)pin_read(&A[1]);
     //printf("wordwheel_inside:%u\n\r",wordwheel_in);
     uint8_t wordwheel_out;
-    if(wordwheel_in<51000){
+    if (wordwheel_in<51000){
         wordwheel_out = 0;
     }
     else if (wordwheel_in<52000 && wordwheel_in>51000){
@@ -109,14 +111,15 @@ int16_t main(void) {
     init_int();
     init_spi();
     init_timer();
-    timer_initDelay(&timer5);
+    timer_initDelayMicro(&timer5);
 
     init_uart();
-    init_console();
 
     init_i2c();
     init_lcd(1);
 
+    init_console();
+    
     console1_init();
     console_attach_poll(&console, poll_state);
 
