@@ -53,6 +53,8 @@ void cd_start(_CD *self, float dur_sec, int32_t ticks_start) {
     self->ticks_start = ticks_start;
 
     self->active = 1;
+
+    cd_update(self, ticks_start);
 }
 
 void cd_update(_CD *self, int32_t ticks_cur) {
