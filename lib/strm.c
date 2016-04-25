@@ -224,10 +224,11 @@ void strm_genPush(char* command, char* name, uint8_t number){
     strcpy(temp2,temp1);
 }
 
-void strm_genSet(char* command, char* name, char* val){
+void strm_genSet(char* command, char* name, uint8_t value){
     char newstr[33] = "                                ";
     char set[5]="Set ";
     char to[5]=" to ";
+    char* val=numbers_word[value];
     char* setptr =set;
     char* toptr =to;
     char* newstrptr= newstr;
