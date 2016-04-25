@@ -66,11 +66,6 @@ void poll_state(_CONSOLE *self) {
     printf("State: %08lx\r\n", (unsigned long)self->state.ul);
 }
 
-void handle_CSn(_INT *intx) {
-    console.res = spi_read_slave(console.spi);
-    //printf("res:%x%x\n\r",res.l[1],res.l[0]);
-}
-
 void console1_poll(_TIMER *timer) {
     console_poll_changes(&console);
 }
@@ -89,18 +84,17 @@ int16_t main(void) {
     init_int();
     init_spi();
     init_timer();
-    timer_initDelay(&timer5);
+    timer_initDelayMicro(&timer5);
 
     init_uart();
-    init_console();
 
     init_i2c();
     init_lcd(2);
 
+    init_console();
+    
     console2_init();
-
     console_attach_poll(&console, poll_state);
-    int_attach(&int1, console.spi->SSn, 1, handle_CSn);
 
     timer_every(&timer4, 1e-2, console1_poll);
 

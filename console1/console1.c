@@ -119,10 +119,9 @@ int16_t main(void) {
     init_lcd(1);
 
     init_console();
-    
+
     console1_init();
     console_attach_poll(&console, poll_state);
-
 
     timer_every(&timer4, 1e-2, console1_poll);
 

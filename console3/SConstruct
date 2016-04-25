@@ -29,6 +29,7 @@ env.Program('console3', ['console3.c',
                         '../lib/i2c.c', 
                         '../lib/int.c', 
                         '../lib/spi.c',
+                        '../lib/lcd.c',
                         '../lib/common.c',
                         '../lib/console.c',
                         '../lib/spacecomms.h'])
