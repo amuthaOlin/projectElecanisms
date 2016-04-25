@@ -194,7 +194,7 @@ void strm_genPush(char* command, char* name, uint8_t number){
         numb="";
     }
     char newstr[33] = "                                ";
-    char push[13]="Push button ";
+    char push[6]="Push ";
     char* pushptr =push;
     char* newstrptr= newstr;
     char* temp1 = newstrptr;
@@ -266,7 +266,6 @@ void strm_genAct(char* command, char* name, uint8_t number, uint8_t action){
     else{
         numb="";
     }
-    char* numb=numbers_word[number];
     char newstr[33] = "                                ";
     char act[10]="Activate ";
     char deact[12]="Deactivate ";

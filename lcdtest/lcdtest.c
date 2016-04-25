@@ -45,9 +45,12 @@ int16_t main(void) {
     // lcd_print1(&lcd[0],strptr3);
     // printf("%s\r\n",string1);
     // lcd_broadcast(string2);
-    strm_genAct(string1,"Thing","Two",1);
+    strm_genAct(string1,"Toggle",2,1);
     // printf("%s\r\n",string1);
-    lcd_broadcast(string1);//TODO get level_number and string cat
+    lcd_print(&lcd[0], string1);//TODO get level_number and string cat
+    strm_genPush(string2,"Triangle",3);
+    // printf("%s\r\n",string2);
+    lcd_print(&lcd[1], string2);//TODO get level_number and string cat
     // lcd_broadcast_after(numbers[9]);
     // lcd_print1(&lcd[0],strptr1);
     // // Reverse(strptr2);
