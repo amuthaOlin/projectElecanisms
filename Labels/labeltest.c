@@ -21,9 +21,9 @@ void console_update_lcds(void) {
     level.lab_numb[4] = 4;
     level.lab_numb[5] = 5;
     level.lab_theme = 1;
-    level.mod = 2;
-    level.arg_freq = 0;
-    level.arg_shift = 0;
+    level.mod = 8;
+    level.arg_freq = 3;
+    level.arg_shift = 2;
 
     labc_setup();
 }
@@ -41,8 +41,6 @@ int16_t main(void) {
     lcd_clear(&lcd[1]);
     lcd_clear(&lcd[2]);
 
-
-    _LABC level;
 
     console_update_lcds();
     

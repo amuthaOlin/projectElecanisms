@@ -2,6 +2,7 @@
 #include "common.h"
 #include "ui.h"
 #include "console.h"
+#include "lcd.h"
 #include "labc.h"
 
 _CONSOLE console;
@@ -9,7 +10,7 @@ _CONSOLE console;
 STATE_HANDLER_T state, last_state;
 
 void console_s_change_lcds(void) {
-    if (state != last_state){
+    if (state != last_state) {
         last_state = state;
         console_update_lcds();
         console.LCD_flag = 0;
@@ -24,11 +25,10 @@ void console_s_level(void) {
     if (state != last_state){
         last_state = state;
     }
+
+    led_toggle(&led3);
     if(console.LCD_flag == 2){
         state = console_s_change_lcds;
-    }
-    if (state != last_state){
-
     }
 }
 
@@ -38,15 +38,23 @@ void init_console(void) {
 
 void handle_CSn(_INT *intx) {
     console.res = spi_read_slave(console.spi);
+    led_on(&led1);
+    printf("Result index 1: %d\r\n",console.res.b[1]);
     if (console.res.d1.packet == 1) {
+        printf("First packet type\r\n");
         console.LCD_flag = 1;
         console.lcd_update1 = console.res;
     }
     if (console.res.d2.packet == 2) {
+        printf("Second packet type\r\n");
         console.LCD_flag = 2;
         console.lcd_update2 = console.res;
+        printf("Sending theme: %d\r\n", console.lcd_update2.d2.theme);
+        printf("Sending mod: %d\r\n", console.lcd_update2.d2.mods);
+        printf("Sending arg1: %d\r\n", console.lcd_update2.d2.argument1);
+        printf("Sending arg2: %d\r\n", console.lcd_update2.d2.argument2);
+        // printf("Packet 2:%d\r\n",console.lcd_update1.b[1], console.lcd_update2.b[1]);
     }
-    //printf("res:%x%x\n\r",res.l[1],res.l[0]);
 }
 
 void console_update_lcds(void) {
@@ -82,7 +90,7 @@ void console_attach_poll(_CONSOLE *self, void (*poll)(_CONSOLE *self)) {
 }
 
 void console_tx(_CONSOLE *self, WORD32 cmd) {
-	printf("cmd:%lu\n\r",cmd.l );
+	// printf("cmd:%lu\n\r",cmd.l );
     spi_queue_slave(self->spi, cmd);
     pin_set(self->Sint);
     pin_clear(self->Sint);

@@ -13,6 +13,7 @@
 #include "timer.h"
 #include "lev.h"
 #include "strm.h"
+#include "play.h"
 #include "lcd.h"
 
 int16_t main(void) {
@@ -31,6 +32,7 @@ int16_t main(void) {
     timer_initDelayMicro(&timer5);
     init_lcd(0);
     init_rng();
+    init_con();
 
     lcd_clear(&lcd[0]);
     lcd_clear(&lcd[1]);
@@ -41,15 +43,11 @@ int16_t main(void) {
     // lcd_print1(&lcdcmd[1],".");
     // lcd_print1(&lcdcmd[2],".");
 
-    _LEV level;
-    lev_setup(3);
-    lev_genCmd();
-    lev_printCmd(0,30);
-    lev_printCmd(1,60);
-    lev_printCmd(2,89);
+    // lev_genCmd();
     // cmd_print(32);
     // cmd_print(33);
     // cmd_print(34);
+
 
     // char command[33] = "                                ";
     // strm_genSet(command,"Thingymagig","One");
@@ -59,6 +57,34 @@ int16_t main(void) {
 
     lcd_stop(&lcd[0]);
     led_on(&led3);
+
+
+    _PIN *MISO  = &D[1];
+    _PIN *MOSI  = &D[0];
+    _PIN *SCK   = &D[2];
+    _PIN *Sint1 = &D[10];
+    _PIN *Sint2 = &D[6];
+    _PIN *Sint3 = &D[8];
+
+    _PIN *SSn[] = { &D[3], &D[5], &D[7] };
+
+    spi_open(&spi1, &D[0], &D[1], &D[2], 1e6, 1, 1);
+    pin_digitalIn(Sint1);
+    pin_digitalIn(Sint2);
+    pin_digitalIn(Sint3);
+
+    // int_attach(&int1, Sint1, 1, con1_state_change);
+    // int_attach(&int2, Sint2, 1, con2_state_change);
+    // int_attach(&int3, Sint3, 1, con3_state_change);
+
+
+    lev_setup(3);
+    printf("Label theme: %d\r\n", level.lab_theme);
+    printf("Label mod: %d\r\n", level.mod);
+    printf("Label arg1: %d\r\n", level.arg_freq);
+    printf("Label arg2: %d\r\n", level.arg_shift);
+
+    play_begin();
 
     // uint8_t success;
     // printf("=================\r\n");
