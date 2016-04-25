@@ -68,13 +68,13 @@ void __lev_init(void) {
 }
 
 
-bool __lev_already_exists(int *array, int array_size, int value)
-{
-    for (int i = 0; i < array_size; i++)
+uint8_t __lev_already_exists(uint8_t *array, uint8_t array_size, uint8_t value) {
+    uint8_t i;
+    for (i = 0; i < array_size; i++)
         if (array[i] == value)
-            return true; // we found the same value, return true
+            return 1; // we found the same value, return true
 
-    return false; // if we get here we have not found it
+    return 0; // if we get here we have not found it
 }
 
 void __lev_pickLabels(uint8_t theme){
@@ -86,7 +86,7 @@ void __lev_pickLabels(uint8_t theme){
 
 	for(j=0;j<18;j++){
 		random_num = (uint8_t)rng_int(1,theme_len[theme]);
-		while(__lev_already_exists(random_num)){
+		while(__lev_already_exists(random_num_array, 18, random_num)){
 			random_num = (uint8_t)rng_int(1,theme_len[theme]);
 		}
 		random_num_array[j] = random_num;
