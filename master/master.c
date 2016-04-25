@@ -30,7 +30,7 @@ _PIN *Sint2 = &D[6];
 _PIN *Sint3 = &D[8];
 
 _PIN *SSn[] = { &D[3], &D[5], &D[7] };
-_PIN *Coin = &D[12];
+_PIN *Coin_pin = &D[12];
 
 volatile uint8_t coin = 0;
 volatile uint8_t level_number = 0;
@@ -180,12 +180,12 @@ void init_master() {
     pin_digitalIn(Sint1);
     pin_digitalIn(Sint2);
     pin_digitalIn(Sint3);
-    pin_digitalIn(Coin);
+    pin_digitalIn(Coin_pin);
 
     int_attach(&int1, Sint1, 1, con1_state_change);
     int_attach(&int2, Sint2, 1, con2_state_change);
     int_attach(&int3, Sint3, 1, con3_state_change);
-    int_attach(&int4, Coin, 1, coin_handler);
+    int_attach(&int4, Coin_pin, 1, coin_handler);
 }
 
 int16_t main(void) {
