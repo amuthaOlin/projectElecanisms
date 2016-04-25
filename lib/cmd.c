@@ -127,9 +127,9 @@ void cmd_str(uint16_t cmdidx) { // assume str is 16 char long
     _CMD *cmd = &cmds[cmdidx];
 
     if (CONS_HASREST[cmd->console][cmd->actuator] && CONS_STATES[cmd->console][cmd->actuator] == 2) {
-        strm_genPush(cmd->command,cmd->name);
+        strm_genPush(cmd->command,cmd->name, numbers_word[CONS_GROUPNUM[cmd->console][cmd->actuator]]);
     } else if (CONS_STATES[cmd->console][cmd->actuator] == 2) {
-        strm_genAct(cmd->command,cmd->name,cmd->action);
+        strm_genAct(cmd->command,cmd->name,numbers_word[CONS_GROUPNUM[cmd->console][cmd->actuator]],cmd->action);
     } else {
         strm_genSet(cmd->command,cmd->name,numbers_word[cmd->action]);
     }
