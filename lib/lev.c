@@ -34,7 +34,7 @@ char lab_wars [47][17]={" ","Deathstar", "X-Wing", "TIE Fighter", "Alderaan", "C
 char lab_pir [47][17]={" ","Treasure", "Galleon", "Black Beard", "Carribean", "Tortuga", "Jack Sparrow", "Black Pearl", "Davvy Jones", "Islands", "Spiced Rum", "Rum Gone", "Starboard", "Port", "Mast", "Rigging", "Plank", "Keel Haul", "Anchor", "Bermuda", "Avast", "Shiver Timbers", "Monkey", "Poop Deck", "Cockswain", "Landlubber", "Chips Ahoy", "Batten Hatches", "Booty", "Crows Nest", "Jolly Roger", "Man-O-War", "Scallyway", "Calico Jack", "Captain Kidd", "Barbary Coast", "Cat O Nine", "Cutlass", "Cannon", "Powder Chest", "Kraken", "Parrot", "Wooden Leg", "Captian Hook", "Eye Patch", "Dread Pirate", "Hydra"};
 
 char lab_descr [18][17]={"Two Toggles C1","Green Button","Word Wheel","Joystick","One Hot","Red C1","Four Hot","Slider","Red C2","Four Green","Rocker","C2 Dial","Clutch","Dial C3","Red C3","Triangle","Two Toggles C3","Arming"};
-int theme_len[9]={101,47,49,47,47,47,47,47,47};
+int theme_len[11]={101,47,49,47,47,47,47,47,47,47,18};
 int lab_len[3]={2,8,7};
 int easy_lab[2]={0,1};
 int med_lab[8]={0,1,2,4,5,7,8,9};
@@ -88,9 +88,11 @@ void __lev_pickLabels(uint8_t theme){
 		while(__lev_already_exists(&random_num_array, 18, random_num)){
 			random_num = (uint8_t)rng_int(1,theme_len[theme]);
             // printf("Random number in while loop: %d\r\n", random_num);
-		}
+        }
+        printf("Random number in while loop: %d\r\n", random_num);
 		random_num_array[j] = random_num;
 	}
+    led_on(&led3);
 
 	while(i<6){
 		level.label[0][i]=random_num_array[i];
