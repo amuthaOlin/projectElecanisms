@@ -48,9 +48,6 @@ void game_over(void);
 
 STATE_HANDLER_T state, last_state;
 
-
-
-
 void con1_state_change(_INT *intx) {
     play_state_change(0);
 }
@@ -74,7 +71,6 @@ void coin_wait(){
         level_number = 1;
         coin = 0;
     }
-
 }
 
 volatile uint8_t red_pressed = 0;
@@ -87,14 +83,13 @@ void pre_level(){
     }
     
     red_pressed = con[0].state.s1.red_button && con[1].state.s2.red_button && con[2].state.s3.red_button;
-    if (red_pressed == 1){
+    if (red_pressed){
         state = level_play;
     }
 
     if (state != last_state) {
         lcd_broadcast(launch_str);
     }
-        
 }
 
 volatile uint8_t level_successs = 0;
@@ -116,22 +111,19 @@ void level_play(){
             if (level_number == 15){
                 game_success = 1;
                 state = game_over;
-            }
-            else {
+            } else {
                 level_number = level_number +1;
                 state = pre_level;
             }
         }
     }
 
-    if(state != last_state){
-        if(level_success == 1){
+    if (state != last_state){
+        if (level_success == 1){
             strcat(win_str,numbers[level_number]);
             lcd_broadcast(win_str); //TODO get level_number and string cat
         }
     }
-
-
 }
 
 void game_over(){
@@ -150,12 +142,10 @@ void game_over(){
     led_on(&led1);
     uint8_t i;
     for (i=0; i<10; i++ ){
-    timer_delayMicro(50000);
+        timer_delayMicro(50000);
     }
 
     state = coin_wait;
-    
-
 }
 
 void coin_handler(_INT *intx) {

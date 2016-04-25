@@ -5,7 +5,7 @@
 
 _CON con[3];
 
-WORD32 __con_transfer(_CON *self, WORD32 cmd) {
+WORD32 con_transfer(_CON *self, WORD64 cmd) {
     WORD32 tmp;
     pin_clear(self->SSn);
     tmp = spi_queue(&spi1, cmd);
@@ -34,7 +34,6 @@ void con_init(_CON *self, _CD *cd, _LCD *lcd, _PIN *SSn) {
 
 void con_send_cmd(_CON *self, _CMD *cmd, float cd_time, int32_t game_clock) {
     self->last_cmd = cmd;
-    __con_transfer(self, cmd_packet(cmd->index));
 
     lcd_clear(self->lcd);
     lcd_print1(self->lcd, "HEYyyyyyy");
@@ -44,7 +43,8 @@ void con_send_cmd(_CON *self, _CMD *cmd, float cd_time, int32_t game_clock) {
 
 // returns command success/failure
 uint8_t con_state_change(_CON *self) {
-    self->state = __con_transfer(self, (WORD32)0xFEEDF00D);
+    WORD64 empty = (WORD64){0,0,0,0,0,0,0,0};
+    self->state = con_transfer(self, empty);
     uint8_t success = cmd_test(self->last_cmd->index, self->state);
 
     return self->cd->active && success;

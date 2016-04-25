@@ -15,7 +15,7 @@ typedef struct LCD_NAMES1 {
   unsigned index3:8;
   unsigned index4:8;
   unsigned index5:8;
-  unsigned index6:8
+  unsigned index6:8;
   unsigned long :8;
 } LCD_NAMES1;
 
