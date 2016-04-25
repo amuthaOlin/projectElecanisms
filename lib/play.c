@@ -105,15 +105,14 @@ void play_begin() {
     __play_update_level_begin_packet();
     __play_send_level_begin_packet();
 
-    // lcd_broadcast(level.message);
-    // timer_every(play.timer, PLAY_TICK, __play_loop);
-    // cd_start(&cdcenter, level.cmd_time, play.clock);
+    lcd_broadcast(level.message);
+    timer_every(play.timer, PLAY_TICK, __play_loop);
+    cd_start(&cdcenter, level.cmd_time, play.clock);
+    play.PLAYING = 1;
 
-    // uint8_t i;
-    // for (i = 0; i < 3; i++)
-    //     con_send_cmd(&con[i], &cmds[__play_rand_cmd_idx()], 6, play.clock);
-
-    // printf("Begin level play!\r\n");
+    uint8_t i;
+    for (i = 0; i < 3; i++)
+        con_send_cmd(&con[i], &cmds[__play_rand_cmd_idx()], 6, play.clock);
 }
 
 void __play_end() {

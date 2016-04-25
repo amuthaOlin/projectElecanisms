@@ -83,12 +83,12 @@ void pre_level() {
     }
     
     red_pressed = con[0].state.s1.red_button && con[1].state.s2.red_button && con[2].state.s3.red_button;
-    if (red_pressed){
-        state = level_play;
-    }
-
-    if (state != last_state) {
+    if (red_pressed) {
         lcd_broadcast(launch_str);
+        uint8_t i;
+        for (i = 0; i < 10; i++)
+            timer_delayMicro(0xFFFF);
+        state = level_play;
     }
 }
 
