@@ -120,7 +120,7 @@ void level_play() {
     if (state != last_state){
         if (level_success == 1){
             strcat(level_win_str,numbers[level_number]);
-            lcd_broadcast(level_win_str); //TODO get level_number and string cat
+            lcd_broadcast(level_win_str); 
         }
     }
 }
@@ -133,9 +133,9 @@ void game_over() {
         if (game_success == 0){
             strcat(lose_str,numbers[level_number]);
             strcat(lose_str,"!");
-            lcd_broadcast(lose_str);//TODO get level_number and string cat//TODO get level_number and string cat
+            lcd_broadcast(lose_str);
         } else {
-            lcd_broadcast(win_str);//TODO get level num and string cat
+            lcd_broadcast(win_str);
         }
     }
     led_on(&led1);
@@ -149,11 +149,7 @@ void game_over() {
 
 void coin_handler(_INT *intx) {
     coin = 1;
-    //uint8_t level_success = play_level(); // (for now)
-}
-
-void init_game(){
-    // uint8_t level_success = level_play(); // (for now)
+    
 }
 
 void init_master() {
@@ -189,8 +185,7 @@ void init_master() {
     int_attach(&int1, Sint1, 1, con1_state_change);
     int_attach(&int2, Sint2, 1, con2_state_change);
     int_attach(&int3, Sint3, 1, con3_state_change);
-    int_attach(&int4, Coin, 0, coin_handler);
-    //init_game(&int4);
+    int_attach(&int4, Coin, 1, coin_handler);
 }
 
 int16_t main(void) {
@@ -200,10 +195,4 @@ int16_t main(void) {
     while (1) {
         state();
     }
-    // init_master();
-    // state = coin_wait;
-    // last_state = (STATE_HANDLER_T)NULL;
-    // while (1) {
-    //     state();
-    // }
 }
