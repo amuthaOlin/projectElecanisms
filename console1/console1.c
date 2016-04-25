@@ -20,7 +20,8 @@ void level(void);
 void change_lcds(void){
     if (state != last_state){
         last_state = state;
-        update_lcds(console.res);
+        update_lcds();
+        LCD_flag = 0;
     }
     state = level;
     if (state != last_state){
@@ -32,7 +33,7 @@ void level(void){
     if (state != last_state){
         last_state = state;
     }
-    if(console.LCD_flag == 1){
+    if(console.LCD_flag == 2){
         state = change_lcds;
     }
     if (state != last_state){

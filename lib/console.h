@@ -15,9 +15,11 @@
 void init_console(void);
 
 typedef struct _CONSOLE {
-    WORD32 res;
+    WORD64 res;
     WORD32 state;
     WORD32 last_state;
+    WORD64 lcd_update1;
+    WORD64 lcd_update2;
     _SPI *spi;
     _PIN *Sint;
     void (*poll)(struct _CONSOLE *self);
