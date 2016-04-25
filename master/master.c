@@ -92,18 +92,17 @@ void pre_level(){
     }
 }
 
-volatile uint8_t level_successs = 0;
-void level_play(){
-    char win_str[33]="You Beat Level ";
+volatile uint8_t level_success = 0;
+char level_win_str[33] = "You Beat Level ";
+void level_play() {
     if (state != last_state) {
         last_state = state;
         lev_setup(level_number);
         play_begin();
     }
 
-    if(play.PLAYING == 0){
-        level_successs = play.success;
-    // level_success = play_level(&lev1); //TODO fix play_level() so it works in this way
+    if (play.PLAYING == 0) {
+        level_success = play.success;
         if (level_success == 0){
             game_success = 0;
             state = game_over;
@@ -112,7 +111,7 @@ void level_play(){
                 game_success = 1;
                 state = game_over;
             } else {
-                level_number = level_number +1;
+                level_number++;
                 state = pre_level;
             }
         }
@@ -120,8 +119,8 @@ void level_play(){
 
     if (state != last_state){
         if (level_success == 1){
-            strcat(win_str,numbers[level_number]);
-            lcd_broadcast(win_str); //TODO get level_number and string cat
+            strcat(level_win_str,numbers[level_number]);
+            lcd_broadcast(level_win_str); //TODO get level_number and string cat
         }
     }
 }
@@ -150,11 +149,11 @@ void game_over(){
 
 void coin_handler(_INT *intx) {
     coin = 1;
-    //uint8_t level_successs = play_level(); // (for now)
+    //uint8_t level_success = play_level(); // (for now)
 }
 
 void init_game(){
-    // uint8_t level_successs = level_play(); // (for now)
+    // uint8_t level_success = level_play(); // (for now)
 }
 
 void init_master() {

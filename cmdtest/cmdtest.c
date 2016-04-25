@@ -83,7 +83,6 @@ int16_t main(void) {
         for (j = 0; j < 10; j++) {
             timer_delayMicro(0xFFFF);
         }
-        lev_init();
         lev_setup(i);
         play_begin();
         printf("LEVEL %d===========================\r\n", i);

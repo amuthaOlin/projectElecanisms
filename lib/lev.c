@@ -43,7 +43,7 @@ char instructions[3][33]={"Game Starting","Shake ball to avoid asteroids","Press
 
 _LEV level;
 
-void lev_init(void){
+void __lev_init(void) {
 	uint8_t i=0;
 	uint8_t k;
 	while(i<8){
@@ -185,6 +185,7 @@ void __lev_pickLabels(uint8_t theme){
 }
 
 void lev_setup(uint8_t lev_num){
+    __lev_init();
 	if (lev_num == 1){ // First level has no complications
 		level.lab_theme=0;
 		level.level_time=325;
