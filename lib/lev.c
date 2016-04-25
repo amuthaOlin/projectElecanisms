@@ -307,7 +307,7 @@ void lev_setup(uint8_t lev_num){
 	else if (lev_num == 100){ // TEST LEVEL
 		level.lab_theme=10;
 		level.level_time=500;
-		level.cmd_time=30;
+		level.cmd_time=10;
 		strcpy(level.message,messages[0]);
 		__lev_pickLabels(10);
 	}
