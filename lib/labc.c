@@ -36,8 +36,14 @@ int theme_len[9]={101,47,49,47,47,47,47,47,47};
 void (*mods[9]) (char* str, uint8_t freq, uint8_t shift) ={strm_Nada,strm_CamelCase,strm_Brnrd,strm_Missing,strm_Leet,strm_Pig,strm_Reverse,strm_Scramble,strm_Caesar};
 
 _LABC level;
-void labc_setup(void){
 
+void __labc_print(void){
+    lcd_print2(&lcd[0],level.lab_str[0],level.lab_str[1]);
+    lcd_print2(&lcd[1],level.lab_str[2],level.lab_str[3]);
+    lcd_print2(&lcd[2],level.lab_str[4],level.lab_str[5]);
+}
+
+void labc_setup(void){
 	// stringcpy(level->lab_str[0],lab_general[3]);
 	char string[17]= "                ";
 	char* stringp = string;
@@ -124,11 +130,5 @@ void labc_setup(void){
 			}	
 			break;
 		}	
-}
-
-
-void labc_print(void){
-	lcd_print2(&lcd[0],level.lab_str[0],level.lab_str[1]);
-    lcd_print2(&lcd[1],level.lab_str[2],level.lab_str[3]);
-    lcd_print2(&lcd[2],level.lab_str[4],level.lab_str[5]);
+        __labc_print();
 }

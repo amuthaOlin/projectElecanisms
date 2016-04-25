@@ -14,7 +14,6 @@ typedef struct _LABC {
 extern _LABC level;
 
 void labc_setup(void);
-void labc_print(void);
 
 #endif
 

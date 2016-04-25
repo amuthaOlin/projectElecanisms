@@ -13,6 +13,21 @@
 // I2C Reg (MSB) P7 P6 P5 P4 P3 P2 P1 P0
 // Driver pin    D7 D6 D5 D4 ?  E  RW RS
 
+void console_update_lcds(void) {
+    level.lab_numb[0] = 30;
+    level.lab_numb[1] = 1;
+    level.lab_numb[2] = 2;
+    level.lab_numb[3] = 3;
+    level.lab_numb[4] = 4;
+    level.lab_numb[5] = 5;
+    level.lab_theme = 1;
+    level.mod = 2;
+    level.arg_freq = 0;
+    level.arg_shift = 0;
+
+    labc_setup();
+}
+
 int16_t main(void) {
     init_clock();
     init_ui();
@@ -21,27 +36,26 @@ int16_t main(void) {
     init_timer();
     timer_initDelayMicro(&timer5);
 
-    init_lcd(0);
+    init_lcd(3);
     lcd_clear(&lcd[0]);
     lcd_clear(&lcd[1]);
     lcd_clear(&lcd[2]);
 
 
-    // _LABC level;
+    _LABC level;
 
-    // labc_recieve(&level,0);
-    // labc_setup(&level);
+    console_update_lcds();
     
-    char string1[17]="Go";
-    char* strptr1=string1;
-    char string2[17]="Space";
-    char* strptr2=string2;
-    char string3[17]="Team";
-    char* strptr3=string3;
+    // char string1[17]="Go";
+    // char* strptr1=string1;
+    // char string2[17]="Space";
+    // char* strptr2=string2;
+    // char string3[17]="Team";
+    // char* strptr3=string3;
 
-    lcd_print1(&lcd[0],strptr1);
-    lcd_print1(&lcd[1],strptr2);
-    lcd_print1(&lcd[2],strptr3);
+    // lcd_print1(&lcd[0],strptr1);
+    // lcd_print1(&lcd[1],strptr2);
+    // lcd_print1(&lcd[2],strptr3);
     // lcd_print1(&lcd1,strptr2);
     // Brnrd(strptr2,0,0);
     // labc_print(&level);

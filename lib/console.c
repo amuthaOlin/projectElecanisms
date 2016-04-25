@@ -61,7 +61,7 @@ void console_update_lcds(void) {
     level.arg_freq = console.lcd_update2.d2.argument1;
     level.arg_shift = console.lcd_update2.d2.argument2;
 
-    labc_print();
+    labc_setup();
 }
 
 void console_init(_CONSOLE *self, _PIN *MISO, _PIN *MOSI, _PIN *SCK, _PIN *Sint, _PIN *CSn, _SPI *spi){
