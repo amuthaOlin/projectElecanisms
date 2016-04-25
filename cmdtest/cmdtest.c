@@ -53,12 +53,6 @@ int16_t main(void) {
     // strm_genSet(command,"Thingymagig","One");
     // lcd_print(&lcdcmd[0],command);
 
-
-
-    lcd_stop(&lcd[0]);
-    led_on(&led3);
-
-
     _PIN *MISO  = &D[1];
     _PIN *MOSI  = &D[0];
     _PIN *SCK   = &D[2];

@@ -67,7 +67,6 @@ void __lev_init(void) {
     level.actuators=6; // We almost always use all of them
 }
 
-
 uint8_t __lev_already_exists(uint8_t *array, uint8_t array_size, uint8_t value) {
     uint8_t i;
     for (i = 0; i < array_size; i++)
@@ -86,8 +85,9 @@ void __lev_pickLabels(uint8_t theme){
 
 	for(j=0;j<18;j++){
 		random_num = (uint8_t)rng_int(1,theme_len[theme]);
-		while(__lev_already_exists(random_num_array, 18, random_num)){
+		while(__lev_already_exists(&random_num_array, 18, random_num)){
 			random_num = (uint8_t)rng_int(1,theme_len[theme]);
+            // printf("Random number in while loop: %d\r\n", random_num);
 		}
 		random_num_array[j] = random_num;
 	}
@@ -96,7 +96,9 @@ void __lev_pickLabels(uint8_t theme){
 		level.label[0][i]=random_num_array[i];
 		level.label[1][i]=random_num_array[i+6];
 		level.label[2][i]=random_num_array[i+12];
+        i++;
 	}
+    i = 0;
 	
 	switch(theme) { //FUCK THIS SHIT IN PARTICULAR 
 		case 0:
@@ -299,7 +301,7 @@ void lev_setup(uint8_t lev_num){
 		level.arg_shift=3; // Make them hard
 		level.arg_freq=rng_int(3,6);
 	}
-	else if (lev_num ==100){ // TEST LEVEL
+	else if (lev_num == 100){ // TEST LEVEL
 		level.lab_theme=10;
 		level.level_time=500;
 		level.cmd_time=30;

@@ -76,7 +76,7 @@ void coin_wait(){
 volatile uint8_t red_pressed = 0;
 void pre_level() {
     char ready_str[33]="Hold the red button if ready";
-    char launch_str[33]=" Space Team      Launched";
+    char launch_str[33]="Space Team Launched";
     if (state != last_state) {
         last_state = state;
         lcd_broadcast(ready_str);
@@ -85,6 +85,7 @@ void pre_level() {
     red_pressed = con[0].state.s1.red_button && con[1].state.s2.red_button && con[2].state.s3.red_button;
     if (red_pressed) {
         lcd_broadcast(launch_str);
+        led_on(&led1);
         uint8_t i;
         for (i = 0; i < 10; i++)
             timer_delayMicro(0xFFFF);
@@ -97,6 +98,7 @@ void level_play() {
     if (state != last_state) {
         last_state = state;
         lev_setup(level_number);
+        led_on(&led3);
         lev_genCmd();
         play_begin();
     }

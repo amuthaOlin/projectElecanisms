@@ -32,10 +32,12 @@ void __play_advance(uint8_t sole, uint8_t success) {
 void play_state_change(uint8_t sole) {
     con_state_change(&con[sole]);
 
-    uint8_t i;
-    for (i = 0; i < 3; i++) {
-        if (cmd_test(con[i].last_cmd->index)) {
-            __play_advance(i, 1);
+    if (play.PLAYING) {
+        uint8_t i;
+        for (i = 0; i < 3; i++) {
+            if (cmd_test(con[i].last_cmd->index)) {
+                __play_advance(i, 1);
+            }
         }
     }
 }
@@ -104,14 +106,14 @@ void play_begin() {
     __play_update_level_begin_packet();
     __play_send_level_begin_packet();
 
-    lcd_broadcast(level.message);
-    timer_every(play.timer, PLAY_TICK, __play_loop);
-    cd_start(&cdcenter, level.level_time, play.clock);
-    play.PLAYING = 1;
+    // lcd_broadcast(level.message);
+    // timer_every(play.timer, PLAY_TICK, __play_loop);
+    // cd_start(&cdcenter, level.level_time, play.clock);
+    // play.PLAYING = 1;
 
-    uint8_t i;
-    for (i = 0; i < 3; i++)
-        con_send_cmd(&con[i], &cmds[__play_rand_cmd_idx()], level.cmd_time, play.clock);
+    // uint8_t i;
+    // for (i = 0; i < 3; i++)
+    //     con_send_cmd(&con[i], &cmds[__play_rand_cmd_idx()], level.cmd_time, play.clock);
 }
 
 void __play_end() {
