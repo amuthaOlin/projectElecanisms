@@ -81,18 +81,18 @@ void __play_update_level_begin_packet() {
 }
 
 void __play_send_level_begin_packet() {
-    printf("Begin transfers\r\n");
-    printf("Sending theme: %d\r\n", play.level_packet_type_2.d2.theme);
-    printf("Sending mod: %d\r\n", play.level_packet_type_2.d2.mods);
-    printf("Sending arg1: %d\r\n", play.level_packet_type_2.d2.argument1);
-    printf("Sending arg2: %d\r\n", play.level_packet_type_2.d2.argument2);
+    // printf("Begin transfers\r\n");
+    // printf("Sending theme: %d\r\n", play.level_packet_type_2.d2.theme);
+    // printf("Sending mod: %d\r\n", play.level_packet_type_2.d2.mods);
+    // printf("Sending arg1: %d\r\n", play.level_packet_type_2.d2.argument1);
+    // printf("Sending arg2: %d\r\n", play.level_packet_type_2.d2.argument2);
     con_transfer(&con[0],play.level_packet1);
     con_transfer(&con[0],play.level_packet_type_2);
     con_transfer(&con[1],play.level_packet2);
     con_transfer(&con[1],play.level_packet_type_2);
     con_transfer(&con[2],play.level_packet3);
     con_transfer(&con[2],play.level_packet_type_2);
-    printf("End transfers\r\n");
+    // printf("End transfers\r\n");
 }
 
 
@@ -106,14 +106,14 @@ void play_begin() {
     __play_update_level_begin_packet();
     __play_send_level_begin_packet();
 
-    // lcd_broadcast(level.message);
-    // timer_every(play.timer, PLAY_TICK, __play_loop);
-    // cd_start(&cdcenter, level.level_time, play.clock);
-    // play.PLAYING = 1;
+    lcd_broadcast(level.message);
+    timer_every(play.timer, PLAY_TICK, __play_loop);
+    cd_start(&cdcenter, level.level_time, play.clock);
+    play.PLAYING = 1;
 
-    // uint8_t i;
-    // for (i = 0; i < 3; i++)
-    //     con_send_cmd(&con[i], &cmds[__play_rand_cmd_idx()], level.cmd_time, play.clock);
+    uint8_t i;
+    for (i = 0; i < 3; i++)
+        con_send_cmd(&con[i], &cmds[__play_rand_cmd_idx()], level.cmd_time, play.clock);
 }
 
 void __play_end() {

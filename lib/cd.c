@@ -72,8 +72,8 @@ void cd_update(_CD *self, int32_t ticks_cur) {
 }
 
 void cd_advance(_CD *self, float off_sec) {
-    printf("Advance %f seconds\r\n", off_sec);
-    printf("Advance %ld ticks\r\n", (long)(off_sec/self->tick_sec));
+    // printf("Advance %f seconds\r\n", off_sec);
+    // printf("Advance %ld ticks\r\n", (long)(off_sec/self->tick_sec));
     self->ticks_offset += (int32_t)(off_sec/self->tick_sec);
 }
 
