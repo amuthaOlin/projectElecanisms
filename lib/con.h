@@ -28,7 +28,6 @@ void con_init(_CON *self, _CD *cd, _LCD *lcd, _PIN *SSn, uint8_t num);
 void con_send_cmd(_CON *self, _CMD *cmd, float cd_time, int32_t game_clock);
 WORD32 con_transfer(_CON *self, WORD64 cmd);
 
-uint8_t con_state_change(_CON *self);
-uint8_t con_cmd_test(_CON *self);
+void con_state_change(_CON *self);
 
 #endif

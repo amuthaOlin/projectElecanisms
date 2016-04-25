@@ -27,6 +27,7 @@
 #include "common.h"
 #include "math.h"
 #include "cmd.h"
+#include "con.h"
 #include "spacecomms.h"
 #include "ui.h"
 #include "strm.h"
@@ -135,8 +136,13 @@ void cmd_str(uint16_t cmdidx) { // assume str is 16 char long
 }
 
 // returns 1 if command passes
-uint8_t cmd_test(uint16_t cmdidx, WORD32 state) {
+uint8_t __cmd_compare(uint16_t cmdidx, WORD32 state) {
     _CMD *cmd = &cmds[cmdidx];
 
     return (state.ul & cmd->mask.ul) == cmd->desired.ul;
+}
+
+uint8_t cmd_test(uint16_t cmdidx) {
+    // check this command against the state of the console it's for
+    return __cmd_compare(cmdidx, con[cmds[cmdidx].console].state);
 }

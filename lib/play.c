@@ -30,9 +30,13 @@ void __play_advance(uint8_t sole, uint8_t success) {
 }
 
 void play_state_change(uint8_t sole) {
-    uint8_t success = con_state_change(&con[sole]);
-    if (success) {
-        __play_advance(sole, 1);
+    con_state_change(&con[sole]);
+
+    uint8_t i;
+    for (i = 0; i < 3; i++) {
+        if (cmd_test(con[i].last_cmd->index)) {
+            __play_advance(i, 1);
+        }
     }
 }
 

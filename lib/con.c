@@ -41,23 +41,7 @@ void con_send_cmd(_CON *self, _CMD *cmd, float cd_time, int32_t game_clock) {
     cd_start(self->cd, cd_time, game_clock);
 }
 
-// test MY state against all commands FOR ME
-uint8_t con_cmd_test(_CON *self) {
-    uint8_t i;
-    uint8_t success = 0;
-    for (i = 0; i < 3; i++) {
-        if (con[i].last_cmd->console == self->num) {
-            success |= cmd_test(con[i].last_cmd->index, self->state);
-        }
-    }
-    return success;
-}
-
-// returns command success/failure
-uint8_t con_state_change(_CON *self) {
+void con_state_change(_CON *self) {
     WORD64 empty = (WORD64){0,0,0,0,0,0,0,0};
     self->state = con_transfer(self, empty);
-    uint8_t success = con_cmd_test(self);
-
-    return self->cd->active && success;
 }
