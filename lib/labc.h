@@ -15,7 +15,6 @@ extern _LABC level;
 
 void labc_setup(void);
 void labc_print(void);
-void labc_recieve(uint8_t console);
 
 #endif
 

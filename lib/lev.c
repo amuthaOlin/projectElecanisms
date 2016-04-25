@@ -70,7 +70,7 @@ void __lev_pickLabels(uint8_t theme){
 	uint8_t k;
 	uint8_t i=0;
 	
-	switch(theme){ //FUCK THIS SHIT IN PARTICULAR 
+	switch(theme) { //FUCK THIS SHIT IN PARTICULAR 
 		case 0:
 			while(i<7){
 				level.label[0][i]=(uint8_t)rng_int(1,theme_len[theme]);
@@ -182,9 +182,7 @@ void __lev_pickLabels(uint8_t theme){
 			}	
 			break;
 		}	
-		
 }
-
 
 void lev_setup(uint8_t lev_num){
 	if (lev_num == 1){ // First level has no complications

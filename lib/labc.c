@@ -132,24 +132,3 @@ void labc_print(void){
     lcd_print2(&lcd[1],level.lab_str[2],level.lab_str[3]);
     lcd_print2(&lcd[2],level.lab_str[4],level.lab_str[5]);
 }
-
-void labc_recieve(uint8_t console){
-	//Unpack into struct:
-	// - label1
-	// - lab_theme
-	// - mod
-	// - arg_freq
-	// - arg_shift
-	//FOR TESTING
-	level.lab_numb[0]=3;
-	level.lab_numb[1]=40;
-	level.lab_numb[2]=33;
-	level.lab_numb[3]=12;
-	level.lab_numb[4]=9;
-	level.lab_numb[5]=44;
-	level.lab_theme=9;
-	level.mod=0;
-	level.arg_freq=0;
-	level.arg_shift=0;
-}
-
