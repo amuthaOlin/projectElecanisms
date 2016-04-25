@@ -140,10 +140,22 @@ void leds_centerDisplay(_LEDS *self, float fire, float space) {
     leds_writeRange(self, space_pos+1, self->num, 0,0,0);
 }
 
+volatile float fire_bri = .5;
 void leds_writeFire(_LEDS *self, uint16_t start, uint16_t end) {
     uint16_t i;
-    for (i = start; i < end; i++)
-        leds_writeRGB(self, i, rng_int(220,255),rng_int(10,20),0);
+    // weight the random walk towards middle brightness
+    uint8_t brighten = rng_coin_flip(100 - 100*fire_bri);
+    if (brighten && fire_bri < 1) {
+        fire_bri += .03;
+    } else if (!brighten && fire_bri > 0) {
+        fire_bri -= .03;
+    }
+
+    clamp(fire_bri, 0., 1.);
+
+    for (i = start; i < end; i++) {
+        leds_writeRGB(self, i, 200*fire_bri,20*fire_bri,0);
+    }
 }
 
 void leds_clear(_LEDS *self) {

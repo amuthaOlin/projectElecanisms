@@ -49,6 +49,24 @@
 #define disable_interrupts()    __asm__ volatile("disi #0x3FFF")
 #define enable_interrupts()     DISICNT = 0
 
+#define max(a,b) \
+   ({ __typeof__ (a) _a = (a); \
+       __typeof__ (b) _b = (b); \
+     _a > _b ? _a : _b; })
+
+#define min(a,b) \
+   ({ __typeof__ (a) _a = (a); \
+       __typeof__ (b) _b = (b); \
+     _a < _b ? _a : _b; })
+
+#define sign(x) \
+   ({ __typeof__ (x) _x = (x); \
+     (_x > 0) - (_x < 0); })
+
+#define clamp(x, l, h) \
+   ({ __typeof__ (x) _x = (x); \
+     max(l, min(x, h)); })
+
 typedef union {
     int16_t i;
     uint16_t w;
