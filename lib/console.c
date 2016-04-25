@@ -50,16 +50,16 @@ void handle_CSn(_INT *intx) {
 }
 
 void console_update_lcds(void) {
-    // level.lab_numb[0] = console.lcd_update1.d1.index1;
-    // level.lab_numb[1] = console.lcd_update1.d1.index2;
-    // level.lab_numb[2] = console.lcd_update1.d1.index3;
-    // level.lab_numb[3] = console.lcd_update1.d1.index4;
-    // level.lab_numb[4] = console.lcd_update1.d1.index5;
-    // level.lab_numb[5] = console.lcd_update1.d1.index6;
-    // level.lab_theme = console.lcd_update2.d2.theme;
-    // level.mod = console.lcd_update2.d2.mods;
-    // level.arg_freq = console.lcd_update2.d2.argument1;
-    // level.arg_shift = console.lcd_update2.d2.argument2;
+    level.lab_numb[0] = console.lcd_update1.d1.index1;
+    level.lab_numb[1] = console.lcd_update1.d1.index2;
+    level.lab_numb[2] = console.lcd_update1.d1.index3;
+    level.lab_numb[3] = console.lcd_update1.d1.index4;
+    level.lab_numb[4] = console.lcd_update1.d1.index5;
+    level.lab_numb[5] = console.lcd_update1.d1.index6;
+    level.lab_theme = console.lcd_update2.d2.theme;
+    level.mod = console.lcd_update2.d2.mods;
+    level.arg_freq = console.lcd_update2.d2.argument1;
+    level.arg_shift = console.lcd_update2.d2.argument2;
 }
 
 void console_init(_CONSOLE *self, _PIN *MISO, _PIN *MOSI, _PIN *SCK, _PIN *Sint, _PIN *CSn, _SPI *spi){
