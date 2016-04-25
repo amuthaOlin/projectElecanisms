@@ -88,8 +88,10 @@ void __play_send_level_begin_packet() {
     // printf("Sending arg2: %d\r\n", play.level_packet_type_2.d2.argument2);
     con_transfer(&con[0],play.level_packet1);
     con_transfer(&con[0],play.level_packet_type_2);
+    timer_delayMicro(100);
     con_transfer(&con[1],play.level_packet2);
     con_transfer(&con[1],play.level_packet_type_2);
+    timer_delayMicro(100);
     con_transfer(&con[2],play.level_packet3);
     con_transfer(&con[2],play.level_packet_type_2);
     // printf("End transfers\r\n");

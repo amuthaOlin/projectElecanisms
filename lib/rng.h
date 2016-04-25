@@ -29,10 +29,10 @@
 #include <stdint.h>
 #include "pin.h"
 #include "leds.h"
+#include "stdint.h"
 
 void init_rng(void);
 
-uint16_t rng_gen();
 uint16_t rng_int(uint16_t min, uint16_t max);
 uint16_t rng_coin_flip(uint16_t weight);
 uint16_t rng_coin_replace(uint16_t num, uint16_t weight, uint16_t replace);
