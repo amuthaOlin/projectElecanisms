@@ -68,7 +68,7 @@ void coin_wait(){
     }
     if (coin) {
         state = pre_level;
-        level_number = 1;
+        level_number = 100;
         coin = 0;
     }
 }

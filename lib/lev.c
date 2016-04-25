@@ -33,6 +33,7 @@ char lab_wars [47][17]={" ","Deathstar", "X-Wing", "TIE Fighter", "Alderaan", "C
 // Theme 9
 char lab_pir [47][17]={" ","Treasure", "Galleon", "Black Beard", "Carribean", "Tortuga", "Jack Sparrow", "Black Pearl", "Davvy Jones", "Islands", "Spiced Rum", "Rum Gone", "Starboard", "Port", "Mast", "Rigging", "Plank", "Keel Haul", "Anchor", "Bermuda", "Avast", "Shiver Timbers", "Monkey", "Poop Deck", "Cockswain", "Landlubber", "Chips Ahoy", "Batten Hatches", "Booty", "Crows Nest", "Jolly Roger", "Man-O-War", "Scallyway", "Calico Jack", "Captain Kidd", "Barbary Coast", "Cat O Nine", "Cutlass", "Cannon", "Powder Chest", "Kraken", "Parrot", "Wooden Leg", "Captian Hook", "Eye Patch", "Dread Pirate", "Hydra"};
 
+char lab_descr [18][17]={"Two Toggles C1","Green Button","Word Wheel","Joystick","One Hot","Red C1","Four Hot","Slider","Red C2","Four Green","Rocker","C2 Dial","Clutch","Dial C3","Red C3","Triangle","Two Toggles C3","Arming"};
 int theme_len[9]={101,47,49,47,47,47,47,47,47};
 int lab_len[3]={2,8,7};
 int easy_lab[2]={0,1};
@@ -183,6 +184,17 @@ void __lev_pickLabels(uint8_t theme){
 				strcpy(level.label_name3[i],lab_pir[level.label[2][i]]);
 				i++;
 			}	
+            break;
+		case 10:
+			while(i<6){
+				level.label[0][i]=i;
+				level.label[1][i]=i+6;
+				level.label[2][i]=i+12;
+				strcpy(level.label_name1[i],lab_descr[level.label[0][i]]);
+				strcpy(level.label_name2[i],lab_descr[level.label[1][i]]);
+				strcpy(level.label_name3[i],lab_descr[level.label[2][i]]);
+				i++;
+			}	
 			break;
 		}	
 }
@@ -295,6 +307,13 @@ void lev_setup(uint8_t lev_num){
 		level.mod=(uint8_t)rng_coin_replace(rng_int(0,8),30,0);
 		level.arg_shift=3; // Make them hard
 		level.arg_freq=rng_int(3,6);
+	}
+	else if (lev_num ==100){ // TEST LEVEL
+		level.lab_theme=10;
+		level.level_time=500;
+		level.cmd_time=30;
+		strcpy(level.message,messages[0]);
+		__lev_pickLabels(10);
 	}
 	// lcd_print1(&lcdcmd[2],level.label_name[0][0]);
 

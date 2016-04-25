@@ -4,6 +4,10 @@
 #include "lcd.h"
 #include "strm.h"
 
+
+char numbers_word[11][7]={"Zero","One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten"};
+
+
 void strm_CamelCase(char* str, uint8_t a, uint8_t b){
     while(*str){
         if(*str >= 'a' && *str <= 'z'){
@@ -181,9 +185,16 @@ void strm_Nada(char* str,uint8_t a, uint8_t b){
     //nothing
 }
 
-void strm_genPush(char* command, char* name){
+void strm_genPush(char* command, char* name, uint8_t number){
+    char* numb;
+    if (number > 0){
+        numb=numbers_word[number];
+    }
+    else{
+        numb="";
+    }
     char newstr[33] = "                                ";
-    char push[13]="Push button ";
+    char push[6]="Push ";
     char* pushptr =push;
     char* newstrptr= newstr;
     char* temp1 = newstrptr;
@@ -197,6 +208,16 @@ void strm_genPush(char* command, char* name){
         *newstrptr=*name;
         newstrptr++;
         name++;
+    }
+    if (number >0){
+        *newstrptr=' ';
+        newstrptr++;   
+    }
+
+    while(*numb){
+        *newstrptr=*numb;
+        newstrptr++;
+        numb++;
     }
     *newstrptr='!';
     newstrptr++;
@@ -231,6 +252,56 @@ void strm_genSet(char* command, char* name, char* val){
         *newstrptr=*val;
         newstrptr++;
         val++;
+    }
+    *newstrptr='!';
+    newstrptr++;
+    strcpy(temp2,temp1);
+}
+
+void strm_genAct(char* command, char* name, uint8_t number, uint8_t action){
+    char* numb;
+    if (number > 0){
+        numb=numbers_word[number];
+    }
+    else{
+        numb="";
+    }
+    char newstr[33] = "                                ";
+    char act[10]="Activate ";
+    char deact[12]="Deactivate ";
+    char* actptr =act;
+    char* deactptr=deact;
+    char* newstrptr= newstr;
+    char* temp1 = newstrptr;
+    char* temp2 = command;
+
+    if (action==1){
+    while(*actptr){
+        *newstrptr=*actptr;
+        newstrptr++;
+        actptr++;
+    }
+    }
+    if (action==0){
+    while(*deactptr){
+        *newstrptr=*deactptr;
+        newstrptr++;
+        deactptr++;
+    }
+    }
+    while(*name){
+        *newstrptr=*name;
+        newstrptr++;
+        name++;
+    }
+    if (numb > 0) {
+        *newstrptr=" ";
+        newstrptr++;
+    }
+    while(*numb){
+        *newstrptr=*numb;
+        newstrptr++;
+        numb++;
     }
     *newstrptr='!';
     newstrptr++;

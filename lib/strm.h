@@ -12,7 +12,8 @@ void strm_Missing(char* str, uint8_t freq, uint8_t a);
 void strm_Reverse(char* str,uint8_t a, uint8_t b);
 void strm_Scramble(char* str,uint8_t a, uint8_t b);
 void strm_Nada(char* str,uint8_t a, uint8_t b);
-void strm_genPush(char* command, char* name);
+void strm_genPush(char* command, char* name, uint8_t number);
 void strm_genSet(char* command, char* name, char* val);
+void strm_genAct(char* command, char* name, uint8_t number, uint8_t action);
 
 #endif
