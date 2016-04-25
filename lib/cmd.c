@@ -134,17 +134,6 @@ void cmd_str(uint16_t cmdidx) { // assume str is 16 char long
     // strcpy(cmd->command, "Do something!");
 }
 
-WORD32 cmd_packet(uint16_t cmdidx) {
-    _CMD *cmd = &cmds[cmdidx];
-    WORD32 dir = (WORD32)0;
-
-    dir.d.packet = 0; // type for "command"
-    dir.d.actaddr = cmd->actuator;
-    dir.d.actact = cmd->action;
-
-    return dir;
-}
-
 // returns 1 if command passes
 uint8_t cmd_test(uint16_t cmdidx, WORD32 state) {
     _CMD *cmd = &cmds[cmdidx];

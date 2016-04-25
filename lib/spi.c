@@ -232,19 +232,17 @@ uint8_t spi_transfer(_SPI *self, uint8_t val) {
     return (uint8_t)(*(self->SPIxBUF));
 }
 
-WORD32 spi_queue(_SPI *self, WORD32 payload) {
+WORD32 spi_queue(_SPI *self, WORD64 payload) {
     WORD32 temp;
-    uint8_t trash;
+    *(self->SPIxBUF) = payload.b[7];
+    *(self->SPIxBUF) = payload.b[6];    
+    *(self->SPIxBUF) = payload.b[5];
+    *(self->SPIxBUF) = payload.b[4];
     *(self->SPIxBUF) = payload.b[3];
     *(self->SPIxBUF) = payload.b[2];    
     *(self->SPIxBUF) = payload.b[1];
     *(self->SPIxBUF) = payload.b[0];
-    *(self->SPIxBUF) = 0;
-    *(self->SPIxBUF) = 0;
-    *(self->SPIxBUF) = 0;
-    *(self->SPIxBUF) = 0;
-    // wait for 4 pending transactions
-    // while (((WORD*)self->SPIxSTAT)->b[1]&0x07 < 4) {}
+    uint8_t trash;
     while (bitread(self->SPIxSTAT, 0)==0) {}
     temp.b[3] = (uint8_t)*(self->SPIxBUF);
     temp.b[2] = (uint8_t)*(self->SPIxBUF);
@@ -269,17 +267,16 @@ void spi_queue_slave(_SPI *self, WORD32 payload) {
     *(self->SPIxBUF) = 0;
 }
 
-WORD32 spi_read_slave(_SPI *self) {
-    WORD32 temp;
-    uint8_t trash;
+WORD64 spi_read_slave(_SPI *self) {
+    WORD64 temp;
+    temp.b[7] = (uint8_t)*(self->SPIxBUF);
+    temp.b[6] = (uint8_t)*(self->SPIxBUF);
+    temp.b[5] = (uint8_t)*(self->SPIxBUF);
+    temp.b[4] = (uint8_t)*(self->SPIxBUF);
     temp.b[3] = (uint8_t)*(self->SPIxBUF);
     temp.b[2] = (uint8_t)*(self->SPIxBUF);
     temp.b[1] = (uint8_t)*(self->SPIxBUF);
     temp.b[0] = (uint8_t)*(self->SPIxBUF);
-    trash = (uint8_t)*(self->SPIxBUF);
-    trash = (uint8_t)*(self->SPIxBUF);
-    trash = (uint8_t)*(self->SPIxBUF);
-    trash = (uint8_t)*(self->SPIxBUF);
 
     return temp;
 }
