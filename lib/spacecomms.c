@@ -144,3 +144,51 @@ uint8_t CONS_GROUP[][15] = {// has a "rest state" that cannot be commanded
         7
     }
 };
+
+uint8_t CONS_GROUPNUM[][15] = {// has a "rest state" that cannot be commanded
+    {
+        0,
+        1,
+        2,
+        0,
+        0,
+        0,
+        1,
+        2,
+        0,
+        1,
+        2
+    },
+    {
+        0,
+        1,
+        2,
+        3,
+        4,
+        0,
+        0,
+        1,
+        2,
+        3,
+        4,
+        0,
+        0,
+        1,
+        2
+    },
+    {
+        0,
+        1,
+        2,
+        3,
+        1,
+        2,
+        0,
+        1,
+        2,
+        0,
+        0,
+        1,
+        2
+    }
+};
