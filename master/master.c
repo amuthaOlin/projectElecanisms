@@ -121,6 +121,7 @@ void level_play() {
 
     if (state != last_state){
         if (level_success == 1){
+            level_success = 0;
             strcat(level_win_str,numbers[level_number]);
             lcd_broadcast(level_win_str); 
         }
