@@ -40,6 +40,8 @@ typedef struct _CMD {
     uint16_t actuator;
     uint16_t action;
     uint8_t group;
+    uint8_t states;
+    uint8_t hasrest;
 
     WORD32 mask;
     WORD32 desired;

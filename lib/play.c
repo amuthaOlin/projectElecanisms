@@ -19,10 +19,12 @@ uint16_t __play_rand_cmd_idx() {
     uint8_t act = 0;
     act = rng_int(0, 17);
     uint8_t cons = act/6;
+    uint8_t group = act%3;
 
-    uint8_t numstates = CONS_STATES[cons][act];
-    uint8_t state = rng_int(0, numstates-1);
-    return cmd_get(cons, act, state);
+    uint8_t groupcmds = cmd_groupcount(cons, group);
+
+    uint8_t groupidx = cmd_groupidx(cons, group);
+    return rng_int(groupidx, groupidx+groupcmds - 1);
 }
 
 uint16_t __play_valid_cmd_idx() {
