@@ -66,10 +66,10 @@ void poll_state(_CONSOLE *self) {
     self->state.s2.hotsystem4 = (uint8_t)pin_read(&A[5]);  
     //led_write(&led2, self->state.s0.red_button);
 
-    printf("State: %08lx\r\n", (unsigned long)self->state.ul);
+    // printf("State: %08lx\r\n", (unsigned long)self->state.ul);
 }
 
-void console1_poll(_TIMER *timer) {
+void console2_poll(_TIMER *timer) {
     console_poll_changes(&console);
 }
 
@@ -102,7 +102,7 @@ int16_t main(void) {
     console2_init();
     console_attach_poll(&console, poll_state);
 
-    timer_every(&timer4, 1e-2, console1_poll);
+    timer_every(&timer4, 1e-2, console2_poll);
 
     state = console_s_level;
     while(1) {
