@@ -296,7 +296,7 @@ void strm_genAct(char* command, char* name, uint8_t number, uint8_t action){
         name++;
     }
     if (numb > 0) {
-        *newstrptr=" ";
+        *newstrptr=' ';
         newstrptr++;
     }
     while(*numb){
