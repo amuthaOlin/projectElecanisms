@@ -29,7 +29,7 @@ uint16_t __play_valid_cmd_idx() {
     uint16_t idx;
     do {
         idx = __play_rand_cmd_idx();
-    } while(cmd_test(idx);
+    } while(cmd_test(idx));
 
     return idx;
 }
@@ -96,18 +96,18 @@ void __play_update_level_begin_packet() {
 }
 
 void __play_send_level_begin_packet() {
-    printf("Begin transfers\r\n");
-    printf("Sending theme: %d\r\n", play.level_packet_type_2.d2.theme);
-    printf("Sending mod: %d\r\n", play.level_packet_type_2.d2.mods);
-    printf("Sending arg1: %d\r\n", play.level_packet_type_2.d2.argument1);
-    printf("Sending arg2: %d\r\n", play.level_packet_type_2.d2.argument2);
+    // printf("Begin transfers\r\n");
+    // printf("Sending theme: %d\r\n", play.level_packet_type_2.d2.theme);
+    // printf("Sending mod: %d\r\n", play.level_packet_type_2.d2.mods);
+    // printf("Sending arg1: %d\r\n", play.level_packet_type_2.d2.argument1);
+    // printf("Sending arg2: %d\r\n", play.level_packet_type_2.d2.argument2);
     con_transfer(&con[0],play.level_packet1);
     con_transfer(&con[0],play.level_packet_type_2);
     con_transfer(&con[1],play.level_packet2);
     con_transfer(&con[1],play.level_packet_type_2);
     con_transfer(&con[2],play.level_packet3);
     con_transfer(&con[2],play.level_packet_type_2);
-    printf("End transfers\r\n");
+    // printf("End transfers\r\n");
 }
 
 

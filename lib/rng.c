@@ -114,12 +114,12 @@ void init_rng() {
 
 //http://stackoverflow.com/questions/822323/how-to-generate-a-random-number-in-c
 uint16_t randint(uint16_t n) {
-  if ((n - 1) == RAND_MAX) {
+  if ((n - 1) == 32767) {
     return rand();
   } else {
     // Chop off all of the values that would cause skew...
-    long end = RAND_MAX / n; // truncate skew
-    assert (end > 0L);
+    long end = 32767 / n; // truncate skew
+    // assert (end > 0L);
     end *= n;
 
     // ... and ignore results from rand() that fall above that limit.
