@@ -139,6 +139,7 @@ void game_over() {
             lcd_broadcast(lose_str);
         } else {
             lcd_broadcast(win_str);
+            game_success = 0;
         }
     }
     led_on(&led1);
