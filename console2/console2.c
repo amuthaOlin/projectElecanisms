@@ -33,6 +33,7 @@ uint8_t read_tri_state(){
 uint8_t read_slider(uint8_t slider_out){
 
     uint16_t slider_in = (uint16_t)pin_read(&A[1]);
+    printf("Slider_In:%u\n\r",slider_in);
     if (slider_in < 1000){
         slider_out = 0;
     }
