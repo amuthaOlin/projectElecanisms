@@ -33,20 +33,23 @@ uint8_t read_tri_state(){
 uint8_t read_slider(uint8_t slider_out){
 
     uint16_t slider_in = (uint16_t)pin_read(&A[1]);
-    printf("Slider_In:%u\n\r",slider_in);
-    if (slider_in < 1000){
+    //printf("Slider_In:%u\n\r",slider_in);
+
+    if (slider_in > 55000){
         slider_out = 0;
     }
-    else if(slider_in < 42000 && slider_in > 37000){
+    else if(slider_in < 51000 && slider_in > 49000){
         slider_out = 1;
     }
-    else if(slider_in < 52000 && slider_in > 49000 ){
+    else if(slider_in < 42000 && slider_in > 37000){
         slider_out = 2;
     }
-    else if(slider_in > 60000){
+    else if(slider_in < 7000){
         slider_out = 3;
     }
+    //printf("Slider_out:%u\n\r",slider_out);
     return slider_out;
+
 }
 
 
@@ -106,6 +109,7 @@ int16_t main(void) {
     timer_every(&timer4, 1e-2, console2_poll);
 
     state = console_s_level;
+    led_toggle(&led1);
     while(1) {
         state();
         // printf("Slave sent: 0x%x\r\n", 0x5A);
