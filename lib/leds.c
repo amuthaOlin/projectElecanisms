@@ -63,6 +63,10 @@ void __leds_update(_TIMER *timer) {
 }
 
 void init_leds(void) { // init the objects and set up the unified controller
+    uint8_t i;
+    for (i = 0; i < LEDS_NUM; i++) {
+        leds_state[i] = 0;
+    }
     leds_init(&ledbar1, 8, 0);
     leds_init(&ledbar2, 8, 8);
     leds_init(&ledbar3, 8, 16);
