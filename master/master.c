@@ -25,7 +25,7 @@ volatile _CMD *commands[3];
 _PIN *MISO  = &D[1];
 _PIN *MOSI  = &D[0];
 _PIN *SCK   = &D[2];
-_PIN *Sint1 = &D[10];
+_PIN *Sint1 = &D[4];
 _PIN *Sint2 = &D[6];
 _PIN *Sint3 = &D[8];
 
