@@ -31,14 +31,14 @@ int16_t main(void) {
 
     led_on(&led3);
 
-    printf("Random int: %u\r\n", rng_int(0,10));
-    printf("Random int: %u\r\n", rng_int(0,10));
-    printf("Random int: %u\r\n", rng_int(0,10));
-    printf("Random int: %u\r\n", rng_int(0,10));
-    printf("Random int: %u\r\n", rng_int(0,10));
-    printf("Random int: %u\r\n", rng_int(0,10));
-    printf("Random int: %u\r\n", rng_int(0,10));
-    printf("Random int: %u\r\n", rng_int(0,10));
+    printf("Random int: %u\r\n", rng_int(1,18));
+    printf("Random int: %u\r\n", rng_int(1,18));
+    printf("Random int: %u\r\n", rng_int(1,18));
+    printf("Random int: %u\r\n", rng_int(1,18));
+    printf("Random int: %u\r\n", rng_int(1,18));
+    printf("Random int: %u\r\n", rng_int(1,18));
+    printf("Random int: %u\r\n", rng_int(1,18));
+    printf("Random int: %u\r\n", rng_int(1,18));
 
     while (1) {}
 }

@@ -32,7 +32,7 @@ _PIN *Sint3 = &D[8];
 _PIN *SSn[] = { &D[3], &D[5], &D[7] };
 _PIN *Coin_pin = &D[12];
 
-volatile uint8_t coin = 0;
+volatile uint8_t coin = 1; //TODO:Change to zero when coinop plugged in
 volatile uint8_t level_number = 0;
 volatile uint8_t game_success = 0;
 volatile uint8_t level_success = 0;
