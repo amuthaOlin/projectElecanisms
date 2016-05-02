@@ -19,7 +19,7 @@ uint16_t __play_rand_cmd_idx() {
     uint8_t act = 0;
     act = rng_int(0, 17);
     uint8_t cons = act/6;
-    uint8_t group = act%3;
+    uint8_t group = act%6;
 
     uint8_t groupcmds = cmd_groupcount(cons, group);
 
