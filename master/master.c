@@ -61,7 +61,7 @@ void con3_state_change(_INT *intx) {
 }
 
 void coin_wait(){
-    char coin_str[33] = "Please insert a penny";
+    char coin_str[33] = "Please insert a penny.";
     if (state != last_state) {  // if we are entering the state, do initialization stuff
         last_state = state;
         lcd_broadcast(coin_str);
@@ -75,8 +75,8 @@ void coin_wait(){
 
 volatile uint8_t red_pressed = 0;
 void pre_level() {
-    char ready_str[33]="Hold the red button if ready";
-    char launch_str[33]="Space Team Launched";
+    char ready_str[33]="Hold your red button when ready.";
+    char launch_str[33]="Space Team launched!";
     if (state != last_state) {
         last_state = state;
         lcd_broadcast(ready_str);
@@ -93,7 +93,7 @@ void pre_level() {
     }
 }
 
-char level_win_str[33] = "You Beat Level ";
+char level_win_str[33] = "You beat level ";
 void level_play() {
     if (state != last_state) {
         last_state = state;
@@ -129,8 +129,8 @@ void level_play() {
 }
 
 void game_over() {
-    char lose_str[33] = "You made it to  level ";
-    char win_str[33] = "Congratulations!You Win!";
+    char lose_str[33] = "You made it to level ";
+    char win_str[33] = "Congratulations!You win!";
     if (state != last_state) {
         last_state = state;
         if (game_success == 0){
