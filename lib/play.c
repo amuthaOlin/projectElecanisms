@@ -6,6 +6,7 @@
 #include "lev.h"
 #include "ui.h"
 #include "lcd.h"
+#include "spacecomms.h"
 
 #define PLAY_NUM_CMDS 90
 #define PLAY_TICK 1e-2 // seconds
@@ -15,9 +16,25 @@ volatile uint8_t PLAYING = 0;
 _PLAY play;
 
 uint16_t __play_rand_cmd_idx() {
-    return rng_int(0, PLAY_NUM_CMDS);
+    uint8_t act = 0;
+    act = rng_int(0, 17);
+    uint8_t cons = act/6;
+    uint8_t group = act%6;
+
+    uint8_t groupcmds = cmd_groupcount(cons, group);
+
+    uint8_t groupidx = cmd_groupidx(cons, group);
+    return rng_int(groupidx, groupidx+groupcmds - 1);
 }
 
+uint16_t __play_valid_cmd_idx() {
+    uint16_t idx;
+    do {
+        idx = __play_rand_cmd_idx();
+    } while(cmd_test(idx));
+
+    return idx;
+}
 
 void __play_advance(uint8_t sole, uint8_t success) {
     if (!success) {
@@ -26,7 +43,7 @@ void __play_advance(uint8_t sole, uint8_t success) {
     } else {
         play.cmds_progress--;
     }
-    con_send_cmd(&con[sole], &cmds[__play_rand_cmd_idx()], level.cmd_time, play.clock);
+    con_send_cmd(&con[sole], &cmds[__play_valid_cmd_idx()], level.cmd_time, play.clock);
 }
 
 void play_state_change(uint8_t sole) {
@@ -88,10 +105,8 @@ void __play_send_level_begin_packet() {
     // printf("Sending arg2: %d\r\n", play.level_packet_type_2.d2.argument2);
     con_transfer(&con[0],play.level_packet1);
     con_transfer(&con[0],play.level_packet_type_2);
-    timer_delayMicro(100);
     con_transfer(&con[1],play.level_packet2);
     con_transfer(&con[1],play.level_packet_type_2);
-    timer_delayMicro(100);
     con_transfer(&con[2],play.level_packet3);
     con_transfer(&con[2],play.level_packet_type_2);
     // printf("End transfers\r\n");

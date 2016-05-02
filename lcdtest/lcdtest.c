@@ -21,7 +21,7 @@ int16_t main(void) {
     init_i2c();
     init_timer();
     timer_initDelayMicro(&timer5);
-
+    
     init_lcd(0);
 
     lcd_clear(&lcd[0]);
@@ -51,6 +51,7 @@ int16_t main(void) {
     strm_genPush(string2,"Triangle",3);
     // printf("%s\r\n",string2);
     lcd_print(&lcd[1], string2);//TODO get level_number and string cat
+    lcd_print(&lcd[2], string2);//TODO get level_number and string cat
     // lcd_broadcast_after(numbers[9]);
     // lcd_print1(&lcd[0],strptr1);
     // // Reverse(strptr2);

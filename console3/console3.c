@@ -17,7 +17,7 @@
 uint8_t read_clutch(uint16_t clutch_prev){
     uint16_t clutch_in = (uint16_t)pin_read(&A[0]);
     uint8_t clutch_out;
-    // printf("%u\n\r", clutch_in); 
+    printf("clutch_in:%u\n\r", clutch_in); 
     if (clutch_prev<clutch_in){
         if (clutch_in<33500 && clutch_in>0){
             clutch_out = 0;

@@ -33,19 +33,23 @@ uint8_t read_tri_state(){
 uint8_t read_slider(uint8_t slider_out){
 
     uint16_t slider_in = (uint16_t)pin_read(&A[1]);
-    if (slider_in < 1000){
+    //printf("Slider_In:%u\n\r",slider_in);
+
+    if (slider_in > 55000){
         slider_out = 0;
     }
-    else if(slider_in < 42000 && slider_in > 37000){
+    else if(slider_in < 51000 && slider_in > 49000){
         slider_out = 1;
     }
-    else if(slider_in < 52000 && slider_in > 49000 ){
+    else if(slider_in < 42000 && slider_in > 37000){
         slider_out = 2;
     }
-    else if(slider_in > 60000){
+    else if(slider_in < 7000){
         slider_out = 3;
     }
+    //printf("Slider_out:%u\n\r",slider_out);
     return slider_out;
+
 }
 
 
@@ -66,10 +70,10 @@ void poll_state(_CONSOLE *self) {
     self->state.s2.hotsystem4 = (uint8_t)pin_read(&A[5]);  
     //led_write(&led2, self->state.s0.red_button);
 
-    printf("State: %08lx\r\n", (unsigned long)self->state.ul);
+    // printf("State: %08lx\r\n", (unsigned long)self->state.ul);
 }
 
-void console1_poll(_TIMER *timer) {
+void console2_poll(_TIMER *timer) {
     console_poll_changes(&console);
 }
 
@@ -102,9 +106,10 @@ int16_t main(void) {
     console2_init();
     console_attach_poll(&console, poll_state);
 
-    timer_every(&timer4, 1e-2, console1_poll);
+    timer_every(&timer4, 1e-2, console2_poll);
 
     state = console_s_level;
+    led_toggle(&led1);
     while(1) {
         state();
         // printf("Slave sent: 0x%x\r\n", 0x5A);

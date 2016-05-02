@@ -82,6 +82,8 @@ void cmd_init(uint16_t actuator, uint16_t action, uint8_t console) {
     cmd_tmp.desired = desired;
     cmd_tmp.mask = mask;
     cmd_tmp.group = CONS_GROUP[console][actuator];
+    cmd_tmp.states = CONS_STATES[console][actuator];
+    cmd_tmp.hasrest = CONS_HASREST[console][actuator];
 
     if (CONS_GROUP[console][actuator] > 5) {// special
         cmd_tmp.index = cmds_special_ptr;
@@ -107,6 +109,36 @@ uint16_t cmd_get(uint8_t console, uint16_t actuator, uint16_t action) {
         }
     }
     return -1; // invalid command
+}
+
+uint16_t cmd_groupidx(uint8_t console, uint8_t group) {
+    uint16_t i;
+    _CMD *cmd_search;
+    // "O(n) time"
+    uint8_t ingroup = 0;
+    for (i = 0; i < CMD_COUNT; i++) {
+        cmd_search = &cmds[i];
+        if (cmd_search->console == console &&
+            cmd_search->group == group) {
+            return i;
+        }
+    }
+    return -1; // invalid group (?)
+}
+
+uint16_t cmd_groupcount(uint8_t console, uint8_t group) {
+    uint16_t i;
+    _CMD *cmd_search;
+    // "O(n) time"
+    uint8_t ingroup = 0;
+    for (i = 0; i < CMD_COUNT; i++) {
+        cmd_search = &cmds[i];
+        if (cmd_search->console == console &&
+            cmd_search->group == group) {
+            ingroup++;
+        }
+    }
+    return ingroup;
 }
 
 void cmd_print(uint16_t index) {

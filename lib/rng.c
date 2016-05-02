@@ -111,9 +111,32 @@ void init_rng() {
 //     return rng_val;
 // }
 
+
+//http://stackoverflow.com/questions/822323/how-to-generate-a-random-number-in-c
+uint16_t randint(uint16_t n) {
+  if ((n - 1) == 32767) {
+    return rand();
+  } else {
+    // Chop off all of the values that would cause skew...
+    long end = 32767 / n; // truncate skew
+    // assert (end > 0L);
+    end *= n;
+
+    // ... and ignore results from rand() that fall above that limit.
+    // (Worst case the loop condition should succeed 50% of the time,
+    // so we can expect to bail out of this loop pretty quickly.)
+    int r;
+    while ((r = rand()) >= end);
+
+    return r % n;
+  }
+}
+
+
 // from min (inclusive) to max (inclusive)
 uint16_t rng_int(uint16_t min, uint16_t max) {
-    return (rand() % (max + 1 - min)) + min;
+    uint16_t n = max - min;
+    return min + randint(n+1);
 }
 
 // perform a weighted coin flip

@@ -21,6 +21,12 @@ void blue() {
     led_toggle(&led3);
 }
 
+void all() {
+    led_on(&led1);
+    led_on(&led2);
+    led_on(&led3);
+}
+
 int16_t main(void) {
     init_clock();
     init_ui();
@@ -30,16 +36,16 @@ int16_t main(void) {
     init_uart();
 
     pin_digitalIn(&D[0]);
-    int_attach(&int1, &D[0], 1, red);
+    int_attach(&int1, &D[4], 1, red);
 
     pin_digitalIn(&D[1]);
-    int_attach(&int2, &D[1], 0, green);
+    int_attach(&int2, &D[6], 1, green);
 
     pin_digitalIn(&D[2]);
-    int_attach(&int3, &D[2], 0, blue);
+    int_attach(&int3, &D[8], 1, blue);
 
     pin_digitalIn(&D[3]);
-    int_attach(&int4, &D[3], 0, blue);
+    int_attach(&int4, &D[10], 1, all);
 
     led_on(&led1);
 

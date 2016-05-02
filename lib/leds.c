@@ -58,11 +58,15 @@ void __attribute__((interrupt, auto_psv)) _OC1Interrupt(void) {
 }
 
 void __leds_update(_TIMER *timer) {
-    oc_pwm(&oc1, &D[9], NULL, LEDS_FREQ, 0x0000);
+    oc_pwm(&oc1, &A[5], NULL, LEDS_FREQ, 0x0000);
     bitset(&IEC0, 2); // enable OC1 interrupt
 }
 
 void init_leds(void) { // init the objects and set up the unified controller
+    uint8_t i;
+    for (i = 0; i < LEDS_NUM; i++) {
+        leds_state[i] = 0;
+    }
     leds_init(&ledbar1, 8, 0);
     leds_init(&ledbar2, 8, 8);
     leds_init(&ledbar3, 8, 16);
@@ -127,35 +131,32 @@ void leds_bar(_LEDS *self, float fill, float bri) {
 
 // space and time are floats 0-1
 void leds_centerDisplay(_LEDS *self, float fire, float space) {
-    uint16_t i;
     // write a red bar from the bottom up based on `fire`
     uint16_t leds_fire = fire*self->num;
     leds_writeFire(self, 0, leds_fire+1); // fire color
     leds_brighten(self, leds_fire, (fire*self->num)-leds_fire);
     // write a blue dot based on `space`
     uint16_t space_pos = space*self->num;
-    leds_writeRGB(self, space_pos, 0,40,255); // spaceship color
+    leds_writeRange(self, space_pos, space_pos+6, 0,40,255); // spaceship color
+    leds_brighten(self, space_pos, 1.-((space*self->num)-space_pos));
+    leds_brighten(self, space_pos+5, (space*self->num)-space_pos);
     // clear all the LEDs that aren't supposed to be lit
-    leds_writeRange(self, leds_fire, space_pos, 0,0,0);
-    leds_writeRange(self, space_pos+1, self->num, 0,0,0);
+    leds_writeRange(self, leds_fire+1, space_pos, 0,0,0);
+    leds_writeRange(self, space_pos+6, self->num, 0,0,0);
 }
 
 volatile float fire_bri = .5;
 void leds_writeFire(_LEDS *self, uint16_t start, uint16_t end) {
-    uint16_t i;
+    float fbri = fire_bri;
     // weight the random walk towards middle brightness
-    uint8_t brighten = rng_coin_flip(100 - 100*fire_bri);
-    if (brighten && fire_bri < 1) {
-        fire_bri += .03;
-    } else if (!brighten && fire_bri > 0) {
-        fire_bri -= .03;
+    uint8_t brighten = rng_coin_flip(100 - 100*fbri);
+    if (brighten && fbri < .9) {
+        fbri += .03;
+    } else if (!brighten && fbri > .1) {
+        fbri -= .03;
     }
 
-    clamp(fire_bri, 0., 1.);
-
-    for (i = start; i < end; i++) {
-        leds_writeRGB(self, i, 200*fire_bri,20*fire_bri,0);
-    }
+    leds_writeRange(self, start, end, 200*fbri,20*fbri,0);
 }
 
 void leds_clear(_LEDS *self) {
