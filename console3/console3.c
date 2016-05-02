@@ -49,6 +49,16 @@ uint8_t read_clutch(uint16_t clutch_prev){
     return clutch_out;
 }
 
+uint8_t read_arming(){
+    uint16_t arming_in = (uint16_t)pin_read(&A[1]);
+    uint8_t arming_out;
+}
+
+uint8_t read_dial(){
+    uint16_t dial_in = (uint16_t)pin_read(&A[3]);
+    uint8_t dial_out;
+}
+
 void poll_state(_CONSOLE *self) {
     //led_toggle(&led3);
     self->state.s3.red_button = (uint8_t)!pin_read(&D[5]);
@@ -60,11 +70,18 @@ void poll_state(_CONSOLE *self) {
     self->state.s3.wormhole1 = (uint8_t)pin_read(&D[12]);
     self->state.s3.wormhole2 = (uint8_t)pin_read(&D[13]);
     self->state.s3.clutch = read_clutch(self->state.s3.clutch);
+    self->state.s3.arming = read_arming();
+    self->state.s3.arming_button = (uint8_t)pin_read(&A[2]);
+    self->state.s3.dial = read_dial();
     //led_write(&led2, self->state.s0.red_button);
 }
 
 void console3_poll(_TIMER *timer) {
     console_poll_changes(&console);
+}
+
+void console3_init(){
+    pin_digitalIn(&A[2]);
 }
 
 int16_t main(void) {
@@ -84,7 +101,10 @@ int16_t main(void) {
     lcd_clear(&lcd[1]);
     lcd_clear(&lcd[2]);
 
+    pin
+
     init_console();
+    console3_init();
 
     console_attach_poll(&console, poll_state);
 

@@ -49,14 +49,17 @@ void game_over(void);
 STATE_HANDLER_T state, last_state;
 
 void con1_state_change(_INT *intx) {
+    led_on(&led1);
     play_state_change(0);
 }
 
 void con2_state_change(_INT *intx) {
+    led_on(&led2);
     play_state_change(1);
 }
 
 void con3_state_change(_INT *intx) {
+    led_on(&led3);
     play_state_change(2);
 }
 
@@ -85,7 +88,6 @@ void pre_level() {
     red_pressed = con[0].state.s1.red_button && con[1].state.s2.red_button && con[2].state.s3.red_button;
     if (red_pressed) {
         lcd_broadcast(launch_str);
-        led_on(&led1);
         uint8_t i;
         for (i = 0; i < 10; i++)
             timer_delayMicro(0xFFFF);
@@ -98,7 +100,6 @@ void level_play() {
     if (state != last_state) {
         last_state = state;
         lev_setup(level_number);
-        led_on(&led3);
         lev_genCmd();
         play_begin();
     }
@@ -142,7 +143,6 @@ void game_over() {
             game_success = 0;
         }
     }
-    led_on(&led1);
     uint8_t i;
     for (i=0; i<10; i++ ){
         timer_delayMicro(50000);
@@ -172,7 +172,7 @@ void init_master() {
     // this represents a problem
     // cd1.tick_sec = GAME_TICK;
     // cd2.tick_sec = GAME_TICK;
-    // cd3.tick_sec = GAME_TICK;
+    // cd3.tick_sec = GAME_TICK
 
     init_cmd();
     init_i2c();

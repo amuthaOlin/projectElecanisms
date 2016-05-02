@@ -30,7 +30,16 @@ uint8_t read_tri_state(){
     return tri_state_out;
 }
 
-uint8_t read_slider(uint8_t slider_out){
+uint8_t read_dial(uint8_t slider_out){
+
+    uint16_t dial_in = (uint16_t)pin_read(&D[11]); //Can this pin be analog?
+    uint16_t dial_out;
+    //printf("Slider_In:%u\n\r",slider_in);
+
+    return dial_out;
+}
+
+uint8_t read_slider(){
 
     uint16_t slider_in = (uint16_t)pin_read(&A[1]);
     //printf("Slider_In:%u\n\r",slider_in);
@@ -67,7 +76,8 @@ void poll_state(_CONSOLE *self) {
     self->state.s2.hotsystem1 = (uint8_t)pin_read(&A[2]);
     self->state.s2.hotsystem2 = (uint8_t)pin_read(&A[3]);
     self->state.s2.hotsystem3 = (uint8_t)pin_read(&A[4]);
-    self->state.s2.hotsystem4 = (uint8_t)pin_read(&A[5]);  
+    self->state.s2.hotsystem4 = (uint8_t)pin_read(&A[5]); 
+    self->state.s2.dial = read_dial();
     //led_write(&led2, self->state.s0.red_button);
 
     // printf("State: %08lx\r\n", (unsigned long)self->state.ul);
@@ -82,6 +92,7 @@ void console2_init(){
     pin_digitalIn(&A[3]);
     pin_digitalIn(&A[4]);
     pin_digitalIn(&A[5]);
+    pin_analogIn(&D[11]);
 }
 
 int16_t main(void) {
