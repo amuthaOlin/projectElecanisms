@@ -16,12 +16,15 @@ int16_t bar2_ms = 2e2;
 int16_t bar3_ms = 3e2;
 int16_t barc_ms = 8e2;
 
-volatile float fill = 1;
 volatile float space = 0.5;
 volatile float fire = 0.25;
 void led_loop(_TIMER *timer) {
-    fill -= 0.01;
+    fire += .0005;
+    space += .0005;
     leds_centerDisplay(&ledcenter, fire, space);
+    leds_bar(&ledbar1, fire, 0.5);
+    leds_bar(&ledbar2, fire, 0.5);
+    leds_bar(&ledbar3, fire, 0.5);
 }
 
 int16_t main(void) {
@@ -41,9 +44,5 @@ int16_t main(void) {
 
     timer_every(&timer1, 1e-2, led_loop);
 
-    while(1) {
-        leds_bar(&ledbar1, fill, 0.5);
-        leds_bar(&ledbar2, fill, 0.5);
-        leds_bar(&ledbar3, fill, 0.5);
-    }
+    while(1) {}
 }
