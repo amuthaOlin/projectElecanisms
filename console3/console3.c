@@ -17,61 +17,60 @@
 uint8_t read_clutch(uint16_t clutch_prev){
     uint16_t clutch_in = (uint16_t)pin_read(&A[0]);
     uint8_t clutch_out;
-    //printf("clutch_in:%u\n\r", clutch_in); 
+    // printf("clutch_in:%u\n\r", clutch_in); 
     if (clutch_prev<clutch_in){
         if (clutch_in<9000 && clutch_in>0){
-            clutch_out = 1;
+            clutch_out = 4;
         }
         else if(clutch_in<22000 && clutch_in>9000){
-            clutch_out = 2;
-        }
-        else if(clutch_in<25000 && clutch_in>22000){
             clutch_out = 3;
         }
+        else if(clutch_in<25000 && clutch_in>22000){
+            clutch_out = 2;
+        }
         else if(clutch_in<64000 && clutch_in>25000){
-            clutch_out = 4;
+            clutch_out = 1;
         }
     }
     else if (clutch_prev>clutch_in){
         if (clutch_in<9000 && clutch_in>0){
-            clutch_out = 1;
+            clutch_out = 4;
         }
         else if(clutch_in<13000 && clutch_in>9000){
-            clutch_out = 2;
-        }
-        else if(clutch_in<25000 && clutch_in>13000){
             clutch_out = 3;
         }
+        else if(clutch_in<25000 && clutch_in>13000){
+            clutch_out = 2;
+        }
         else if(clutch_in<64000 && clutch_in>25000){
-            clutch_out = 4;
+            clutch_out = 1;
         }
     }
     else{
         clutch_out = clutch_prev;
     }
-    //printf("clutch_out:%u\n\r", clutch_out); 
+    // printf("clutch_out:%u\n\r", clutch_out); 
     return clutch_out;
 }
 
 uint8_t read_arming(){
     uint16_t arming_in = (uint16_t)pin_read(&A[1]);
     uint8_t arming_out;
-    //printf("arming_in:%u\n\r", arming_in); 
+    // printf("arming_in:%u\n\r", arming_in); 
         if (arming_in<25000){
-            arming_out = 1;
+            arming_out = 3;
         }
         else if(arming_in<52000 && arming_in>20000){
             arming_out = 2;
         }
         else if(arming_in>52000){
-            arming_out = 3;
+            arming_out = 1;
         }
     //printf("arming_out:%u\n\r", arming_out);
     return arming_out;
 }
 
 uint8_t read_dial(){
-
     uint16_t dial_in = (uint16_t)pin_read(&A[3]); 
     uint8_t dial_out;
     //printf("dial_In:%u\n\r",dial_in);
@@ -87,7 +86,7 @@ uint8_t read_dial(){
     else if(dial_in >= 43000){
         dial_out = 4;
     }
-    //printf("dial_out:%u\n\r",dial_out);
+    // printf("dial_out:%u\n\r",dial_out);
     return dial_out;
 }
 
