@@ -33,7 +33,7 @@ uint8_t read_tri_state(){
 uint8_t read_dial(){
 
     uint16_t dial_in = (uint16_t)pin_read(&A[5]); 
-    uint16_t dial_out;
+    uint16_t dial_out = 0;
     //printf("dial_In:%u\n\r",dial_in);
     if (dial_in > 40000){
         dial_out = 0;

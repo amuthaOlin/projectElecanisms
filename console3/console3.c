@@ -16,7 +16,7 @@
 
 uint8_t read_clutch(uint16_t clutch_prev){
     uint16_t clutch_in = (uint16_t)pin_read(&A[0]);
-    uint8_t clutch_out;
+    uint8_t clutch_out = 3;
     // printf("clutch_in:%u\n\r", clutch_in); 
     if (clutch_prev<clutch_in){
         if (clutch_in<9000 && clutch_in>0){
@@ -55,9 +55,9 @@ uint8_t read_clutch(uint16_t clutch_prev){
 
 uint8_t read_arming(){
     uint16_t arming_in = (uint16_t)pin_read(&A[1]);
-    uint8_t arming_out;
+    uint8_t arming_out = 2;
     // printf("arming_in:%u\n\r", arming_in); 
-        if (arming_in<25000){
+        if (arming_in<20000){
             arming_out = 2;
         }
         else if(arming_in<52000 && arming_in>20000){
@@ -72,9 +72,9 @@ uint8_t read_arming(){
 
 uint8_t read_dial(){
     uint16_t dial_in = (uint16_t)pin_read(&A[3]); 
-    uint8_t dial_out;
+    uint8_t dial_out = 0;
     //printf("dial_In:%u\n\r",dial_in);
-    if (dial_in  < 10000){
+    if (dial_in < 10000){
         dial_out = 0;
     }
     else if(dial_in < 25000 && dial_in >= 10000){
