@@ -16,7 +16,7 @@
 
 uint8_t read_wordwheel_inside(){
     uint16_t wordwheel_in = (uint16_t)pin_read(&A[1]);
-    printf("wordwheel_inside:%u\n\r",wordwheel_in);
+    // printf("wordwheel_inside:%u\n\r",wordwheel_in);
     uint8_t wordwheel_out;
     if (wordwheel_in<51000){
         wordwheel_out = 0;
@@ -66,13 +66,18 @@ uint8_t read_wordwheel_outside(uint8_t wordwheel_prev){
     return wordwheel_out;
 }
 
+// 16 elements
+uint8_t joystick_key[] = {0, 5, 3, 4, 1, 0, 2, 0, 7, 6, 0, 0, 8, 0, 0, 0};
+
 uint8_t read_joystick(){
     uint8_t j1 = pin_read(&D[8]);
     uint8_t j3 = pin_read(&D[9]);
     uint8_t j5 = pin_read(&D[10]);
     uint8_t j7 = pin_read(&A[5]); // pin 11 isn't working
 
-    return j1 + (j3<<1) + (j5<<2) + (j7<<3);
+    uint8_t num = j1 + (j3<<1) + (j5<<2) + (j7<<3);
+    // printf("Position: %d\r\n", joystick_key[num]);
+    return joystick_key[num];
 }
 
 
