@@ -33,6 +33,7 @@ _PIN *SSn[] = { &D[3], &D[5], &D[7] };
 _PIN *Coin_pin = &D[12];
 
 volatile uint8_t coin = 0; 
+volatile uint8_t power_on = 0;
 volatile uint8_t level_number = 0;
 volatile uint8_t game_success = 0;
 volatile uint8_t level_success = 0;
@@ -69,7 +70,7 @@ void coin_wait(){
         last_state = state;
         lcd_broadcast(coin_str);
     }
-    if (coin) {
+    if (coin==1) {
         state = pre_level;
         level_number = 100; //change to 1 for real game
         coin = 0;
@@ -77,9 +78,9 @@ void coin_wait(){
 }
 
 volatile uint8_t red_pressed = 0;
+char ready_str[33]="Hold your red button when ready.";
+char launch_str[33]="Space Team launched!";
 void pre_level() {
-    char ready_str[33]="Hold your red button when ready.";
-    char launch_str[33]="Space Team launched!";
     if (state != last_state) {
         last_state = state;
         lcd_broadcast(ready_str);
@@ -152,8 +153,12 @@ void game_over() {
 }
 
 void coin_handler(_INT *intx) {
-    coin = 1;
-    
+    if(power_on == 1){
+        coin = 1;
+    }
+    else{
+        power_on = 1;
+    }
 }
 
 void init_master() {
@@ -186,16 +191,16 @@ void init_master() {
     pin_digitalIn(Sint3);
     pin_digitalIn(Coin_pin);
 
+    int_attach(&int4, Coin_pin, 1, coin_handler);
     int_attach(&int1, Sint1, 1, con1_state_change);
     int_attach(&int2, Sint2, 1, con2_state_change);
     int_attach(&int3, Sint3, 1, con3_state_change);
-    int_attach(&int4, Coin_pin, 1, coin_handler);
 }
 
 int16_t main(void) {
+    init_master();
     state = coin_wait;
     last_state = (STATE_HANDLER_T)NULL;
-    init_master();
     while (1) {
         state();
     }
