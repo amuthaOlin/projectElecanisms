@@ -140,6 +140,9 @@ void play_begin() {
 void __play_end() {
     play.PLAYING = 0;
     timer_cancel(play.timer);
+    leds_clear(&ledbar1);
+    leds_clear(&ledbar2);
+    leds_clear(&ledbar3);
 }
 
 void __play_loop() {
