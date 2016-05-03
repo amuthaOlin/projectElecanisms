@@ -76,62 +76,68 @@ void strm_Leet(char* str,uint8_t a, uint8_t b){
 }
 
 void strm_Pig(char* str,uint8_t a, uint8_t b){
-    char newstr[17] ="                ";
-    char* newstrptr=newstr;
-    char* newstrbgn=newstr;
-    uint8_t word =1;
-    char first;
-    char* wordbgn=str;
-    char* strbgn=str;
-    uint8_t len=0;
-    uint8_t count=0;
-    while(*str){
-        
-        if (word==1){
-            first=*wordbgn;
-            word=0;
-            len=0;
-        }
-        if (*str==' '){
-            uint8_t i=0;
-            while (i<len-1){
-                wordbgn++;
-                *newstrptr=*wordbgn;
-                if (count<17){newstrptr++;count++;} 
-                i++;
+    uint8_t temp[20];
+    uint8_t length, spaces;
+    length=strm_Length(str);
+    spaces=strm_Spaces(str,temp); 
+    if ((length+((spaces+1)*2))<17){ // will it still fit?
+        char newstr[17] ="                ";
+        char* newstrptr=newstr;
+        char* newstrbgn=newstr;
+        uint8_t word =1;
+        char first;
+        char* wordbgn=str;
+        char* strbgn=str;
+        uint8_t len=0;
+        uint8_t count=0;
+        while(*str){
+            
+            if (word==1){
+                first=*wordbgn;
+                word=0;
+                len=0;
             }
-            *newstrptr=first;
-            if (count<17){newstrptr++;count++;}
-            *newstrptr='a';
-            if (count<17){newstrptr++;count++;}
-            *newstrptr='y';
-            if (count<17){newstrptr++;count++;}
-            *newstrptr=' ';
-            if (count<17){newstrptr++;count++;}
-            word=1;
-            wordbgn+=2;
-        }
-        str++;
-        len++;
+            if (*str==' '){
+                uint8_t i=0;
+                while (i<len-1){
+                    wordbgn++;
+                    *newstrptr=*wordbgn;
+                    if (count<17){newstrptr++;count++;} 
+                    i++;
+                }
+                *newstrptr=first;
+                if (count<17){newstrptr++;count++;}
+                *newstrptr='a';
+                if (count<17){newstrptr++;count++;}
+                *newstrptr='y';
+                if (count<17){newstrptr++;count++;}
+                *newstrptr=' ';
+                if (count<17){newstrptr++;count++;}
+                word=1;
+                wordbgn+=2;
+            }
+            str++;
+            len++;
 
-    }
-    int i=0;
-    while (i<len-1){
-        wordbgn++;
-        *newstrptr=*wordbgn;
+        }
+        int i=0;
+        while (i<len-1){
+            wordbgn++;
+            *newstrptr=*wordbgn;
+            if (count<17){newstrptr++;count++;}
+            i++;
+            }
+        *newstrptr=first;
         if (count<17){newstrptr++;count++;}
-        i++;
-        }
-    *newstrptr=first;
-    if (count<17){newstrptr++;count++;}
-    *newstrptr='a';
-    if (count<17){newstrptr++;count++;}
-    *newstrptr='y';
-    if (count<17){newstrptr++;count++;}
-    *newstrptr=' ';
-    if (count<17){newstrptr++;count++;}
+        *newstrptr='a';
+        if (count<17){newstrptr++;count++;}
+        *newstrptr='y';
+        if (count<17){newstrptr++;count++;}
+        *newstrptr=' ';
+        if (count<17){newstrptr++;count++;}
 
-    strcpy(strbgn,newstrbgn);
+        strcpy(strbgn,newstrbgn);
+    }
 }
 
 void strm_Missing(char* str, uint8_t freq, uint8_t a){
@@ -308,6 +314,49 @@ void strm_genAct(char* command, char* name, uint8_t number, uint8_t action){
     newstrptr++;
     strcpy(temp2,temp1);
 }
-    
+ 
+uint8_t strm_Spaces(char* string, uint8_t* space_loc){
+    uint8_t space_num=0;
+    uint8_t i;
+    for (i = 0; i < 32; i++){
+        if (*string){
+            if (*string==' '){
+                string++;
+                if(*string != ' '){
+                    if (*string){                 
+                         space_loc[space_num]=i;
+                         space_num++;
+                         string--;
+                    }
+                }
+            }
+            string++;
+        }
+    }
+    return space_num;
+}  
+
+uint8_t strm_Length(char* string){
+    uint8_t len=0;
+    uint8_t i;
+    for (i = 0; i < 33; i++){
+        if (*string){
+            if (*string==' '){
+                string++;
+                if(*string == ' '){
+                    return len;
+                }
+                else if (!*string){                
+                    return len;
+                }
+                string--;
+            }
+            
+            len++;
+            string++;
+        }
+    }
+    return len;
+}  
 
 

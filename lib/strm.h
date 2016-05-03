@@ -15,5 +15,7 @@ void strm_Nada(char* str,uint8_t a, uint8_t b);
 void strm_genPush(char* command, char* name, uint8_t number);
 void strm_genSet(char* command, char* name, uint8_t value);
 void strm_genAct(char* command, char* name, uint8_t number, uint8_t action);
+uint8_t strm_Spaces(char* string, uint8_t * space_loc);
+uint8_t strm_Length(char* string);
 
 #endif
