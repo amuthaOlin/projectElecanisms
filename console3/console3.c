@@ -20,30 +20,30 @@ uint8_t read_clutch(uint16_t clutch_prev){
     //printf("clutch_in:%u\n\r", clutch_in); 
     if (clutch_prev<clutch_in){
         if (clutch_in<9000 && clutch_in>0){
-            clutch_out = 0;
-        }
-        else if(clutch_in<22000 && clutch_in>9000){
             clutch_out = 1;
         }
-        else if(clutch_in<25000 && clutch_in>22000){
+        else if(clutch_in<22000 && clutch_in>9000){
             clutch_out = 2;
         }
-        else if(clutch_in<64000 && clutch_in>25000){
+        else if(clutch_in<25000 && clutch_in>22000){
             clutch_out = 3;
+        }
+        else if(clutch_in<64000 && clutch_in>25000){
+            clutch_out = 4;
         }
     }
     else if (clutch_prev>clutch_in){
         if (clutch_in<9000 && clutch_in>0){
-            clutch_out = 0;
-        }
-        else if(clutch_in<13000 && clutch_in>9000){
             clutch_out = 1;
         }
-        else if(clutch_in<25000 && clutch_in>13000){
+        else if(clutch_in<13000 && clutch_in>9000){
             clutch_out = 2;
         }
-        else if(clutch_in<64000 && clutch_in>25000){
+        else if(clutch_in<25000 && clutch_in>13000){
             clutch_out = 3;
+        }
+        else if(clutch_in<64000 && clutch_in>25000){
+            clutch_out = 4;
         }
     }
     else{
@@ -58,13 +58,13 @@ uint8_t read_arming(){
     uint8_t arming_out;
     //printf("arming_in:%u\n\r", arming_in); 
         if (arming_in<25000){
-            arming_out = 0;
-        }
-        else if(arming_in<52000 && arming_in>20000){
             arming_out = 1;
         }
-        else if(arming_in>52000){
+        else if(arming_in<52000 && arming_in>20000){
             arming_out = 2;
+        }
+        else if(arming_in>52000){
+            arming_out = 3;
         }
     //printf("arming_out:%u\n\r", arming_out);
     return arming_out;

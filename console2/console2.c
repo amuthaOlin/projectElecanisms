@@ -55,16 +55,16 @@ uint8_t read_slider(){
     //printf("Slider_In:%u\n\r",slider_in);
 
     if (slider_in > 55000){
-        slider_out = 0;
-    }
-    else if(slider_in < 51000 && slider_in > 49000){
         slider_out = 1;
     }
-    else if(slider_in < 42000 && slider_in > 37000){
+    else if(slider_in < 51000 && slider_in > 49000){
         slider_out = 2;
     }
-    else if(slider_in < 7000){
+    else if(slider_in < 42000 && slider_in > 37000){
         slider_out = 3;
+    }
+    else if(slider_in < 7000){
+        slider_out = 4;
     }
     //printf("Slider_out:%u\n\r",slider_out);
     return slider_out;

@@ -32,7 +32,7 @@ _PIN *Sint3 = &D[8];
 _PIN *SSn[] = { &D[3], &D[5], &D[7] };
 _PIN *Coin_pin = &D[12];
 
-volatile uint8_t coin = 1; //TODO:Change to zero when coinop plugged in
+volatile uint8_t coin = 0; 
 volatile uint8_t level_number = 0;
 volatile uint8_t game_success = 0;
 volatile uint8_t level_success = 0;
@@ -71,7 +71,7 @@ void coin_wait(){
     }
     if (coin) {
         state = pre_level;
-        level_number = 100;
+        level_number = 100; //change to 1 for real game
         coin = 0;
     }
 }
@@ -193,9 +193,9 @@ void init_master() {
 }
 
 int16_t main(void) {
-    init_master();
     state = coin_wait;
     last_state = (STATE_HANDLER_T)NULL;
+    init_master();
     while (1) {
         state();
     }
