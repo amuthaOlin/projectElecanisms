@@ -36,13 +36,13 @@ uint8_t read_dial(){
     uint16_t dial_out;
     //printf("dial_In:%u\n\r",dial_in);
     if (dial_in > 40000){
-        dial_out = 1;
+        dial_out = 0;
     }
     else if(dial_in <= 40000 && dial_in > 20000){
-        dial_out = 2;
+        dial_out = 1;
     }
     else if(dial_in <= 20000 && dial_in >= 0){
-        dial_out = 3;
+        dial_out = 2;
     }
     // printf("dial_out:%u\n\r",dial_out);
     return dial_out;
@@ -51,22 +51,22 @@ uint8_t read_dial(){
 uint8_t read_slider(){
 
     uint16_t slider_in = (uint16_t)pin_read(&A[1]);
-    uint8_t slider_out;
+    uint8_t slider_out = 0;
     //printf("Slider_In:%u\n\r",slider_in);
 
     if (slider_in > 55000){
+        slider_out = 0;
+    }
+    else if(slider_in < 55000 && slider_in > 49000){
         slider_out = 1;
     }
-    else if(slider_in < 51000 && slider_in > 49000){
+    else if(slider_in < 49000 && slider_in > 30000){
         slider_out = 2;
     }
-    else if(slider_in < 42000 && slider_in > 37000){
+    else if(slider_in < 30000){
         slider_out = 3;
     }
-    else if(slider_in < 7000){
-        slider_out = 4;
-    }
-    //printf("Slider_out:%u\n\r",slider_out);
+    // printf("Slider_out:%u\n\r",slider_out);
     return slider_out;
 
 }

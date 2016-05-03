@@ -84,8 +84,8 @@ uint8_t read_joystick(){
 void poll_state(_CONSOLE *self) {
     //led_toggle(&led3);
     self->state.s1.red_button = (uint8_t)!pin_read(&D[5]);
-    self->state.s1.toggle1 = (uint8_t)pin_read(&D[6]);
-    self->state.s1.toggle2 = (uint8_t)pin_read(&D[7]);
+    self->state.s1.toggle1 = (uint8_t)pin_read(&D[7]);
+    self->state.s1.toggle2 = (uint8_t)pin_read(&D[6]);
     self->state.s1.green_button = (uint8_t)pin_read(&A[4]);
     self->state.s1.joystick = read_joystick();
     self->state.s1.wormhole1 = (uint8_t)pin_read(&D[12]);
@@ -94,6 +94,7 @@ void poll_state(_CONSOLE *self) {
     self->state.s1.wordwheel_inside = read_wordwheel_inside();
     self->state.s1.wordwheel_outside = read_wordwheel_outside(self->state.s1.wordwheel_outside);
 
+    // printf("Hotsystem: %d, T1: %d, T2: %d\r\n", self->state.s1.hotsystem, self->state.s1.toggle1, self->state.s1.toggle2);
     // printf("State: %08lx\r\n", (unsigned long)self->state.ul);
 }
 
