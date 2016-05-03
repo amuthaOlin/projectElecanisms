@@ -146,9 +146,9 @@ void __play_loop() {
     play.clock++;
 
     cd_update_all(play.clock);
-    leds_centerDisplay(&ledcenter, cdcenter.percent_done, play.cmds_progress/play.cmds_to_win);
+    leds_centerDisplay(&ledcenter, cdcenter.percent_done, play.cmds_progress/(float)play.cmds_to_win);
 
-    if (cdcenter.percent_done > play.cmds_progress/play.cmds_to_win) {
+    if (cdcenter.percent_done > play.cmds_progress/(float)play.cmds_to_win) {
         // we lost!
         cdcenter.flag = 0;
         leds_clear(&ledcenter);
