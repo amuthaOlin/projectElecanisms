@@ -137,12 +137,12 @@ void leds_centerDisplay(_LEDS *self, float fire, float space) {
     leds_brighten(self, leds_fire, (fire*self->num)-leds_fire);
     // write a blue dot based on `space`
     uint16_t space_pos = space*self->num;
-    leds_writeRange(self, space_pos, space_pos+6, 0,40,255); // spaceship color
-    leds_brighten(self, space_pos, 1.-((space*self->num)-space_pos));
-    leds_brighten(self, space_pos+5, (space*self->num)-space_pos);
+    leds_writeRange(self, space_pos-6, space_pos, 0,40,255); // spaceship color
+    leds_brighten(self, space_pos-6, 1.-((space*self->num)-space_pos));
+    leds_brighten(self, space_pos-1, (space*self->num)-space_pos);
     // clear all the LEDs that aren't supposed to be lit
     leds_writeRange(self, leds_fire+1, space_pos, 0,0,0);
-    leds_writeRange(self, space_pos+6, self->num, 0,0,0);
+    leds_writeRange(self, space_pos, self->num, 0,0,0);
 }
 
 volatile float fire_bri = .5;

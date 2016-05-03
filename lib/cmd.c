@@ -47,6 +47,9 @@ void init_cmd(void) {
 
     for (k = 0; k < 3; k++) { // k for konsole
         for (i = 0; i < CONS_NUMACTS[k]; i++) {
+            if (k == 0 && (i == 6 || i == 7)) { // word wheel killer -> 73 COMMANDS
+                continue;
+            }
             if (!CONS_HASREST[k][i])
                 cmd_init(i, 0, k);
             for (j = 1; j < CONS_STATES[k][i]; j++) {
@@ -162,6 +165,8 @@ void cmd_str(uint16_t cmdidx) { // assume str is 16 char long
         strm_genPush(cmd->command,cmd->name,CONS_GROUPNUM[cmd->console][cmd->actuator]);
     } else if (CONS_STATES[cmd->console][cmd->actuator] == 2) {
         strm_genAct(cmd->command,cmd->name,CONS_GROUPNUM[cmd->console][cmd->actuator],cmd->action);
+    } else if (!CONS_HASREST[cmd->console][cmd->actuator] && CONS_STATES[cmd->console][cmd->actuator] > 2) {
+        strm_genSet(cmd->command,cmd->name,cmd->action+1);
     } else {
         strm_genSet(cmd->command,cmd->name,cmd->action);
     }

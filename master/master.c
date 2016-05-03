@@ -32,7 +32,8 @@ _PIN *Sint3 = &D[8];
 _PIN *SSn[] = { &D[3], &D[5], &D[7] };
 _PIN *Coin_pin = &D[12];
 
-volatile uint8_t coin = 0;
+volatile uint8_t coin = 0; 
+volatile uint8_t power_on = 0;
 volatile uint8_t level_number = 0;
 volatile uint8_t game_success = 0;
 volatile uint8_t level_success = 0;
@@ -49,14 +50,17 @@ void game_over(void);
 STATE_HANDLER_T state, last_state;
 
 void con1_state_change(_INT *intx) {
+    led_on(&led1);
     play_state_change(0);
 }
 
 void con2_state_change(_INT *intx) {
+    led_on(&led2);
     play_state_change(1);
 }
 
 void con3_state_change(_INT *intx) {
+    led_on(&led3);
     play_state_change(2);
 }
 
@@ -66,17 +70,17 @@ void coin_wait(){
         last_state = state;
         lcd_broadcast(coin_str);
     }
-    if (coin) {
+    if (coin==1) {
         state = pre_level;
-        level_number = 100;
+        level_number = 1; //change to 1 for real game
         coin = 0;
     }
 }
 
 volatile uint8_t red_pressed = 0;
+char ready_str[33]="Hold your red button when ready.";
+char launch_str[33]="Space Team launched!";
 void pre_level() {
-    char ready_str[33]="Hold your red button when ready.";
-    char launch_str[33]="Space Team launched!";
     if (state != last_state) {
         last_state = state;
         lcd_broadcast(ready_str);
@@ -85,7 +89,6 @@ void pre_level() {
     red_pressed = con[0].state.s1.red_button && con[1].state.s2.red_button && con[2].state.s3.red_button;
     if (red_pressed) {
         lcd_broadcast(launch_str);
-        led_on(&led1);
         uint8_t i;
         for (i = 0; i < 10; i++)
             timer_delayMicro(0xFFFF);
@@ -98,7 +101,6 @@ void level_play() {
     if (state != last_state) {
         last_state = state;
         lev_setup(level_number);
-        led_on(&led3);
         lev_genCmd();
         play_begin();
     }
@@ -142,9 +144,8 @@ void game_over() {
             game_success = 0;
         }
     }
-    led_on(&led1);
     uint8_t i;
-    for (i=0; i<10; i++ ){
+    for (i=0; i<100; i++){
         timer_delayMicro(50000);
     }
 
@@ -152,8 +153,12 @@ void game_over() {
 }
 
 void coin_handler(_INT *intx) {
-    coin = 1;
-    
+    if(power_on == 1){
+        coin = 1;
+    }
+    else{
+        power_on = 1;
+    }
 }
 
 void init_master() {
@@ -172,7 +177,7 @@ void init_master() {
     // this represents a problem
     // cd1.tick_sec = GAME_TICK;
     // cd2.tick_sec = GAME_TICK;
-    // cd3.tick_sec = GAME_TICK;
+    // cd3.tick_sec = GAME_TICK
 
     init_cmd();
     init_i2c();
@@ -186,10 +191,10 @@ void init_master() {
     pin_digitalIn(Sint3);
     pin_digitalIn(Coin_pin);
 
+    int_attach(&int4, Coin_pin, 1, coin_handler);
     int_attach(&int1, Sint1, 1, con1_state_change);
     int_attach(&int2, Sint2, 1, con2_state_change);
     int_attach(&int3, Sint3, 1, con3_state_change);
-    int_attach(&int4, Coin_pin, 1, coin_handler);
 }
 
 int16_t main(void) {

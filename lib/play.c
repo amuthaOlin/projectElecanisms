@@ -8,10 +8,8 @@
 #include "lcd.h"
 #include "spacecomms.h"
 
-#define PLAY_NUM_CMDS 90
+#define PLAY_NUM_CMDS 73
 #define PLAY_TICK 1e-2 // seconds
-
-volatile uint8_t PLAYING = 0;
 
 _PLAY play;
 
@@ -27,6 +25,7 @@ uint16_t __play_rand_cmd_idx() {
     return rng_int(groupidx, groupidx+groupcmds - 1);
 }
 
+volatile uint16_t cmd_i = 0;
 uint16_t __play_valid_cmd_idx() {
     uint16_t idx;
     do {
@@ -34,14 +33,19 @@ uint16_t __play_valid_cmd_idx() {
     } while(cmd_test(idx));
 
     return idx;
+
+    //CODE TO TEST EACH ACTUATOR
+    // uint16_t temp = cmd_i;
+    // cmd_i++;
+    // cmd_i = cmd_i%PLAY_NUM_CMDS;
+    // return temp;
 }
 
 void __play_advance(uint8_t sole, uint8_t success) {
     if (!success) {
-        play.cmds_progress++;
-        cd_advance(&cdcenter, 2.0);
-    } else {
         play.cmds_progress--;
+    } else {
+        play.cmds_progress++;
     }
     con_send_cmd(&con[sole], &cmds[__play_valid_cmd_idx()], level.cmd_time, play.clock);
 }
@@ -134,21 +138,24 @@ void play_begin() {
 }
 
 void __play_end() {
-    PLAYING = 0;
+    play.PLAYING = 0;
     timer_cancel(play.timer);
+    leds_clear(&ledbar1);
+    leds_clear(&ledbar2);
+    leds_clear(&ledbar3);
 }
-
 
 void __play_loop() {
     play.clock++;
 
     cd_update_all(play.clock);
+    leds_centerDisplay(&ledcenter, cdcenter.percent_done, play.cmds_progress/(float)play.cmds_to_win);
 
-    // we lost!
-    if (cdcenter.flag) {
+    // printf("Percent done: %f\r\n", cdcenter.percent_done);
+    if (cdcenter.percent_done > play.cmds_progress/(float)play.cmds_to_win) {
+        // we lost!
         cdcenter.flag = 0;
         leds_clear(&ledcenter);
-        leds_writeRGBs(&ledcenter, 255,0,0);
 
         play.success = 0;
         return __play_end();

@@ -56,23 +56,15 @@ int16_t main(void) {
 
     led_on(&led3);
 
-    // printf("Command index: %u\r\n", __play_rand_cmd_idx());
-    // printf("Command index: %u\r\n", __play_rand_cmd_idx());
-    // printf("Command index: %u\r\n", __play_rand_cmd_idx());
-    // printf("Command index: %u\r\n", __play_rand_cmd_idx());
-    // printf("Command index: %u\r\n", __play_rand_cmd_idx());
-    // printf("Command index: %u\r\n", __play_rand_cmd_idx());
-    // printf("Command index: %u\r\n", __play_rand_cmd_idx());
-    // printf("Command index: %u\r\n", __play_rand_cmd_idx());
 
-    __play_rand_cmd_idx();
-    __play_rand_cmd_idx();
-    __play_rand_cmd_idx();
-    __play_rand_cmd_idx();
-    __play_rand_cmd_idx();
-    __play_rand_cmd_idx();
-    __play_rand_cmd_idx();
-    __play_rand_cmd_idx();
+    printf("Random int: %u\r\n", rng_int(1,18));
+    printf("Random int: %u\r\n", rng_int(1,18));
+    printf("Random int: %u\r\n", rng_int(1,18));
+    printf("Random int: %u\r\n", rng_int(1,18));
+    printf("Random int: %u\r\n", rng_int(1,18));
+    printf("Random int: %u\r\n", rng_int(1,18));
+    printf("Random int: %u\r\n", rng_int(1,18));
+    printf("Random int: %u\r\n", rng_int(1,18));
 
     while (1) {}
 }

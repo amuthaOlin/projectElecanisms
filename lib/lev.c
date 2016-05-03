@@ -89,7 +89,6 @@ void __lev_pickLabels(uint8_t theme){
 			random_num = (uint8_t)rng_int(1,theme_len[theme]);
         }
 		random_num_array[j] = random_num;
-		//random_num_array[j] = i+1; //comment this in and comment out last line for testing of each actuator
 	}
     led_on(&led3);
 

@@ -35,6 +35,7 @@ void init_cd(void);
 typedef struct _CD {
     float dur_sec;
     float tick_sec;
+    float percent_done;
 
     _LEDS *ledbar;
 

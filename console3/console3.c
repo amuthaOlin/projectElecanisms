@@ -16,55 +16,103 @@
 
 uint8_t read_clutch(uint16_t clutch_prev){
     uint16_t clutch_in = (uint16_t)pin_read(&A[0]);
-    uint8_t clutch_out;
-    printf("clutch_in:%u\n\r", clutch_in); 
+    uint8_t clutch_out = 3;
+    // printf("clutch_in:%u\n\r", clutch_in); 
     if (clutch_prev<clutch_in){
-        if (clutch_in<33500 && clutch_in>0){
-            clutch_out = 0;
-        }
-        else if(clutch_in<38000 && clutch_in>33500){
-            clutch_out = 1;
-        }
-        else if(clutch_in<41600 && clutch_in>38000){
-            clutch_out = 2;
-        }
-        else if(clutch_in<64000 && clutch_in>41600){
+        if (clutch_in<9000 && clutch_in>0){
             clutch_out = 3;
         }
-    }
-    else if (clutch_prev>=clutch_in){
-        if (clutch_in<39400 && clutch_in>0){
-            clutch_out = 0;
-        }
-        else if(clutch_in<43000 && clutch_in>39400){
-            clutch_out = 1;
-        }
-        else if(clutch_in<46000 && clutch_in>43000){
+        else if(clutch_in<22000 && clutch_in>9000){
             clutch_out = 2;
         }
-        else if(clutch_in<64000 && clutch_in>46000){
-            clutch_out = 3;
+        else if(clutch_in<25000 && clutch_in>22000){
+            clutch_out = 1;
+        }
+        else if(clutch_in<64000 && clutch_in>25000){
+            clutch_out = 0;
         }
     }
+    else if (clutch_prev>clutch_in){
+        if (clutch_in<9000 && clutch_in>0){
+            clutch_out = 3;
+        }
+        else if(clutch_in<13000 && clutch_in>9000){
+            clutch_out = 2;
+        }
+        else if(clutch_in<25000 && clutch_in>13000){
+            clutch_out = 1;
+        }
+        else if(clutch_in<64000 && clutch_in>25000){
+            clutch_out = 0;
+        }
+    }
+    else{
+        clutch_out = clutch_prev;
+    }
+    // printf("clutch_out:%u\n\r", clutch_out); 
     return clutch_out;
+}
+
+uint8_t read_arming(){
+    uint16_t arming_in = (uint16_t)pin_read(&A[1]);
+    uint8_t arming_out = 2;
+    // printf("arming_in:%u\n\r", arming_in); 
+        if (arming_in<35000){
+            arming_out = 2;
+        }
+        else if(arming_in<52000 && arming_in>35000){
+            arming_out = 1;
+        }
+        else if(arming_in>52000){
+            arming_out = 0;
+        }
+    //printf("arming_out:%u\n\r", arming_out);
+    return arming_out;
+}
+
+uint8_t read_dial(){
+    uint16_t dial_in = (uint16_t)pin_read(&A[3]); 
+    uint8_t dial_out = 0;
+    //printf("dial_In:%u\n\r",dial_in);
+    if (dial_in < 10000){
+        dial_out = 0;
+    }
+    else if(dial_in < 25000 && dial_in >= 10000){
+        dial_out = 1;
+    }
+    else if(dial_in < 43000 && dial_in >= 25000){
+        dial_out = 2;
+    }
+    else if(dial_in >= 43000){
+        dial_out = 3;
+    }
+    // printf("dial_out:%u\n\r",dial_out);
+    return dial_out;
 }
 
 void poll_state(_CONSOLE *self) {
     //led_toggle(&led3);
     self->state.s3.red_button = (uint8_t)!pin_read(&D[5]);
-    self->state.s3.triangle1 = (uint8_t)!pin_read(&D[6]);
-    self->state.s3.triangle2 = (uint8_t)!pin_read(&D[7]);
+    self->state.s3.triangle1 = (uint8_t)!pin_read(&D[7]);
+    self->state.s3.triangle2 = (uint8_t)!pin_read(&D[6]);
     self->state.s3.triangle3 = (uint8_t)!pin_read(&D[8]);
     self->state.s3.toggle1 = (uint8_t)pin_read(&D[9]);
     self->state.s3.toggle2 = (uint8_t)pin_read(&D[10]);
     self->state.s3.wormhole1 = (uint8_t)pin_read(&D[12]);
     self->state.s3.wormhole2 = (uint8_t)pin_read(&D[13]);
     self->state.s3.clutch = read_clutch(self->state.s3.clutch);
+    self->state.s3.arming = read_arming();
+    self->state.s3.arming_button = (uint8_t)pin_read(&A[2]);
+    self->state.s3.dial = read_dial();
     //led_write(&led2, self->state.s0.red_button);
 }
 
 void console3_poll(_TIMER *timer) {
     console_poll_changes(&console);
+}
+
+void console3_init(){
+    pin_digitalIn(&A[2]);
 }
 
 int16_t main(void) {
@@ -84,7 +132,9 @@ int16_t main(void) {
     lcd_clear(&lcd[1]);
     lcd_clear(&lcd[2]);
 
+
     init_console();
+    console3_init();
 
     console_attach_poll(&console, poll_state);
 

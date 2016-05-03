@@ -137,6 +137,7 @@ uint16_t randint(uint16_t n) {
 uint16_t rng_int(uint16_t min, uint16_t max) {
     uint16_t n = max - min;
     return min + randint(n+1);
+    
 }
 
 // perform a weighted coin flip
