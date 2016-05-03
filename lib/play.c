@@ -8,7 +8,7 @@
 #include "lcd.h"
 #include "spacecomms.h"
 
-#define PLAY_NUM_CMDS 90
+#define PLAY_NUM_CMDS 89
 #define PLAY_TICK 1e-2 // seconds
 
 _PLAY play;
