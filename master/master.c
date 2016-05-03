@@ -145,7 +145,7 @@ void game_over() {
         }
     }
     uint8_t i;
-    for (i=0; i<10; i++ ){
+    for (i=0; i<100; i++){
         timer_delayMicro(50000);
     }
 
