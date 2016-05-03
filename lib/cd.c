@@ -72,7 +72,7 @@ void cd_update(_CD *self, int32_t ticks_cur) {
     }
     self->percent_done = (float)(self->ticks_dur-ticks_consumed)/self->ticks_dur;
 
-    leds_bar(self->ledbar, self->percent_done, 1);
+    leds_bar(self->ledbar, self->percent_done, .5);
 }
 
 void cd_advance(_CD *self, float off_sec) {

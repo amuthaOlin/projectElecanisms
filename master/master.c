@@ -71,7 +71,7 @@ void coin_wait(){
     }
     if (coin) {
         state = pre_level;
-        level_number = 100; //change to 1 for real game
+        level_number = 1; //change to 1 for real game
         coin = 0;
     }
 }
