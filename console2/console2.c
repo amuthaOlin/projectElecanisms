@@ -36,13 +36,13 @@ uint8_t read_dial(){
     uint16_t dial_out;
     //printf("dial_In:%u\n\r",dial_in);
     if (dial_in > 40000){
-        dial_out = 0;
-    }
-    else if(dial_in <= 40000 && dial_in > 20000){
         dial_out = 1;
     }
-    else if(dial_in <= 20000 && dial_in >= 0){
+    else if(dial_in <= 40000 && dial_in > 20000){
         dial_out = 2;
+    }
+    else if(dial_in <= 20000 && dial_in >= 0){
+        dial_out = 3;
     }
     // printf("dial_out:%u\n\r",dial_out);
     return dial_out;

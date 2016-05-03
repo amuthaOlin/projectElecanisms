@@ -76,16 +76,16 @@ uint8_t read_dial(){
     uint8_t dial_out;
     //printf("dial_In:%u\n\r",dial_in);
     if (dial_in  < 10000){
-        dial_out = 0;
-    }
-    else if(dial_in < 25000 && dial_in >= 10000){
         dial_out = 1;
     }
-    else if(dial_in < 43000 && dial_in >= 25000){
+    else if(dial_in < 25000 && dial_in >= 10000){
         dial_out = 2;
     }
-    else if(dial_in >= 43000){
+    else if(dial_in < 43000 && dial_in >= 25000){
         dial_out = 3;
+    }
+    else if(dial_in >= 43000){
+        dial_out = 4;
     }
     //printf("dial_out:%u\n\r",dial_out);
     return dial_out;
@@ -94,8 +94,8 @@ uint8_t read_dial(){
 void poll_state(_CONSOLE *self) {
     //led_toggle(&led3);
     self->state.s3.red_button = (uint8_t)!pin_read(&D[5]);
-    self->state.s3.triangle1 = (uint8_t)!pin_read(&D[6]);
-    self->state.s3.triangle2 = (uint8_t)!pin_read(&D[7]);
+    self->state.s3.triangle1 = (uint8_t)!pin_read(&D[7]);
+    self->state.s3.triangle2 = (uint8_t)!pin_read(&D[6]);
     self->state.s3.triangle3 = (uint8_t)!pin_read(&D[8]);
     self->state.s3.toggle1 = (uint8_t)pin_read(&D[9]);
     self->state.s3.toggle2 = (uint8_t)pin_read(&D[10]);

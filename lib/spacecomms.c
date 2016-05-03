@@ -22,7 +22,7 @@ uint8_t CONS_STATES[][15] = {
         2, // green_button3:1
         2, // green_button4:1
         3, // tri_state:2
-        4, // slider:2
+        5, // slider:2
         2, // hotsystem1:1
         2, // hotsystem2:1
         2, // hotsystem3:1
@@ -39,7 +39,7 @@ uint8_t CONS_STATES[][15] = {
         2, // triangle3:1
         2, // toggle1:1
         2, // toggle2:1
-        4, // clutch:2
+        5, // clutch:2
         4, // arming:2
         2, // arming_button:1
         5, // dial:3
@@ -70,7 +70,7 @@ uint8_t CONS_HASREST[][15] = {// has a "rest state" that cannot be commanded
         0,
         0,
         1,
-        0,
+        1,
         0,
         0,
         0,
@@ -87,7 +87,7 @@ uint8_t CONS_HASREST[][15] = {// has a "rest state" that cannot be commanded
         1,
         0,
         0,
-        0,
+        1,
         0,
         0,
         1,
