@@ -17,35 +17,39 @@
 uint8_t read_clutch(uint16_t clutch_prev){
     uint16_t clutch_in = (uint16_t)pin_read(&A[0]);
     uint8_t clutch_out;
-    printf("clutch_in:%u\n\r", clutch_in); 
+    //printf("clutch_in:%u\n\r", clutch_in); 
     if (clutch_prev<clutch_in){
-        if (clutch_in<33500 && clutch_in>0){
+        if (clutch_in<9000 && clutch_in>0){
             clutch_out = 0;
         }
-        else if(clutch_in<38000 && clutch_in>33500){
+        else if(clutch_in<22000 && clutch_in>9000){
             clutch_out = 1;
         }
-        else if(clutch_in<41600 && clutch_in>38000){
+        else if(clutch_in<25000 && clutch_in>22000){
             clutch_out = 2;
         }
-        else if(clutch_in<64000 && clutch_in>41600){
+        else if(clutch_in<64000 && clutch_in>25000){
             clutch_out = 3;
         }
     }
-    else if (clutch_prev>=clutch_in){
-        if (clutch_in<39400 && clutch_in>0){
+    else if (clutch_prev>clutch_in){
+        if (clutch_in<9000 && clutch_in>0){
             clutch_out = 0;
         }
-        else if(clutch_in<43000 && clutch_in>39400){
+        else if(clutch_in<13000 && clutch_in>9000){
             clutch_out = 1;
         }
-        else if(clutch_in<46000 && clutch_in>43000){
+        else if(clutch_in<25000 && clutch_in>13000){
             clutch_out = 2;
         }
-        else if(clutch_in<64000 && clutch_in>46000){
+        else if(clutch_in<64000 && clutch_in>25000){
             clutch_out = 3;
         }
     }
+    else{
+        clutch_out = clutch_prev;
+    }
+    //printf("clutch_out:%u\n\r", clutch_out); 
     return clutch_out;
 }
 
@@ -55,8 +59,24 @@ uint8_t read_arming(){
 }
 
 uint8_t read_dial(){
-    uint16_t dial_in = (uint16_t)pin_read(&A[3]);
+
+    uint16_t dial_in = (uint16_t)pin_read(&A[3]); 
     uint8_t dial_out;
+    //printf("dial_In:%u\n\r",dial_in);
+    if (dial_in  < 10000){
+        dial_out = 0;
+    }
+    else if(dial_in < 25000 && dial_in >= 10000){
+        dial_out = 1;
+    }
+    else if(dial_in < 43000 && dial_in >= 25000){
+        dial_out = 2;
+    }
+    else if(dial_in >= 43000){
+        dial_out = 3;
+    }
+    //printf("dial_out:%u\n\r",dial_out);
+    return dial_out;
 }
 
 void poll_state(_CONSOLE *self) {
@@ -101,7 +121,6 @@ int16_t main(void) {
     lcd_clear(&lcd[1]);
     lcd_clear(&lcd[2]);
 
-    pin
 
     init_console();
     console3_init();

@@ -27,6 +27,7 @@ uint16_t __play_rand_cmd_idx() {
     return rng_int(groupidx, groupidx+groupcmds - 1);
 }
 
+volatile uint16_t cmd_i = 0;
 uint16_t __play_valid_cmd_idx() {
     uint16_t idx;
     do {
@@ -34,6 +35,12 @@ uint16_t __play_valid_cmd_idx() {
     } while(cmd_test(idx));
 
     return idx;
+
+    //CODE TO TEST EACH ACTUATOR
+    // uint16_t temp = cmd_i;
+    // cmd_i++;
+    // cmd_i = cmd_i%PLAY_NUM_CMDS;
+    // return temp;
 }
 
 void __play_advance(uint8_t sole, uint8_t success) {
