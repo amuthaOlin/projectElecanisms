@@ -29,14 +29,13 @@ typedef struct LCD_NAMES2 {
   unsigned long :24;
 } LCD_NAMES2;
 
-
 typedef struct CONS1_STATE {
   unsigned red_button:1;        // 0
   unsigned toggle1:1;           // 1
   unsigned toggle2:1;           // 2
   unsigned green_button:1;      // 3
-  unsigned joystick:4;          // 4
   unsigned hotsystem:1;         // 5
+  unsigned joystick:4;          // 4
   unsigned wordwheel_inside:4;  // 6
   unsigned wordwheel_outside:4; // 7
   unsigned asteroid:1;          // 8

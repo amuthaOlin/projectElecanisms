@@ -7,8 +7,8 @@ uint8_t CONS_STATES[][15] = {
         2, // toggle1:1
         2, // toggle2:1
         2, // green_button:1
-        9, // joystick:4
         2, // hotsystem:1
+        9, // joystick:4
         8, // wordwheel_inside:4
         8, // wordwheel_outside:4
         2, // asteroid:1
@@ -55,8 +55,8 @@ uint8_t CONS_HASREST[][15] = {// has a "rest state" that cannot be commanded
         0, // if it doesn't then it's a "set"
         0,
         0,
-        1,
         0,
+        1,
         0,
         0,
         1,
@@ -103,8 +103,8 @@ uint8_t CONS_GROUP[][15] = {// has a "rest state" that cannot be commanded
         0,
         0,
         1,
-        2,
         3,
+        2,
         5,
         5,
         6,

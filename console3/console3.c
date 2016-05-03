@@ -57,10 +57,10 @@ uint8_t read_arming(){
     uint16_t arming_in = (uint16_t)pin_read(&A[1]);
     uint8_t arming_out = 2;
     // printf("arming_in:%u\n\r", arming_in); 
-        if (arming_in<20000){
+        if (arming_in<35000){
             arming_out = 2;
         }
-        else if(arming_in<52000 && arming_in>20000){
+        else if(arming_in<52000 && arming_in>35000){
             arming_out = 1;
         }
         else if(arming_in>52000){

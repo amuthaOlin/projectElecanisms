@@ -57,10 +57,10 @@ uint8_t read_slider(){
     if (slider_in > 55000){
         slider_out = 0;
     }
-    else if(slider_in < 55000 && slider_in > 49000){
+    else if(slider_in < 55000 && slider_in > 45000){
         slider_out = 1;
     }
-    else if(slider_in < 49000 && slider_in > 30000){
+    else if(slider_in < 45000 && slider_in > 30000){
         slider_out = 2;
     }
     else if(slider_in < 30000){
