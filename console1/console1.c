@@ -40,7 +40,7 @@ uint8_t read_wordwheel_inside(){
     return wordwheel_out;
 }
 
-uint8_t read_wordwheel_outside(uint16_t wordwheel_prev){
+uint8_t read_wordwheel_outside(uint8_t wordwheel_prev){
     uint16_t wordwheel_in = (uint16_t)pin_read(&A[2]);
     //printf("wordwheel_inside:%u\n\r",wordwheel_in);
     uint8_t wordwheel_out;

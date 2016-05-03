@@ -56,6 +56,18 @@ uint8_t read_clutch(uint16_t clutch_prev){
 uint8_t read_arming(){
     uint16_t arming_in = (uint16_t)pin_read(&A[1]);
     uint8_t arming_out;
+    //printf("arming_in:%u\n\r", arming_in); 
+        if (arming_in<25000){
+            arming_out = 0;
+        }
+        else if(arming_in<52000 && arming_in>20000){
+            arming_out = 1;
+        }
+        else if(arming_in>52000){
+            arming_out = 2;
+        }
+    //printf("arming_out:%u\n\r", arming_out);
+    return arming_out;
 }
 
 uint8_t read_dial(){
