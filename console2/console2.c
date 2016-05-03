@@ -44,7 +44,7 @@ uint8_t read_dial(){
     else if(dial_in <= 20000 && dial_in >= 0){
         dial_out = 2;
     }
-    printf("dial_out:%u\n\r",dial_out);
+    // printf("dial_out:%u\n\r",dial_out);
     return dial_out;
 }
 

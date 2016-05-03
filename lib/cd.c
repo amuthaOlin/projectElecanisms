@@ -34,7 +34,7 @@ void init_cd(void) {
     cd_init(&cd1, 1e-2, &ledbar1);
     cd_init(&cd2, 1e-2, &ledbar2);
     cd_init(&cd3, 1e-2, &ledbar3);
-    cd_init(&cdcenter, 1e-2, &ledcenter);
+    cd_init(&cdcenter, 1e-2, NULL);
 }
 
 void cd_init(_CD *self, float tick_sec, _LEDS *ledbar) {
@@ -70,9 +70,11 @@ void cd_update(_CD *self, int32_t ticks_cur) {
         self->active = 0;
         return;
     }
-    self->percent_done = (float)(self->ticks_dur-ticks_consumed)/self->ticks_dur;
+    self->percent_done = 1-(float)(self->ticks_dur-ticks_consumed)/self->ticks_dur;
 
-    leds_bar(self->ledbar, self->percent_done, .5);
+    if (self->ledbar) {
+        leds_bar(self->ledbar, 1-self->percent_done, .5);
+    }
 }
 
 void cd_advance(_CD *self, float off_sec) {
