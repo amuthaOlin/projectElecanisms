@@ -8,16 +8,20 @@
 #include "lcd.h"
 #include "spacecomms.h"
 
-#define PLAY_NUM_CMDS 73
+#define PLAY_NUM_CMDS 89
 #define PLAY_TICK 1e-2 // seconds
 
 _PLAY play;
 
 uint16_t __play_rand_cmd_idx() {
     uint8_t act = 0;
-    act = rng_int(0, 17);
-    uint8_t cons = act/6;
-    uint8_t group = act%6;
+    uint8_t cons = 0;
+    uint8_t group = 0;
+    do {
+        act = rng_int(0, 17);
+        cons = act/6;
+        group = act%6;
+    } while (cons == 0 && act == 5); // this construct is flawed
 
     uint8_t groupcmds = cmd_groupcount(cons, group);
 

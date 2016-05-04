@@ -47,9 +47,6 @@ void init_cmd(void) {
 
     for (k = 0; k < 3; k++) { // k for konsole
         for (i = 0; i < CONS_NUMACTS[k]; i++) {
-            if (k == 0 && (i == 6 || i == 7)) { // word wheel killer -> 73 COMMANDS
-                continue;
-            }
             if (!CONS_HASREST[k][i])
                 cmd_init(i, 0, k);
             for (j = 1; j < CONS_STATES[k][i]; j++) {
