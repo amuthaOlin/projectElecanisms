@@ -14,52 +14,52 @@
 #include "spacecomms.h"
 #include "console.h"
 
-uint8_t read_wordwheel_inside(){
+uint8_t read_wordwheel_outside(){
     uint16_t wordwheel_in = (uint16_t)pin_read(&A[1]);
-    // printf("wordwheel_inside:%u\n\r",wordwheel_in);
+    printf("wordwheel_outside:%u\n\r",wordwheel_in);
     uint8_t wordwheel_out;
-    if (wordwheel_in<51000){
+    if (wordwheel_in<33000 && wordwheel_in>23000){
         wordwheel_out = 0;
     }
-    else if (wordwheel_in<52000 && wordwheel_in>51000){
+    else if (wordwheel_in<42000 && wordwheel_in>33000){
         wordwheel_out =1;    
     }
-    else if (wordwheel_in<54000 && wordwheel_in>52000){
+    else if (wordwheel_in<48000 && wordwheel_in>44000){
         wordwheel_out =2;    
     }
-    else if (wordwheel_in<56000 && wordwheel_in>54000){
+    else if (wordwheel_in<58000 && wordwheel_in>48000){
         wordwheel_out =3;    
     }
-    else if (wordwheel_in<59000 && wordwheel_in>56000){
+    else if (wordwheel_in<5000 || wordwheel_in>58000){
         wordwheel_out =4;    
     }
-    else if (wordwheel_in>59000){
+    else if (wordwheel_in>5000 && wordwheel_in<16000){
         wordwheel_out =5;    
     }
     // printf("outside:%u\n\r",wordwheel_out);
     return wordwheel_out;
 }
 
-uint8_t read_wordwheel_outside(uint8_t wordwheel_prev){
+uint8_t read_wordwheel_inside(uint8_t wordwheel_prev){
     uint16_t wordwheel_in = (uint16_t)pin_read(&A[2]);
     //printf("wordwheel_inside:%u\n\r",wordwheel_in);
     uint8_t wordwheel_out;
-    if(wordwheel_in<22000){
+    if(wordwheel_in<16000){
         wordwheel_out = 0;
     }
-    else if (wordwheel_in<29000 && wordwheel_in>22000){
+    else if (wordwheel_in<22000 && wordwheel_in>16000){
         wordwheel_out =1;    
     }
-    else if (wordwheel_in<35000 && wordwheel_in>29000){
+    else if (wordwheel_in<29500 && wordwheel_in>22000){
         wordwheel_out =2;    
     }
-    else if (wordwheel_in<40000 && wordwheel_in>35000){
+    else if (wordwheel_in<36000 && wordwheel_in>29500){
         wordwheel_out =3;    
     }
-    else if (wordwheel_in<44000 && wordwheel_in>40000){
+    else if (wordwheel_in<41000 && wordwheel_in>36000){
         wordwheel_out =4;    
     }
-    else if (wordwheel_in>44000){
+    else if (wordwheel_in>41000){
         wordwheel_out =5;    
     }
     // printf("outside:%u\n\r",wordwheel_out);

@@ -14,7 +14,7 @@ uint8_t CONS_STATES[][15] = {
         2, // asteroid:1
         2, // wormhole1:1
         2  // wormhole2:1
-    }, // not all states are "commandable" but every state must be captured here
+    },//41 total commands // not all states are "commandable" but every state must be captured here
     {
         2, // red_button:1
         2, // green_button1:1
@@ -31,7 +31,7 @@ uint8_t CONS_STATES[][15] = {
         2, // asteroid:1
         2, // wormhole1:1
         2, // wormhole2:1
-    },
+    },//34 total commands
     {
         2, // red_button:1
         2, // triangle1:1
@@ -46,9 +46,9 @@ uint8_t CONS_STATES[][15] = {
         2, // asteroid:1
         2, // wormhole1:1
         2, // wormhole2:1
-    }
+    }//31 total commands
 };
-// 97 commands
+// 106 commands
 uint8_t CONS_HASREST[][15] = {// has a "rest state" that cannot be commanded
     {
         1, // if it has rest it's just a momentary button, we can use things like "push"
