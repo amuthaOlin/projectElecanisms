@@ -235,7 +235,7 @@ void lev_setup(uint8_t lev_num){
 	}
 
 	else if (lev_num <7){ // Tier 2 levels
-		uint8_t theme=(uint8_t)rng_coin_replace(rng_int(1,lab_len[0]),70,0); // 70% chance of default
+		uint8_t theme=(uint8_t)rng_coin_replace(rng_int(1,lab_len[0]),10,0); // 10% chance of default
 		level.lab_theme=easy_lab[theme];
 		level.level_time=250;
 		level.cmd_time=17;
@@ -251,7 +251,7 @@ void lev_setup(uint8_t lev_num){
 	}
 
 	else if (lev_num <10){ // Tier 3 levels
-		uint8_t theme=(uint8_t)rng_coin_replace(rng_int(1,lab_len[1]),50,0);// 50% chance of default
+		uint8_t theme=(uint8_t)rng_coin_replace(rng_int(1,lab_len[1]),20,0);// 50% chance of default
 		level.lab_theme=easy_lab[theme];
 		level.level_time=225;
 		level.cmd_time=16;
@@ -268,7 +268,7 @@ void lev_setup(uint8_t lev_num){
 	}
 
 	else if (lev_num <14){ // Tier 4 levels
-		uint8_t theme=(uint8_t)rng_coin_replace(rng_int(0,lab_len[1]),40,0);
+		uint8_t theme=(uint8_t)rng_coin_replace(rng_int(0,lab_len[1]),20,0);
 		level.lab_theme=easy_lab[theme];
 		level.level_time=200;
 		level.cmd_time=15;
@@ -286,7 +286,7 @@ void lev_setup(uint8_t lev_num){
 	}
 
 	else if (lev_num <16){ // Tier 5 levels
-		uint8_t theme=(uint8_t)rng_coin_replace(rng_int(0,lab_len[2]),30,0);
+		uint8_t theme=(uint8_t)rng_coin_replace(rng_int(0,lab_len[2]),20,0);
 		level.lab_theme=easy_lab[theme];
 		level.level_time=175;
 		level.cmd_time=14;
@@ -300,7 +300,7 @@ void lev_setup(uint8_t lev_num){
 		level.wormholes[3]=(uint8_t)rng_int(40,50);
 		strcpy(level.message,messages[theme]);
 		__lev_pickLabels(theme);
-		level.mod=(uint8_t)rng_coin_replace(rng_int(0,8),30,0);
+		level.mod=(uint8_t)rng_coin_replace(rng_int(0,8),20,0);
 		level.arg_shift=3; // Make them hard
 		level.arg_freq=rng_int(3,6);
 	}
