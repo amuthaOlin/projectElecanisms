@@ -66,7 +66,7 @@ uint8_t read_slider(){
     else if(slider_in < 30000){
         slider_out = 3;
     }
-    // printf("Slider_out:%u\n\r",slider_out);
+    //printf("Slider_out:%u\n\r",slider_out);
     return slider_out;
 
 }
