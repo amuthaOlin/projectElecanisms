@@ -245,7 +245,7 @@ void lev_setup(uint8_t lev_num){
 		level.wormholes[1]=(uint8_t)rng_int(30,45);
 		strcpy(level.message,messages[theme]);
 		__lev_pickLabels(theme);
-		level.mod=(uint8_t)rng_coin_replace(rng_int(0,3),50,0);
+		level.mod=(uint8_t)rng_coin_replace(rng_int(0,3),20,0);
 		level.arg_freq=(uint8_t)rng_int(5,10);
 
 	}
@@ -262,7 +262,7 @@ void lev_setup(uint8_t lev_num){
 		level.wormholes[1]=(uint8_t)rng_int(30,45);
 		strcpy(level.message,messages[theme]);
 		__lev_pickLabels(theme);
-		level.mod=(uint8_t)rng_coin_replace(rng_int(0,8),50,0);
+		level.mod=(uint8_t)rng_coin_replace(rng_int(0,8),20,0);
 		level.arg_shift=1; // Make them easy
 		level.arg_freq=(uint8_t)rng_int(5,8);
 	}
@@ -280,7 +280,7 @@ void lev_setup(uint8_t lev_num){
 		level.wormholes[2]=(uint8_t)rng_int(30,45);
 		strcpy(level.message,messages[theme]);
 		__lev_pickLabels(theme);
-		level.mod=(uint8_t)rng_coin_replace(rng_int(0,8),30,0);
+		level.mod=(uint8_t)rng_coin_replace(rng_int(0,8),20,0);
 		level.arg_shift=1; // Make them med
 		level.arg_freq=(uint8_t)rng_int(4,6);
 	}
@@ -300,7 +300,7 @@ void lev_setup(uint8_t lev_num){
 		level.wormholes[3]=(uint8_t)rng_int(40,50);
 		strcpy(level.message,messages[theme]);
 		__lev_pickLabels(theme);
-		level.mod=(uint8_t)rng_coin_replace(rng_int(0,8),20,0);
+		level.mod=(uint8_t)rng_coin_replace(rng_int(0,8),10,0);
 		level.arg_shift=3; // Make them hard
 		level.arg_freq=rng_int(3,6);
 	}
