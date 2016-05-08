@@ -131,7 +131,14 @@ void play_begin() {
     __play_update_level_begin_packet();
     __play_send_level_begin_packet();
 
-    lcd_broadcast(level.message);
+    if (level.message) {
+        lcd_broadcast(level.message);
+        uint8_t i;
+        for (i = 0; i < 20; i++) {
+            timer_delayMicro(50000);
+        }
+    }
+
     timer_every(play.timer, PLAY_TICK, __play_loop);
     cd_start(&cdcenter, level.level_time, play.clock);
     play.PLAYING = 1;
