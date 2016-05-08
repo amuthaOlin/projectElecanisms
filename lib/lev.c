@@ -209,7 +209,7 @@ void lev_setup(uint8_t lev_num){
 		level.lab_theme=0;
 		level.level_time=150;
 		level.cmd_time=14;
-		strcpy(level.message,messages[0]);
+		strcpy(level.message,instructions[0]);
 		__lev_pickLabels(0);
 	}
 	else if (lev_num ==3){ // Third Level
@@ -219,7 +219,7 @@ void lev_setup(uint8_t lev_num){
 		level.asteroids[0]=(uint8_t)rng_int(4,10); // Seed two asteroids
 		level.asteroids[1]=(uint8_t)rng_int(12,20);
 
-        strcpy(level.message,instructions[0]);
+        strcpy(level.message,instructions[1]);
 		__lev_pickLabels(0);
 	}
 
@@ -230,7 +230,7 @@ void lev_setup(uint8_t lev_num){
 		level.asteroids[0]=(uint8_t)rng_int(10,35); // Seed an asteroid
 		level.wormholes[0]=(uint8_t)rng_int(0,5); // Seed two wormholes
 		level.wormholes[1]=(uint8_t)rng_int(20,50);
-		strcpy(level.message,instructions[0]);
+		strcpy(level.message,instructions[2]);
 		__lev_pickLabels(0);
 	}
 

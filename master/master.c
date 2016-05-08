@@ -78,8 +78,8 @@ void coin_wait(){
 }
 
 volatile uint8_t red_pressed = 0;
-char ready_str[33]="Hold your red button when ready.";
-char launch_str[33]="Space Team launched!";
+char ready_str[33]="Hold the red button when ready.";
+char launch_str[33]="Spaceteam       launched!";
 void pre_level() {
     if (state != last_state) {
         last_state = state;
