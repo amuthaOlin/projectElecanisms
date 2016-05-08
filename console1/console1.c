@@ -16,7 +16,7 @@
 
 uint8_t read_wordwheel_outside(){
     uint16_t wordwheel_in = (uint16_t)pin_read(&A[1]);
-    printf("wordwheel_outside:%u\n\r",wordwheel_in);
+    // printf("wordwheel_outside:%u\n\r",wordwheel_in);
     uint8_t wordwheel_out;
     if (wordwheel_in<33000 && wordwheel_in>23000){
         wordwheel_out = 0;
@@ -91,8 +91,8 @@ void poll_state(_CONSOLE *self) {
     self->state.s1.wormhole1 = (uint8_t)pin_read(&D[12]);
     self->state.s1.wormhole2 = (uint8_t)pin_read(&D[13]);   
     self->state.s1.hotsystem = (uint8_t)pin_read(&A[0]);
-    self->state.s1.wordwheel_inside = read_wordwheel_inside();
-    self->state.s1.wordwheel_outside = read_wordwheel_outside(self->state.s1.wordwheel_outside);
+    self->state.s1.wordwheel_inside = read_wordwheel_inside(self->state.s1.wordwheel_inside);
+    self->state.s1.wordwheel_outside = read_wordwheel_outside();
 
     // printf("Hotsystem: %d, T1: %d, T2: %d\r\n", self->state.s1.hotsystem, self->state.s1.toggle1, self->state.s1.toggle2);
     // printf("State: %08lx\r\n", (unsigned long)self->state.ul);
