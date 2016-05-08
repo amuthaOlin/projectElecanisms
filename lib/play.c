@@ -129,7 +129,10 @@ void play_begin() {
     play.success = 0;
 
     __play_update_level_begin_packet();
-    __play_send_level_begin_packet();
+    uint8_t i;
+    for (i = 0; i < 3; i++) {
+        __play_send_level_begin_packet();
+    }
 
     if (level.message) {
         lcd_broadcast(level.message);
