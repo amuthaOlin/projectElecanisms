@@ -47,7 +47,7 @@ uint16_t __play_valid_cmd_idx() {
 
 void __play_advance(uint8_t sole, uint8_t success) {
     if (!success) {
-        play.cmds_progress--;
+        play.cmds_progress++;
     } else {
         play.cmds_progress++;
     }
@@ -124,7 +124,7 @@ void __play_send_level_begin_packet() {
 void play_begin() {
     play.timer = &timer1;
     play.clock = 0;
-    play.cmds_to_win = 50;
+    play.cmds_to_win = 20;
     play.cmds_progress = play.cmds_to_win/2;
     play.success = 0;
 

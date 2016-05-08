@@ -87,16 +87,18 @@ void pre_level() {
     }
     
     red_pressed = con[0].state.s1.red_button && con[1].state.s2.red_button && con[2].state.s3.red_button;
+    // red_pressed = 1;
     if (red_pressed) {
         lcd_broadcast(launch_str);
         uint8_t i;
-        for (i = 0; i < 10; i++)
-            timer_delayMicro(0xFFFF);
+        for (i = 0; i < 20; i++)
+            timer_delayMicro(50000);
         state = level_play;
     }
 }
 
 char level_win_str[33] = "You beat level ";
+                        //0123456789012345<---==
 void level_play() {
     if (state != last_state) {
         last_state = state;
@@ -122,20 +124,30 @@ void level_play() {
     }
 
     if (state != last_state){
-        if (level_success == 1){
+        if (level_success == 1) {
             level_success = 0;
-            strcat(level_win_str,numbers[level_number]);
-            lcd_broadcast(level_win_str); 
+            level_win_str[15] = 0;
+            strcat(level_win_str,numbers[level_number-1]);
+            lcd_broadcast(level_win_str);
         }
     }
 }
 
 void game_over() {
+    char game_over[33] = "Game over!";
     char lose_str[33] = "You made it to level ";
+                       //0123456789012345678901<---==
     char win_str[33] = "Congratulations!You win!";
+    uint8_t i;
     if (state != last_state) {
         last_state = state;
-        if (game_success == 0){
+        if (game_success == 0) {
+            lcd_broadcast(game_over);
+            for (i=0; i<20; i++){
+                timer_delayMicro(50000);
+            }
+
+            lose_str[21] = 0;
             strcat(lose_str,numbers[level_number]);
             strcat(lose_str,"!");
             lcd_broadcast(lose_str);
@@ -144,8 +156,7 @@ void game_over() {
             game_success = 0;
         }
     }
-    uint8_t i;
-    for (i=0; i<100; i++){
+    for (i=0; i<20; i++){
         timer_delayMicro(50000);
     }
 
