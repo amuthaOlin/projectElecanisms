@@ -50,7 +50,7 @@ void __play_advance(uint8_t sole, uint8_t success) {
             play.cmds_progress -= 3;
             play.WORMHOLE = 0;
         } else {
-            play.cmds_progress--;
+            play.cmds_progress+=5; /// CHANGED
         }
     } else {
         play.cmds_progress++;
@@ -125,10 +125,13 @@ void __play_send_level_begin_packet() {
     // printf("Sending mod: %d\r\n", play.level_packet_type_2.d2.mods);
     // printf("Sending arg1: %d\r\n", play.level_packet_type_2.d2.argument1);
     // printf("Sending arg2: %d\r\n", play.level_packet_type_2.d2.argument2);
+    // timer_delayMicro(50000);
     con_transfer(&con[0],play.level_packet1);
     con_transfer(&con[0],play.level_packet_type_2);
+    // timer_delayMicro(50000);
     con_transfer(&con[1],play.level_packet2);
     con_transfer(&con[1],play.level_packet_type_2);
+    // timer_delayMicro(50000);
     con_transfer(&con[2],play.level_packet3);
     con_transfer(&con[2],play.level_packet_type_2);
     // printf("End transfers\r\n");

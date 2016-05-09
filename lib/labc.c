@@ -52,7 +52,7 @@ void labc_setup(void){
 	uint8_t i=0;
 	switch(level.lab_theme){
 		case 0:
-			while(i<7){
+			while(i<6){
 			strcpy(stringp,lab_general[level.lab_numb[i]]);
 		    (*mods[level.mod])(stringp,level.arg_freq, level.arg_shift);
 		 	strcpy(level.lab_str[i],stringp);
@@ -60,7 +60,7 @@ void labc_setup(void){
 		}
 			break;
 		case 1:
-			while(i<7){
+			while(i<6){
 				strcpy(stringp,lab_long[level.lab_numb[i]]);
 		    	(*mods[level.mod])(stringp,level.arg_freq, level.arg_shift);
 		 		strcpy(level.lab_str[i],stringp);
@@ -68,7 +68,7 @@ void labc_setup(void){
 			}	
 			break;
 		case 2:
-			while(i<7){
+			while(i<6){
 				strcpy(stringp,lab_homo[level.lab_numb[i]]);
 		    	(*mods[level.mod])(stringp,level.arg_freq, level.arg_shift);
 		 		strcpy(level.lab_str[i],stringp);
@@ -76,7 +76,7 @@ void labc_setup(void){
 			}	
 			break;
 		case 3:
-			while(i<7){
+			while(i<6){
 				strcpy(stringp,lab_sym[level.lab_numb[i]]);
 		    	(*mods[level.mod])(stringp,level.arg_freq, level.arg_shift);
 		 		strcpy(level.lab_str[i],stringp);
@@ -84,7 +84,7 @@ void labc_setup(void){
 			}	
 			break;
 		case 4:
-			while(i<7){
+			while(i<6){
 				strcpy(stringp,lab_emo[level.lab_numb[i]]);
 		    	(*mods[level.mod])(stringp,level.arg_freq, level.arg_shift);
 		 		strcpy(level.lab_str[i],stringp);
@@ -92,7 +92,7 @@ void labc_setup(void){
 			}	
 			break;
 		case 5:
-			while(i<7){
+			while(i<6){
 				strcpy(stringp,lab_num[level.lab_numb[i]]);
 		    	(*mods[level.mod])(stringp,level.arg_freq, level.arg_shift);
 		 		strcpy(level.lab_str[i],stringp);
@@ -100,7 +100,7 @@ void labc_setup(void){
 			}	
 			break;
 		case 6:
-			while(i<7){
+			while(i<6){
 				strcpy(stringp,lab_cons[level.lab_numb[i]]);
 		    	(*mods[level.mod])(stringp,level.arg_freq, level.arg_shift);
 		 		strcpy(level.lab_str[i],stringp);
@@ -108,7 +108,7 @@ void labc_setup(void){
 			}	
 			break;
 		case 7:
-			while(i<7){
+			while(i<6){
 				strcpy(stringp,lab_adven[level.lab_numb[i]]);
 		    	(*mods[level.mod])(stringp,level.arg_freq, level.arg_shift);
 		 		strcpy(level.lab_str[i],stringp);
@@ -116,7 +116,7 @@ void labc_setup(void){
 			}	
 			break;
 		case 8:
-			while(i<7){
+			while(i<6){
 				strcpy(stringp,lab_wars[level.lab_numb[i]]);
 		    	(*mods[level.mod])(stringp,level.arg_freq, level.arg_shift);
 		 		strcpy(level.lab_str[i],stringp);
@@ -124,7 +124,7 @@ void labc_setup(void){
 			}	
 			break;
 		case 9:
-			while(i<7){
+			while(i<6){
 				strcpy(stringp,lab_pir[level.lab_numb[i]]);
 		    	(*mods[level.mod])(stringp,level.arg_freq, level.arg_shift);
 		 		strcpy(level.lab_str[i],stringp);
@@ -132,7 +132,7 @@ void labc_setup(void){
 			}	
 			break;
 		case 10:
-			while(i<7){
+			while(i<6){
 				strcpy(stringp,lab_descr[level.lab_numb[i]]);
 		    	(*mods[level.mod])(stringp,level.arg_freq, level.arg_shift);
 		 		strcpy(level.lab_str[i],stringp);

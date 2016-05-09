@@ -34,10 +34,11 @@ _PIN *Coin_pin = &D[12];
 
 volatile uint8_t coin = 0; 
 volatile uint8_t power_on = 0;
-volatile uint8_t level_number = 0;
+volatile uint8_t level_number = 5;
 volatile uint8_t game_success = 0;
 volatile uint8_t level_success = 0;
 volatile uint8_t in_level= 0;
+
 
 char numbers[16][3]={"0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15"};
 
@@ -72,7 +73,7 @@ void coin_wait(){
     }
     if (coin==1) {
         state = pre_level;
-        level_number = 1; //change to 1 for real game
+        level_number = 13; //change to 1 for real game  //CHANGED
         coin = 0;
     }
 }
@@ -97,11 +98,18 @@ void pre_level() {
     }
 }
 
-char level_win_str[33] = "You beat level ";
+char level_win_str[33] = "You beat level  ";
                         //0123456789012345<---==
 void level_play() {
     if (state != last_state) {
         last_state = state;
+        pin_clear(&D[11]);
+        uint8_t i;
+        for (i = 0; i < 2; i++)
+            timer_delayMicro(50000);
+        pin_set(&D[11]);
+        for (i = 0; i < 3; i++)
+            timer_delayMicro(50000);
         lev_setup(level_number);
         lev_genCmd();
         play_begin();
@@ -110,7 +118,7 @@ void level_play() {
     if (play.PLAYING == 0) {
         level_success = play.success;
         if (level_success == 0){
-            game_success = 0;
+            game_success = 0;  
             state = game_over;
         } else if (level_success == 1){
             if (level_number == 15){
@@ -211,6 +219,8 @@ void init_master() {
 
 int16_t main(void) {
     init_master();
+    pin_digitalOut(&D[11]);
+    pin_set(&D[11]);
     state = coin_wait;
     last_state = (STATE_HANDLER_T)NULL;
     while (1) {

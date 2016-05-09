@@ -15,7 +15,7 @@
 // Theme 0
 char lab_general [101][17]={" ","Engine", "Gyrator", "Flame Thrower", "Delwelder", "Fibrillator", "Generator", "Dismantler", "Transponder", "Collider", "Transformer", "Controller", "Vaporizer", "Diffuser", "Amplifier", "Combustor", "Extruder", "Silencer", "Detonator", "Compressor", "Contraption", "Deflector", "Simulator", "Isomorph", "Defibulator ", "Accelerator", "Replicator", "Differential", "Sabilizer", "Indicator", "Defacer", "Distiller", "Elevator", "Engtangler", "Airlock", "Stopcock", "De-icer", "Mulcher", "Grindr", "Blinder", "Hoover", "Mincher", "Gedder", "Gamma Ray", "Engorger", "Jumper", "Spaceball", "Barge", "Breaks", "Thrusters", "Shunter", "Flywheel", "Flux Beam", "Extra Nipple", "Gamma Punch", "Pocket Bulb", "Death Slicer", "Lambda Flange", "U-Alert", "Warp Hoop", "Ultra Grill", "Eigen Crank", "Clutch Shifter", "Sub Network", "Lube Hose", "Ambiwing", "Beta-Pulsar", "Pico Plucker", "Psi Kick", "Radio Trellis", "Astro Mulcher", "Multiphaser", "Delta Hole", "Giga Bellows", "Cycloscope", "B-Fold", "Depth Synth", "Vibro Hitch", "Shift Baffle", "F-Whisker", "Extra Flush", "G-Spigot", "Gyro Peg", "Rear Frustrum", "O-Lube", "Vibro Ignition", "Orb Sphere", "Sub Tensor", "Cyclo Cube", "Lunar Canal", "Fibre Scrubber", "Terra Cover", "Theta Bypass", "Stun Rockets", "Grip Horn", "Technobraid", "P-Satellite", "Volt Puncher", "Giga Paddler", "Hypno Core", "Macro Slicer"};
 // Theme 1
-char lab_long [47][17]={" ","Spark Scrambler", "Clutch Catalyst", "Suction Scissor", "Epsilon Counter", "Photo Sprinkler", "Depth Sanitizer", "Lambda Lubricant", "Phono Structure", "Omicron Control", "Zeta-Ventricle ", "Flange Aperture", "Beta-Substrate", "Phase Collapser", "Pseudo Register", "Chroma Scratcher", "Spectro Scanner", "Delta Harmonizer", "Chlorosplitter", "Suction Compass", "Power Substrate", "Vibro Lubricant", "Nipple Membrane", "Plasma Sanitizer", "Psi Synthesizer", "Spectrum Conduit", "Kappa Ventricle", "Epsilon Shifter", "Iota Transporter", "Plectrotumbler", "Hydromechanism", "Chroma Irritant", "Omicron Crystal", "Fibre Sprinkler", "Mirror Manifold", "Spectro Capsule", "Wrench Dampener", "Power Trapezoid", "Ribbon Lubricant", "Plasma Solenoid", "Exlposion Sphere", "Flange Cartridge", "Mezzo-Restraint", "Photon Collapser", "Omicron Mulcher", "Synth Harmonizer", "Spine Scratcher"};
+char lab_long [47][17]={" ","Spark Scrambler", "Clutch Catalyst", "Suction Scissor", "Epsilon Counter", "Photo Sprinkler", "Depth Sanitizer", "Lambda Lubrican", "Phono Structure", "Omicron Control", "Zeta-Ventricle", "Flange Aperture", "Beta-Substrate", "Phase Collapser", "Pseudo Register", "Chromar Scratch", "Spectro Scanner", "Nerf Harmonizer", "Chlorosplitter", "Suction Compass", "Power Substrate", "Vibro Lubricant", "Nipple Membrane", "Plasma Sanitity", "Psi Synthesizer", "SpectraConduit", "Kappa Ventricle", "Epsilon Shifter", "Iota Transport", "Plectrotumbler", "Hydromechanism", "Chroma Irritant", "Omicron Crystal", "Fibre Sprinkler", "Mirror Manifold", "Spectro Capsule", "Wrench Dampener", "Power Trapezoid", "Fetch Lubricant", "Plasma Solenoid", "Exlposion Ball", "Flame Cartridge", "Mezzo-Restraint", "Moton Collapser", "Omicron Mulcher", "Iota Harmonizer", "Spine Scratcher"};
 // Theme 2
 char lab_homo [49][17]={" ","Eunuch's Wrench","Unix Wrench","Baud Tuner", "Bawdy Tuner", "Shea Butterer", "She Butterer", "Lie Detector", "Lye Detector", "Cocoa Eater", "Coco Eater", "Whale Tail", "Whale Tale", "Cheap Part", "Cheep Part", "Rap string", "Wrap string", "Beer Brew", "Beer Bruise", "Meet Peg", "Meat Peg", "Pea Pod", "Pee Pod", "Loot Booty", "Lute Booty", "Swtich sign", "Switch sine", "Wax Ceiling", "Wax Sealing", "Anti-Bertha", "Auntie Bertha", "Lip Bomb", "Lip Balm", "Planar Surface", "Planner surface", "Tacks Board", "Tax Board", "Elicit feelings", "Illicit feelings", "Gorilla War", "Guerilla War", "Happy Days", "Happy Daze", "Flee Horn", "Flea Horn", "Naval Treaty", "Navel Treaty", "Second Storey", "Second Story"};
 // Theme 3
@@ -35,12 +35,12 @@ char lab_pir [47][17]={" ","Treasure", "Galleon", "Black Beard", "Carribean", "T
 // Theme 10
 char lab_descr [18][17]={"Two Toggles C1","Green Button","Joystick","One Hot","Red C1","Word Wheel","Four Hot","Slider","Red C2","Four Green","Rocker","C2 Dial","Clutch","Dial C3","Red C3","Triangle","Two Toggles C3","Arming"};
 int theme_len[11]={101,47,49,47,47,47,47,47,47,47,18};
-int lab_len[3]={2,8,7};
-int easy_lab[2]={0,1};
-int med_lab[8]={0,1,2,4,5,7,8,9};
-int hard_lab[7]={0,1,2,3,4,5,6};
-char messages[10][33]={" ","Impending Didactic Aberration","They're over there, by their ship","Tr@n$|at0r M@lfun(#ion","Lol good luck (^_^)/* ttyl, bai","Can I Ha Your Numba","Thngs r brkng dwn","Come on, grab your friends!","May the force be with you","ARRG, spaceship now be a seaship"};
-char instructions[3][33]={"Commands may be for your console","Shake ball to avoid asteroids","Press flip to escape wormwhole"};
+int lab_len[3]={0,6,7};
+int easy_lab[2]={0};
+int med_lab[8]={0,2,4,5,7,8,9};
+int hard_lab[7]={0,2,3,4,5,6};
+char messages[10][33]={" ","Impeding Didactic Aberation","They're over there by their ship","Tr@n$|at0r      M@lfun(#ion","Lol good luck     (^_^)/*","Can I Ha Your Numba","Thngs r brkng dwn","Come on, grab your friends!","May the force be with you","ARRG, spaceship now be a seaship"};
+char instructions[3][33]={"Commands may be for your console","Shake ball to avoid asteroids","Press both to escape wormwhole"};
 
 _LEV level;
 
@@ -98,6 +98,7 @@ void __lev_pickLabels(uint8_t theme){
 		level.label[2][i]=random_num_array[i+12];
         i++;
 	}
+	level.label[0][5]=0;
     i = 0;
 	
 	switch(theme) { //FUCK THIS SHIT IN PARTICULAR 
@@ -234,25 +235,29 @@ void lev_setup(uint8_t lev_num){
 		__lev_pickLabels(0);
 	}
 
-	else if (lev_num <7){ // Tier 2 levels
-		uint8_t theme=(uint8_t)rng_coin_replace(rng_int(1,lab_len[0]),10,0); // 10% chance of default
-		level.lab_theme=easy_lab[theme];
-		level.level_time=140;
-		level.cmd_time=11;
-		level.asteroids[0]=(uint8_t)rng_int(0,15); // Seed two asteroids
-		level.asteroids[1]=(uint8_t)rng_int(30,45);
-		level.wormholes[0]=(uint8_t)rng_int(15,30);// Seed two wormholes
-		level.wormholes[1]=(uint8_t)rng_int(30,45);
-		strcpy(level.message,messages[theme]);
-		__lev_pickLabels(theme);
-		level.mod=(uint8_t)rng_coin_replace(rng_int(0,3),20,0);
-		level.arg_freq=(uint8_t)rng_int(5,10);
+	// else if (lev_num <7){ // Tier 2 levels
+	// 	// uint8_t theme_choice=(uint8_t)rng_coin_replace(1,20,0); // 20% chance of default
+	// 	// uint8_t theme=easy_lab[theme_choice];
+	// 	// uint8_t theme_choice =1;
+	// 	uint8_t theme=1;
+	// 	level.lab_theme=theme;
+	// 	level.level_time=140;
+	// 	level.cmd_time=11;
+	// 	level.asteroids[0]=(uint8_t)rng_int(0,15); // Seed two asteroids
+	// 	level.asteroids[1]=(uint8_t)rng_int(30,45);
+	// 	level.wormholes[0]=(uint8_t)rng_int(15,30);// Seed two wormholes
+	// 	level.wormholes[1]=(uint8_t)rng_int(30,45);
+	// 	strcpy(level.message,messages[theme]);
+	// 	__lev_pickLabels(theme);
+	// 	level.mod=(uint8_t)rng_coin_replace(rng_int(0,3),20,0);
+	// 	level.arg_freq=(uint8_t)rng_int(5,10);
 
-	}
+	// }
 
 	else if (lev_num <10){ // Tier 3 levels
-		uint8_t theme=(uint8_t)rng_coin_replace(rng_int(1,lab_len[1]),20,0);// 50% chance of default
-		level.lab_theme=easy_lab[theme];
+		uint8_t theme_choice=(uint8_t)rng_coin_replace(rng_int(1,lab_len[1]),20,0);// 50% chance of default
+		uint8_t theme=med_lab[theme_choice];
+		level.lab_theme=theme;
 		level.level_time=120;
 		level.cmd_time=10;
 		level.asteroids[0]=(uint8_t)rng_int(0,10); // Seed three asteroids
@@ -268,8 +273,9 @@ void lev_setup(uint8_t lev_num){
 	}
 
 	else if (lev_num <14){ // Tier 4 levels
-		uint8_t theme=(uint8_t)rng_coin_replace(rng_int(0,lab_len[1]),20,0);
-		level.lab_theme=easy_lab[theme];
+		uint8_t theme_choice=(uint8_t)rng_coin_replace(rng_int(0,lab_len[1]),20,0);
+		uint8_t theme=med_lab[theme_choice];
+		level.lab_theme=theme;
 		level.level_time=100;
 		level.cmd_time=9;
 		level.asteroids[0]=(uint8_t)rng_int(0,10); // Seed three asteroids
@@ -285,9 +291,10 @@ void lev_setup(uint8_t lev_num){
 		level.arg_freq=(uint8_t)rng_int(4,6);
 	}
 
-	else if (lev_num <16){ // Tier 5 levels
-		uint8_t theme=(uint8_t)rng_coin_replace(rng_int(0,lab_len[2]),20,0);
-		level.lab_theme=easy_lab[theme];
+	else if (lev_num <17){ // Tier 5 levels
+		uint8_t theme_choice=(uint8_t)rng_coin_replace(rng_int(1,lab_len[2]),20,0);
+		uint8_t theme=hard_lab[theme_choice];
+		level.lab_theme=theme;
 		level.level_time=90;
 		level.cmd_time=8;
 		level.asteroids[0]=(uint8_t)rng_int(0,10); // Seed four asteroids
@@ -312,6 +319,7 @@ void lev_setup(uint8_t lev_num){
 		__lev_pickLabels(10);
 	}
 	// lcd_print1(&lcdcmd[2],level.label_name[0][0]);
+	// lcd_broadcast()
 
 }
 
