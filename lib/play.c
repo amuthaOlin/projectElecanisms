@@ -14,27 +14,26 @@
 _PLAY play;
 
 uint16_t __play_rand_cmd_idx() {
-    uint8_t act = 0;
-    uint8_t cons = 0;
-    uint8_t group = 0;
-    do {
-        act = rng_int(0, 17);
-        cons = act/6;
-        group = act%6;
-    } while (cons == 0 && act == 5); // this construct is flawed
+    uint8_t act = rng_int(0, 17);
+    uint8_t cons = act/6;
+    uint8_t group = act%6;
 
-    uint8_t groupcmds = cmd_groupcount(cons, group);
-
-    uint8_t groupidx = cmd_groupidx(cons, group);
-    return rng_int(groupidx, groupidx+groupcmds - 1);
+    if (group == 5 && cons == 0) { // word wheel
+        uint8_t groupidx = cmd_groupidx(cons, 10);
+        return rng_int(groupidx, groupidx+35);
+    } else {
+        uint8_t groupidx = cmd_groupidx(cons, group);
+        uint8_t groupcmds = cmd_groupcount(cons, group);
+        return rng_int(groupidx, groupidx+groupcmds - 1);
+    }
 }
 
 volatile uint16_t cmd_i = 0;
 uint16_t __play_valid_cmd_idx() {
-    uint16_t idx;
-    do {
+    uint16_t idx = __play_rand_cmd_idx();
+    while (cmd_test(idx)) {
         idx = __play_rand_cmd_idx();
-    } while(cmd_test(idx));
+    }
 
     return idx;
 
