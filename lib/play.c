@@ -46,11 +46,21 @@ uint16_t __play_valid_cmd_idx() {
 
 void __play_advance(uint8_t sole, uint8_t success) {
     if (!success) {
-        play.cmds_progress--;
+        if (play.WORMHOLE == sole+1) {
+            play.cmds_progress -= 3;
+            play.WORMHOLE = 0;
+        } else {
+            play.cmds_progress--;
+        }
     } else {
         play.cmds_progress++;
     }
-    con_send_cmd(&con[sole], &cmds[__play_valid_cmd_idx()], level.cmd_time, play.clock);
+    if (play.cmds_progress == 22) {
+        play.WORMHOLE = sole+1;
+        con_send_cmd(&con[sole], &cmd_wormhole, level.cmd_time, play.clock);
+    } else {
+        con_send_cmd(&con[sole], &cmds[__play_valid_cmd_idx()], level.cmd_time, play.clock);
+    }
 }
 
 void play_state_change(uint8_t sole) {
@@ -62,6 +72,11 @@ void play_state_change(uint8_t sole) {
             if (cmd_test(con[i].last_cmd->index)) {
                 __play_advance(i, 1);
             }
+        }
+        uint8_t wormhole_evaded = con[0].state.s1.wormhole1 && con[0].state.s1.wormhole2 && con[1].state.s2.wormhole1 && con[1].state.s2.wormhole2 && con[2].state.s3.wormhole1 && con[2].state.s3.wormhole2;
+        if (play.WORMHOLE && wormhole_evaded) {
+            play.WORMHOLE = 0;
+            __play_advance(play.WORMHOLE-1, 1);
         }
     }
 }
@@ -143,6 +158,7 @@ void play_begin() {
     timer_every(play.timer, PLAY_TICK, __play_loop);
     cd_start(&cdcenter, level.level_time, play.clock);
     play.PLAYING = 1;
+    play.WORMHOLE = 0;
 
     for (i = 0; i < 3; i++)
         con_send_cmd(&con[i], &cmds[__play_rand_cmd_idx()], level.cmd_time, play.clock);

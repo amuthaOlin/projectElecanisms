@@ -40,6 +40,7 @@ char words_inner[6][10] = {" Ratchet", " Bobbin", " Quark", " Sucker", " Rotor",
 #define CMD_COUNT 120 // 97-9 (120 to be safe)
 _CMD cmds[CMD_COUNT];
 _CMD cmds_special[9];
+_CMD cmd_wormhole;
 
 uint16_t log_reses[] = {
     1, // 0
@@ -63,6 +64,7 @@ uint16_t __cmd_log2(uint16_t n) {
     return log_reses[n];
 }
 
+char worm_str[33] = "WORMHOLE        INCOMING!";
 uint16_t cmds_ptr = 0;
 void init_cmd(void) {
     uint16_t i, j, k;
@@ -103,6 +105,17 @@ void init_cmd(void) {
             cmds_ptr++;
         }
     }
+
+    cmd_wormhole.console = 6;
+    cmd_wormhole.index = 0;
+    cmd_wormhole.actuator = 0;
+    cmd_wormhole.group = 7;
+    cmd_wormhole.states = 0;
+    cmd_wormhole.hasrest = 0;
+    cmd_wormhole.action = 0;
+    cmd_wormhole.desired = (WORD32)0xFFFFFFFF;
+    cmd_wormhole.mask = (WORD32)0xFFFFFFFF;
+    strcpy(cmd_wormhole.command, worm_str);
 }
 
 uint16_t cmds_special_ptr = 0;
@@ -226,8 +239,6 @@ uint8_t __cmd_compare(uint16_t cmdidx, WORD32 state) {
 
 uint8_t cmd_test(uint16_t cmdidx) {
     // check this command against the state of the console it's for
-    cmd_print(cmdidx);
-    printf("STATE=========\r\n");
-    printf("%08lx\r\n", (unsigned long)con[cmds[cmdidx].console].state.ul);
+    // cmd_print(cmdidx);
     return __cmd_compare(cmdidx, con[cmds[cmdidx].console].state);
 }
