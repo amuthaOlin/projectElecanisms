@@ -93,7 +93,7 @@ void poll_state(_CONSOLE *self) {
     self->state.s1.hotsystem = (uint8_t)pin_read(&A[0]);
     self->state.s1.wordwheel_inside = read_wordwheel_inside(self->state.s1.wordwheel_inside);
     self->state.s1.wordwheel_outside = read_wordwheel_outside();
-    printf("Wordwheel state: %d|%d\r\n", self->state.s1.wordwheel_outside, self->state.s1.wordwheel_inside);
+    // printf("Wordwheel state: %d|%d\r\n", self->state.s1.wordwheel_outside, self->state.s1.wordwheel_inside);
 
     // printf("Hotsystem: %d, T1: %d, T2: %d\r\n", self->state.s1.hotsystem, self->state.s1.toggle1, self->state.s1.toggle2);
     // printf("State: %08lx\r\n", (unsigned long)self->state.ul);
