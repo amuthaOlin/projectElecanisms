@@ -14,18 +14,18 @@
 _PLAY play;
 
 uint16_t __play_rand_cmd_idx() {
-    // uint8_t act = rng_int(0, 17);
-    // uint8_t cons = act/6;
-    // uint8_t group = act%6;
+    uint8_t act = rng_int(0, 17);
+    uint8_t cons = act/6;
+    uint8_t group = act%6;
 
-    // if (group == 5 && cons == 0) { // word wheel
+    if (group == 5 && cons == 0) { // word wheel
         uint8_t groupidx = cmd_groupidx(0, 10);
         return rng_int(groupidx, groupidx+35);
-    // } else {
-    //     uint8_t groupidx = cmd_groupidx(cons, group);
-    //     uint8_t groupcmds = cmd_groupcount(cons, group);
-    //     return rng_int(groupidx, groupidx+groupcmds - 1);
-    // }
+    } else {
+        uint8_t groupidx = cmd_groupidx(cons, group);
+        uint8_t groupcmds = cmd_groupcount(cons, group);
+        return rng_int(groupidx, groupidx+groupcmds - 1);
+    }
 }
 
 volatile uint16_t cmd_i = 0;
