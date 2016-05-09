@@ -33,8 +33,8 @@
 #include "strm.h"
 #include "lev.h"
 
-char word_outer[6][10] = {"boge1", "boge2", "boge3", "boge4", "boge5", "boge6"};
-char word_inner[6][10] = {" Doge1", " Doge2", " Doge3", " Doge4", " Doge5", " Doge6"};
+char words_outer[6][10] = {"boge1", "boge2", "boge3", "boge4", "boge5", "boge6"};
+char words_inner[6][10] = {" Doge1", " Doge2", " Doge3", " Doge4", " Doge5", " Doge6"};
 
 // CMD_COUNT is cumsum of members of state arrays minus cumsum of members of hasrest arrays
 #define CMD_COUNT 120 // 97-9 (120 to be safe)
@@ -45,6 +45,7 @@ uint16_t __cmd_log2(uint16_t n) {
     return n<2? 1:ceil(log((double)n)/log(2.));
 }
 
+uint16_t cmds_ptr = 0;
 void init_cmd(void) {
     uint16_t i, j, k;
 
@@ -73,21 +74,19 @@ void init_cmd(void) {
             wordcmd_tmp.states = 36;
             wordcmd_tmp.hasrest = 0;
             wordcmd_tmp.action = k;
-            wordcmd_tmp.desired = cmds[i].desired | cmds[j].desired;
-            wordcmd_tmp.mask = cmds[i].mask | cmds[j].mask;
+            wordcmd_tmp.desired = (WORD32)(cmds[i].desired.ul | cmds[j].desired.ul);
+            wordcmd_tmp.mask = (WORD32)(cmds[i].mask.ul | cmds[j].mask.ul);
 
-            strcpy(wordcmd_tmp.command, word_outer[i]);
-            strcat(wordcmd_tmp.command, word_inner[j]);
+            strcpy(wordcmd_tmp.command, words_outer[i]);
+            strcat(wordcmd_tmp.command, words_inner[j]);
             k++;
 
             cmds[cmds_ptr] = wordcmd_tmp;
             cmds_ptr++;
         }
     }
-
 }
 
-uint16_t cmds_ptr = 0;
 uint16_t cmds_special_ptr = 0;
 void cmd_init(uint16_t actuator, uint16_t action, uint8_t console) {
     WORD32 mask = (WORD32)0;

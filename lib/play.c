@@ -135,7 +135,6 @@ void play_begin() {
 
     if (level.message) {
         lcd_broadcast(level.message);
-        uint8_t i;
         for (i = 0; i < 20; i++) {
             timer_delayMicro(50000);
         }
@@ -145,7 +144,6 @@ void play_begin() {
     cd_start(&cdcenter, level.level_time, play.clock);
     play.PLAYING = 1;
 
-    uint8_t i;
     for (i = 0; i < 3; i++)
         con_send_cmd(&con[i], &cmds[__play_rand_cmd_idx()], level.cmd_time, play.clock);
 }
