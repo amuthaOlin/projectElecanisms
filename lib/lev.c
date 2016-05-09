@@ -84,9 +84,9 @@ void __lev_pickLabels(uint8_t theme){
 	uint8_t random_num_array[18];
 
 	for(j=0;j<18;j++){
-		random_num = (uint8_t)rng_int(1,theme_len[theme]);
+		random_num = (uint8_t)rng_int(1,theme_len[theme]-1);
 		while(__lev_already_exists(&random_num_array, 18, random_num)){
-			random_num = (uint8_t)rng_int(1,theme_len[theme]);
+			random_num = (uint8_t)rng_int(1,theme_len[theme]-1);
         }
 		random_num_array[j] = random_num;
 	}
