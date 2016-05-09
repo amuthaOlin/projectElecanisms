@@ -200,7 +200,7 @@ void lev_setup(uint8_t lev_num){
 	if (lev_num == 1){ // First level has no complications
 		level.lab_theme=0;
 		level.level_time=200;
-		level.cmd_time=15;
+		level.cmd_time=25;
 		level.actuators=4; // Only use 4 buttons
 		strcpy(level.message,instructions[0]);
 		__lev_pickLabels(0);
@@ -208,14 +208,14 @@ void lev_setup(uint8_t lev_num){
 	else if (lev_num ==2){ // Second Level
 		level.lab_theme=0;
 		level.level_time=180;
-		level.cmd_time=14;
+		level.cmd_time=20;
 		strcpy(level.message,instructions[0]);
 		__lev_pickLabels(0);
 	}
 	else if (lev_num ==3){ // Third Level
 		level.lab_theme=0;
 		level.level_time=170;
-		level.cmd_time=13;
+		level.cmd_time=16;
 		level.asteroids[0]=(uint8_t)rng_int(4,10); // Seed two asteroids
 		level.asteroids[1]=(uint8_t)rng_int(12,20);
 

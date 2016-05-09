@@ -36,12 +36,12 @@ typedef struct CONS1_STATE {
   unsigned green_button:1;      // 3
   unsigned hotsystem:1;         // 5
   unsigned joystick:4;          // 4
-  unsigned wordwheel_inside:4;  // 6
-  unsigned wordwheel_outside:4; // 7
+  unsigned wordwheel_inside:3;  // 6
+  unsigned wordwheel_outside:3; // 7
   unsigned asteroid:1;          // 8
   unsigned wormhole1:1;         // 9
   unsigned wormhole2:1;         // 10
-  unsigned long :12;
+  unsigned long :14;
 } CONS1_STATE;
 
 typedef struct CONS2_STATE {

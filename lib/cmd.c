@@ -41,8 +41,26 @@ char words_inner[6][10] = {" Ratchet", " Bobbin", " Quark", " Sucker", " Rotor",
 _CMD cmds[CMD_COUNT];
 _CMD cmds_special[9];
 
+uint16_t log_reses[] = {
+    1, // 0
+    1, // 1
+    1, // 2
+    2, // 3
+    2, // 4
+    3, // 5
+    3, // 6
+    3, // 7
+    4, // 8
+    4, // 9
+    4, // 10
+    4, // 11
+    4, // 12
+    4, // 13
+    4, // 14
+    4, // 15
+};
 uint16_t __cmd_log2(uint16_t n) {
-    return n<2? 1:ceil(log((double)n)/log(2.));
+    return log_reses[n];
 }
 
 uint16_t cmds_ptr = 0;
@@ -59,8 +77,8 @@ void init_cmd(void) {
         }
     }
 
-    uint8_t word_outer = cmd_get(0, 6, 0);
-    uint8_t word_inner = cmd_get(0, 7, 0);
+    uint8_t word_outer = cmd_get(0, 7, 0);
+    uint8_t word_inner = cmd_get(0, 6, 0);
 
     // word wheel commands -- go at the end of the command list
     k = 0;
@@ -208,5 +226,8 @@ uint8_t __cmd_compare(uint16_t cmdidx, WORD32 state) {
 
 uint8_t cmd_test(uint16_t cmdidx) {
     // check this command against the state of the console it's for
+    cmd_print(cmdidx);
+    printf("STATE=========\r\n");
+    printf("%08lx\r\n", (unsigned long)con[cmds[cmdidx].console].state.ul);
     return __cmd_compare(cmdidx, con[cmds[cmdidx].console].state);
 }

@@ -166,6 +166,7 @@ void game_over() {
 void coin_handler(_INT *intx) {
     if(power_on == 1){
         coin = 1;
+        // __asm__("goto 0x0DEA");
     }
     else{
         power_on = 1;
