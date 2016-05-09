@@ -86,8 +86,8 @@ void pre_level() {
         lcd_broadcast(ready_str);
     }
     
-    red_pressed = con[0].state.s1.red_button && con[1].state.s2.red_button && con[2].state.s3.red_button;
-    // red_pressed = 1;
+    // red_pressed = con[0].state.s1.red_button && con[1].state.s2.red_button && con[2].state.s3.red_button;
+    red_pressed = 1;
     if (red_pressed) {
         lcd_broadcast(launch_str);
         uint8_t i;

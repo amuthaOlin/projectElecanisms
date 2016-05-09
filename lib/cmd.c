@@ -33,8 +33,8 @@
 #include "strm.h"
 #include "lev.h"
 
-char words_outer[6][10] = {"boge1", "boge2", "boge3", "boge4", "boge5", "boge6"};
-char words_inner[6][10] = {" Doge1", " Doge2", " Doge3", " Doge4", " Doge5", " Doge6"};
+char words_outer[6][10] = {"Ignite", "Punch", "Charge", "Poke", "Munch", "Soak"};
+char words_inner[6][10] = {" Ratchet", " Bobbin", " Quark", " Sucker", " Rotor", " Uffler"};
 
 // CMD_COUNT is cumsum of members of state arrays minus cumsum of members of hasrest arrays
 #define CMD_COUNT 120 // 97-9 (120 to be safe)
@@ -77,8 +77,8 @@ void init_cmd(void) {
             wordcmd_tmp.desired = (WORD32)(cmds[i].desired.ul | cmds[j].desired.ul);
             wordcmd_tmp.mask = (WORD32)(cmds[i].mask.ul | cmds[j].mask.ul);
 
-            strcpy(wordcmd_tmp.command, words_outer[i]);
-            strcat(wordcmd_tmp.command, words_inner[j]);
+            strcpy(wordcmd_tmp.command, words_outer[i-word_outer]);
+            strcat(wordcmd_tmp.command, words_inner[j-word_inner]);
             k++;
 
             cmds[cmds_ptr] = wordcmd_tmp;

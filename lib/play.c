@@ -14,18 +14,18 @@
 _PLAY play;
 
 uint16_t __play_rand_cmd_idx() {
-    uint8_t act = rng_int(0, 17);
-    uint8_t cons = act/6;
-    uint8_t group = act%6;
+    // uint8_t act = rng_int(0, 17);
+    // uint8_t cons = act/6;
+    // uint8_t group = act%6;
 
-    if (group == 5 && cons == 0) { // word wheel
-        uint8_t groupidx = cmd_groupidx(cons, 10);
+    // if (group == 5 && cons == 0) { // word wheel
+        uint8_t groupidx = cmd_groupidx(0, 10);
         return rng_int(groupidx, groupidx+35);
-    } else {
-        uint8_t groupidx = cmd_groupidx(cons, group);
-        uint8_t groupcmds = cmd_groupcount(cons, group);
-        return rng_int(groupidx, groupidx+groupcmds - 1);
-    }
+    // } else {
+    //     uint8_t groupidx = cmd_groupidx(cons, group);
+    //     uint8_t groupcmds = cmd_groupcount(cons, group);
+    //     return rng_int(groupidx, groupidx+groupcmds - 1);
+    // }
 }
 
 volatile uint16_t cmd_i = 0;
@@ -46,7 +46,7 @@ uint16_t __play_valid_cmd_idx() {
 
 void __play_advance(uint8_t sole, uint8_t success) {
     if (!success) {
-        play.cmds_progress++;
+        play.cmds_progress--;
     } else {
         play.cmds_progress++;
     }
@@ -123,7 +123,7 @@ void __play_send_level_begin_packet() {
 void play_begin() {
     play.timer = &timer1;
     play.clock = 0;
-    play.cmds_to_win = 20;
+    play.cmds_to_win = 28;
     play.cmds_progress = play.cmds_to_win/2;
     play.success = 0;
 

@@ -39,8 +39,8 @@ int lab_len[3]={2,8,7};
 int easy_lab[2]={0,1};
 int med_lab[8]={0,1,2,4,5,7,8,9};
 int hard_lab[7]={0,1,2,3,4,5,6};
-char messages[10][33]={" ","Impending Didactic Aberation","They're over there, by their ship","Tr@n$|at0r M@lfun(#ion","Lol good luck (^_^)/* ttyl, bai","Can I Ha Your Numba","Thngs r brkng dwn","Come on grab your friends!","May the force be with you","ARRG, spaceship now be a seaship"};
-char instructions[3][33]={"Game Starting","Shake ball to avoid asteroids","Press flip to escape wormwhole"};
+char messages[10][33]={" ","Impending Didactic Aberration","They're over there, by their ship","Tr@n$|at0r M@lfun(#ion","Lol good luck (^_^)/* ttyl, bai","Can I Ha Your Numba","Thngs r brkng dwn","Come on, grab your friends!","May the force be with you","ARRG, spaceship now be a seaship"};
+char instructions[3][33]={"Commands may be for your console","Shake ball to avoid asteroids","Press flip to escape wormwhole"};
 
 _LEV level;
 
@@ -199,7 +199,7 @@ void lev_setup(uint8_t lev_num){
     __lev_init();
 	if (lev_num == 1){ // First level has no complications
 		level.lab_theme=0;
-		level.level_time=160;
+		level.level_time=200;
 		level.cmd_time=15;
 		level.actuators=4; // Only use 4 buttons
 		strcpy(level.message,instructions[0]);
@@ -207,14 +207,14 @@ void lev_setup(uint8_t lev_num){
 	}
 	else if (lev_num ==2){ // Second Level
 		level.lab_theme=0;
-		level.level_time=150;
+		level.level_time=180;
 		level.cmd_time=14;
 		strcpy(level.message,instructions[0]);
 		__lev_pickLabels(0);
 	}
 	else if (lev_num ==3){ // Third Level
 		level.lab_theme=0;
-		level.level_time=140;
+		level.level_time=170;
 		level.cmd_time=13;
 		level.asteroids[0]=(uint8_t)rng_int(4,10); // Seed two asteroids
 		level.asteroids[1]=(uint8_t)rng_int(12,20);
@@ -225,7 +225,7 @@ void lev_setup(uint8_t lev_num){
 
 	else if (lev_num ==4 ){ // Level 4 (tier 2)
 		level.lab_theme=0;
-		level.level_time=130;
+		level.level_time=150;
 		level.cmd_time=12;
 		level.asteroids[0]=(uint8_t)rng_int(10,35); // Seed an asteroid
 		level.wormholes[0]=(uint8_t)rng_int(0,5); // Seed two wormholes
@@ -237,7 +237,7 @@ void lev_setup(uint8_t lev_num){
 	else if (lev_num <7){ // Tier 2 levels
 		uint8_t theme=(uint8_t)rng_coin_replace(rng_int(1,lab_len[0]),10,0); // 10% chance of default
 		level.lab_theme=easy_lab[theme];
-		level.level_time=120;
+		level.level_time=140;
 		level.cmd_time=11;
 		level.asteroids[0]=(uint8_t)rng_int(0,15); // Seed two asteroids
 		level.asteroids[1]=(uint8_t)rng_int(30,45);
@@ -253,7 +253,7 @@ void lev_setup(uint8_t lev_num){
 	else if (lev_num <10){ // Tier 3 levels
 		uint8_t theme=(uint8_t)rng_coin_replace(rng_int(1,lab_len[1]),20,0);// 50% chance of default
 		level.lab_theme=easy_lab[theme];
-		level.level_time=110;
+		level.level_time=120;
 		level.cmd_time=10;
 		level.asteroids[0]=(uint8_t)rng_int(0,10); // Seed three asteroids
 		level.asteroids[1]=(uint8_t)rng_int(20,30);
