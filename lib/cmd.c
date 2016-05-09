@@ -33,6 +33,9 @@
 #include "strm.h"
 #include "lev.h"
 
+char word_outer[6][10] = {"boge1", "boge2", "boge3", "boge4", "boge5", "boge6"};
+char word_inner[6][10] = {" Doge1", " Doge2", " Doge3", " Doge4", " Doge5", " Doge6"};
+
 // CMD_COUNT is cumsum of members of state arrays minus cumsum of members of hasrest arrays
 #define CMD_COUNT 100 // 97-9 (100 to be safe)
 _CMD cmds[CMD_COUNT];
@@ -54,6 +57,33 @@ void init_cmd(void) {
             }
         }
     }
+
+    // start with first word wheel command
+
+    uint8_t word_outer = cmd_get(0, 6, 0);
+    uint8_t word_inner = cmd_get(0, 7, 0);
+
+    k = 0;
+    for (i = word_outer; i < word_outer + 6; i++) {
+        for (j = word_inner; j < word_inner + 6; j++) {
+            _CMD wordcmd_tmp;
+            wordcmd_tmp.console = 0;
+            wordcmd_tmp.actuator = 0;
+            wordcmd_tmp.group = 5;
+            wordcmd_tmp.states = 36;
+            wordcmd_tmp.hasrest = 0;
+            wordcmd_tmp.action = k;
+            wordcmd_tmp.desired = cmds[i].desired | cmds[j].desired;
+            wordcmd_tmp.mask = cmds[i].mask | cmds[j].mask;
+
+            strcpy(wordcmd_tmp.command, word_outer[i]);
+            strcat(wordcmd_tmp.command, word_inner[j]);
+            k++;
+
+            cmds_word[k] = wordcmd_tmp;
+        }
+    }
+
 }
 
 uint16_t cmds_ptr = 0;

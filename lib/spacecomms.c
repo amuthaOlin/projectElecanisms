@@ -9,8 +9,8 @@ uint8_t CONS_STATES[][15] = {
         2, // green_button:1
         2, // hotsystem:1
         9, // joystick:4
-        8, // wordwheel_inside:4
-        8, // wordwheel_outside:4
+        6, // wordwheel_inside:4
+        6, // wordwheel_outside:4
         2, // asteroid:1
         2, // wormhole1:1
         2  // wormhole2:1
